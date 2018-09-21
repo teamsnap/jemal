@@ -1,0 +1,16 @@
+.ListItem {
+    transition: 100ms ease;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+.ListItem a:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.ListItem a {
+    width: 100%;
+    display: block;
+    padding: 20px;
+    text-decoration: none;
+    color: #494949;
+}
