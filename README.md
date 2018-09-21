@@ -32,11 +32,17 @@ Coming soon to a branch near you!
 
 #### File structure
 Client app is housed in the `src` folder
+
 The CRA index.html is in the public folder
+
 General components go into the `src/Components` folder
+
 Create your routes in the `src/routes` folder
+
 Pull them into the file `App.js`. If you need auth, using the `<PrivateRoute />` component, that will handle the hardwork for you.
+
 Follow the Apollo best practices, it handles all the caching, data request, etc for us :)
+
 Using material-ui to handle the pretty parts
 
 ## Server application
