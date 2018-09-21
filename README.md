@@ -1,36 +1,53 @@
-# apollo-tutorial-kit
+# JEMAL
+###### Jolly Email Management Application
+The purpose of this application is to decouple the need to create emails inside of an ESP (Email Sending/Service Provider). This was born of out becoming tired of having to manage the creation of emails that was sent across three plus ESPs. It is a graphql and react application that provides previews and CRUD operations leveraging the MJML email framework.
 
-Starting point for the Apollo GraphQL Server tutorial.
+[GIF]
 
-Follow along with the tutorial in the blog post: [How to build a GraphQL server](https://medium.com/apollo-stack/tutorial-building-a-graphql-server-cddaa023c035#.wy5h1htxs). If you want to skip ahead to the solution, check out the [server-tutorial-solution](https://github.com/apollographql/apollo-tutorial-kit/tree/server-tutorial-solution) branch of this repo.
+##### Technologies:
+* MJMl (Email template language)
+* React bootstrapped through Create React App
+* Apollo
+    * Client
+    * Server
+* MongoDB
+* Mongoose to work with MongoDB
 
-Up-to-date documentation and explanations can be found in the [Apollo Server docs](https://www.apollographql.com/docs/apollo-server/)
+See their docs for more information
 
 ## Getting started
 
+With git:
 ```bash
-git clone https://github.com/apollostack/apollo-starter-kit
-cd apollo-starter-kit
+git clone https://github.com/xxx
+cd jemal
 npm install
 npm start
 ```
 
-Then open [http://localhost:3000/graphiql](http://localhost:3000/graphiql)
+With Docker:
+Coming soon to a branch near you!
 
-When you paste this on the left side of the page:
+## Client application
 
-```graphql
-{
-  testString
-}
-```
+#### File structure
+Client app is housed in the `src` folder
+The CRA index.html is in the public folder
+General components go into the `src/Components` folder
+Create your routes in the `src/routes` folder
+Pull them into the file `App.js`. If you need auth, using the `<PrivateRoute />` component, that will handle the hardwork for you.
+Follow the Apollo best practices, it handles all the caching, data request, etc for us :)
+Using material-ui to handle the pretty parts
 
-and hit the play button (cmd-return), then you should get this on the right side:
+## Server application
 
-```json
-{
-  "data": {
-    "testString": "It works!"
-  }
-}
-```
+#### File structure
+xxx
+
+## Setting up your Application
+
+#### File structure
+xxx
+
+## Todo:
+See the issues marked: `Help Wanted`
