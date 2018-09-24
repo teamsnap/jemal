@@ -2,7 +2,7 @@
 ###### Jolly Email Management Application
 The purpose of this application is to decouple the need to create emails inside of an ESP (Email Sending/Service Provider). This was born of out becoming tired of having to manage the creation of emails that was sent across three plus ESPs. It is a Graphql and React application that provides previews and CRUD operations leveraging the MJML email framework.
 
-[GIF]
+![A hefty gif of the JEMAL app](app.gif)
 
 ##### Technologies:
 * MJML v4 (Email template language)
