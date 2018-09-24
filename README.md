@@ -88,7 +88,98 @@ Server code is in the `server` folder
 
 The server will output two folders to work, a hidden from VCS folder in `server` named `emails` and one in the root of project named `emails`. This needs to be refactored, but the purpose will be the same, it is the holding space for the compiled MJML files and the screenshots taken by the system. The resolver needs to read the MJML files to generate the html for the iframe preview and copy to clipboard function.
 
-Refer to the resolvers, graphql schema and mongoose models to see how to add a new feature to the API.
+#### Example usage
+
+Note: you can pull the user off of `context`. That has been configured use in `server.js`.
+
+`models/EmailPartial.js`
+```
+import mongoose from 'mongoose';
+
+const Schema = mongoose.Schema;
+const EmailPartialSchema = new Schema({
+    title: { type: String },
+    createdAt: { type: Date, default: Date.now },
+    createdById: { type: String },
+    updatedAt: { type: Date, default: Date.now },
+    updatedById: { type: String },
+    folderPath: { type: String },
+    mjmlSource: { type: String },
+    organizationId: { type: String },
+});
+
+const EmailPartial =  mongoose.model('EmailPartial', EmailPartialSchema);
+
+export default EmailPartial;
+```
+
+`resolver/EmailPartial.js`
+```
+import { EmailPartial } from '../models'
+import { saveTemplatePartial } from '../../helpers';
+
+const EmailPartialResolver = {
+  Query: {
+      ...
+      getCurrentEmailPartial: async (root, { _id }, { user }) => {
+
+        if (!user) throw new Error('Must be logged in');
+        if (!_id) throw new Error('Must have email partial id');
+
+        const emailPartialsFound = await EmailPartial.findOne({ _id }, (err, org) => { if (err) console.error(err) });
+
+        return emailPartialsFound;
+      }
+    },
+  Mutation: {
+    ...
+    deleteEmailPartial: async (root, { _id }, { user }) => {
+      if (!user._id) throw new Error('Must be logged in');
+      if (!_id) throw new Error('Must have email partial Id');
+
+      // todo: remove partials from fs on removal
+      await EmailPartial.findOneAndRemove({ _id })
+
+      return {_id: ''}
+    },
+    ...
+  },
+```
+
+`schema/EmailPartial.js`
+```
+import { gql } from "apollo-server";
+
+const EmailPartial = gql`
+ extend type Query {
+   getCurrentEmailPartial(_id: String!): EmailPartial
+   getAllEmailPartials(_id: String! offset: Int limit: Int): [EmailPartial]
+   getEmailPartialsCount(_id: String!): Count
+   downloadAllPartials: [EmailPartial]
+ }
+ type EmailPartial {
+   _id: ObjectID
+   title: String!
+   createdAt: String
+   createdById: String
+   updatedAt: String
+   updatedById: String
+   folderPath: String
+   mjmlSource: String
+   organizationId: String
+ }
+ extend type Mutation {
+   createEmailPartial(title: String!, mjmlSource: String, organizationId: String!, folderPath: String): EmailPartial
+   editEmailPartial(_id: String!, title: String!, mjmlSource: String!, organizationId: String!, folderPath: String): EmailPartial
+   deleteEmailPartial(_id: String!): EmailPartial
+   duplicateEmailPartial(_id: String!): EmailPartial
+ }
+`
+
+export default EmailPartial;
+```
+
+Import the pertinent files into their respective `index.js` and that will be automagically be loaded into `server.js` for you!
 
 ## Deploying
 This app will be setup to deploy to your own instance of now.sh. Documentation for that is coming soon as the deploy script is finalized.
