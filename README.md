@@ -186,11 +186,11 @@ This app will be setup to deploy to your own instance of now.sh. Documentation f
 
 ## Contributing
 
-Fork it ( https://github.com/teamsnap/jemal )
-Create your feature branch (git checkout -b my-new-feature)
-Commit your changes (git commit -am 'Add some feature')
-Push to the branch (git push origin my-new-feature)
-Create new Pull Request
+* Fork it ( https://github.com/teamsnap/jemal )
+* Create your feature branch (git checkout -b my-new-feature)
+* Commit your changes (git commit -am 'Add some feature')
+* Push to the branch (git push origin my-new-feature)
+* Create new Pull Request
 
 ## Todo:
 See the issues marked: `Help Wanted`
