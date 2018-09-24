@@ -90,7 +90,7 @@ The server will output two folders to work, a hidden from VCS folder in `server`
 
 #### Example usage
 
-Note: you can pull the user off of `context`. That has been configured use in `server.js`.
+Note: you can pull the user off of `context`. That has been configured in `server.js`.
 
 `models/EmailPartial.js`
 ```
