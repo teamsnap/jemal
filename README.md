@@ -32,7 +32,8 @@ npm start
 ```
 
 With Docker:
-Coming soon to a branch near you!
+`docker build . -t jemal/jemal`
+`docker run --env-file=.env.development.local -p 4000:4000 -p 4100:4100 jemal/jemal`
 
 ## .env setup
 Refer to Create React App for the different type of .env filenames it supports; the server will supoort those out of the box too.

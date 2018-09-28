@@ -13,8 +13,6 @@ const options = {
   }
 };
 
-console.log(options)
-
 const transporter = nodemailer.createTransport(options);
 
 export default transporter;
