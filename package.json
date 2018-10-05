@@ -55,9 +55,9 @@
   "homepage": "./",
   "main": "./client/src/index.js",
   "scripts": {
-    "start": "nodemon ./server/server.js --exec babel-node",
+    "start": "babel-node ./server/server.js",
     "develop": "nf start -p 4000",
-    "build": "react-scripts build && babel server -d build",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "react-start": "react-scripts start",
