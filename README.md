@@ -28,7 +28,8 @@ git clone https://github.com/teamsnap/jemal.git
 cd jemal
 npm install
 touch .env.development.local
-npm start
+npm run dev # for development
+npm run build && npm start # for prod
 ```
 
 With Docker:

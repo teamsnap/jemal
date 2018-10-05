@@ -34,8 +34,15 @@ const server = new ApolloServer({
   })
 });
 
+app.use(express.static(path.resolve(__dirname, '../build')))
 app.use('/emails', express.static(path.join(__dirname, 'emails')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('*', express.static(path.join(__dirname, '../build')));
+
+// All remaining requests return the React app, so it can handle routing.
+app.get('*', (request, response) => {
+  response.sendFile(path.resolve(__dirname, '../build', 'index.html'))
+})
 
 app.use(
   gqlPath,
@@ -45,5 +52,10 @@ app.use(
 server.applyMiddleware({ app, gqlPath });
 
 app.listen({ port }, () =>
-  console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`)
-);
+{
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`)
+  } else {
+    console.log(`🚀 Server ready at http://localhost:${port} with graphql`)
+  }
+});
