@@ -106,13 +106,14 @@ const UserResolver = {
       const resetPasswordToken = await crypto.randomBytes(48).toString('hex');
       // expires in 1 hour
       const resetPasswordExpires = Date.now() + (1 * 60 * 60 * 1000);
+      const url = process.env.APP_URL || process.env.NOW_URL;
 
       const message = {
         from: 'sender@server.com',
         to: email,
         subject: 'Password reset',
-        text: `http://localhost:3000/forgot/${resetPasswordToken}`,
-        html: `<p><a href="http://localhost:3000/forgot/${resetPasswordToken}">http://localhost:3000/forgot/${resetPasswordToken}</a></p>`
+        text: `${url}/forgot/${resetPasswordToken}`,
+        html: `<p><a href="${url}/forgot/${resetPasswordToken}">${url}/forgot/${resetPasswordToken}</a></p>`
       };
 
       await User.update(
@@ -136,6 +137,8 @@ const UserResolver = {
       return user;
     },
     changePassword: async (root, { newPassword, verifyPassword, resetPasswordToken, email }, {}) => {
+      if (newPassword === '') throw new Error('Password not provided');
+      if (verifyPassword === '') throw new Error('Password not provided');
 
       const message = {
         from: 'sender@server.com',

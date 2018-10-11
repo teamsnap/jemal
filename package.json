@@ -52,7 +52,7 @@
       "env"
     ]
   },
-  "homepage": "./",
+  "homepage": "/",
   "main": "./client/src/index.js",
   "scripts": {
     "start": "babel-node ./server/server.js",

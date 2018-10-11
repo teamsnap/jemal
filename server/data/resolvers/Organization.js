@@ -42,13 +42,14 @@ const OrganizationResolver = {
 
       const { organizationId } = await User.findOne({ _id: user._id });
       const { name } = await Organization.findOne({ _id: organizationId });
+      const url = process.env.APP_URL || process.env.NOW_URL;
 
       const message = {
         from: 'sender@server.com',
         to: email,
         subject: `You have been invited to: ${name}`,
-        text: `You have an invite pending for ${name} in the MJML Template Engine! Please click the following link http://localhost:3000/organization/accept/${organizationId}`,
-        html: `<p>You have an invite pending for ${name} in the MJML Template Engine! Please click the following link <a href="http://localhost:3000/organization/accept/${organizationId}">http://localhost:3000/organization/accept/${organizationId}</a></p>`
+        text: `You have an invite pending for ${name} in the MJML Template Engine! Please click the following link ${url}/organization/accept/${organizationId}`,
+        html: `<p>You have an invite pending for ${name} in the MJML Template Engine! Please click the following link <a href="${url}/organization/accept/${organizationId}">${url}/organization/accept/${organizationId}</a></p>`
       };
 
       transporter.sendMail(message, (error, response) => {
@@ -64,6 +65,7 @@ const OrganizationResolver = {
     acceptToOrganization: async (root, { email, organizationId }, { user }) => {
       if (!user._id) throw new Error('Must be logged in');
       if (!email) throw new Error('Must have an email');
+      if (!organizationId) throw new Error('Must provide orgid');
 
       const inviteUser = await User.findOne({ email });
 
