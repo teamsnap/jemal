@@ -1,15 +1,15 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import CreateEmailView from '../Components/Email/CreateEmail'
+import CreateEmailView from '../Components/Email/CreateEmail';
 
 class CreateEmail extends Component {
-    render() {
-        return (
-            <div style={{ marginTop: 32 }}>
-                <CreateEmailView />
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div style={{ marginTop: 32 }}>
+        <CreateEmailView />
+      </div>
+    );
+  }
 }
 
 export default CreateEmail;

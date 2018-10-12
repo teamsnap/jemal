@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import gql from "graphql-tag";
-import { withApollo, graphql, compose } from "react-apollo";
+import gql from 'graphql-tag';
+import { withApollo, graphql, compose } from 'react-apollo';
 import { NavLink, Link } from 'react-router-dom';
 
 import './Menu.css';
@@ -10,12 +10,12 @@ import Divider from 'material-ui/Divider';
 
 class Menu extends Component {
   state = {
-    left: false,
+    left: false
   };
 
   toggleDrawer = (side, open) => () => {
     this.setState({
-      [side]: open,
+      [side]: open
     });
   };
 
@@ -23,11 +23,11 @@ class Menu extends Component {
     const token = 'mjml-jwt';
 
     localStorage.removeItem(token);
-    window.location.href = '/'
+    window.location.href = '/';
   }
 
   render() {
-      const styles = {
+    const styles = {
       list: {
         width: '100%',
         marginTop: 20,
@@ -45,12 +45,13 @@ class Menu extends Component {
         paddingBottom: 0
       },
       fullList: {
-        width: 'auto',
-      },
+        width: 'auto'
+      }
     };
 
     if (this.props.loading) return null;
-    const user = this.props.currentUser.currentUser && this.props.currentUser.currentUser
+    const user =
+      this.props.currentUser.currentUser && this.props.currentUser.currentUser;
     return (
       <div>
         <Drawer open={this.props.open} onClose={this.props.close}>
@@ -61,31 +62,59 @@ class Menu extends Component {
             onKeyDown={this.props.close}
           >
             <Link to="/">
-                { user && user.organization ? (
-                  <img style={styles.logo} src={user && user.organization.logoUrl} alt={user && user.organization.name} />
-                ) : (
-                  null
-                )}
+              {user && user.organization ? (
+                <img
+                  style={styles.logo}
+                  src={user && user.organization.logoUrl}
+                  alt={user && user.organization.name}
+                />
+              ) : null}
             </Link>
             <div style={styles.list}>
-              <List className='ListItem' style={styles.listItem}>
+              <List className="ListItem" style={styles.listItem}>
                 <NavLink to="/">Dashboard</NavLink>
               </List>
               <Divider />
-              <List className='ListItem' style={styles.listItem}><NavLink to="/email/create">New email</NavLink></List>
-              <List className='ListItem' style={styles.listItem}><NavLink to="/email/view/page/1">View all emails</NavLink></List>
-              <List className='ListItem' style={styles.listItem}><NavLink to="/email/favorited/view/page/1">View all favorited emails</NavLink></List>
+              <List className="ListItem" style={styles.listItem}>
+                <NavLink to="/email/create">New email</NavLink>
+              </List>
+              <List className="ListItem" style={styles.listItem}>
+                <NavLink to="/email/view/page/1">View all emails</NavLink>
+              </List>
+              <List className="ListItem" style={styles.listItem}>
+                <NavLink to="/email/favorited/view/page/1">
+                  View all favorited emails
+                </NavLink>
+              </List>
               <Divider />
-              <List className='ListItem' style={styles.listItem}><NavLink to="/email/partials/create">Create email partials</NavLink></List>
-              <List className='ListItem' style={styles.listItem}><NavLink to="/email/partials/view/page/1">View all email partials</NavLink></List>
+              <List className="ListItem" style={styles.listItem}>
+                <NavLink to="/email/partials/create">
+                  Create email partials
+                </NavLink>
+              </List>
+              <List className="ListItem" style={styles.listItem}>
+                <NavLink to="/email/partials/view/page/1">
+                  View all email partials
+                </NavLink>
+              </List>
               <Divider />
-              { user && user.organizationId ? (
-                  <List className='ListItem' style={styles.listItem}><NavLink to={`/organization/invite/${user && user.organizationId}`}>Invite to organization</NavLink></List>
-              ) : (
-                null
-              )}
-              <List className='ListItem' style={styles.listItem}><NavLink to="/settings">Settings</NavLink></List>
-              <List className='ListItem' style={styles.listItem}><Link to="#" color="inherit" onClick={this.logoutUser}>Logout</Link></List>
+              {user && user.organizationId ? (
+                <List className="ListItem" style={styles.listItem}>
+                  <NavLink
+                    to={`/organization/invite/${user && user.organizationId}`}
+                  >
+                    Invite to organization
+                  </NavLink>
+                </List>
+              ) : null}
+              <List className="ListItem" style={styles.listItem}>
+                <NavLink to="/settings">Settings</NavLink>
+              </List>
+              <List className="ListItem" style={styles.listItem}>
+                <Link to="#" color="inherit" onClick={this.logoutUser}>
+                  Logout
+                </Link>
+              </List>
             </div>
           </div>
         </Drawer>
@@ -96,19 +125,19 @@ class Menu extends Component {
 
 const currentUser = gql`
   query currentUser {
-      currentUser {
-          _id
-          organizationId
-          organization {
-            name
-            logoUrl
-          }
+    currentUser {
+      _id
+      organizationId
+      organization {
+        name
+        logoUrl
       }
+    }
   }
 `;
 
 export default compose(
-    graphql(currentUser, {
-        name: "currentUser"
-    })
+  graphql(currentUser, {
+    name: 'currentUser'
+  })
 )(withApollo(Menu));

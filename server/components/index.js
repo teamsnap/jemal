@@ -1,5 +1,3 @@
-import mjBulletProofButton from './mjBulletProofButton'
+import mjBulletProofButton from './mjBulletProofButton';
 
-export {
-    mjBulletProofButton
-}
+export { mjBulletProofButton };

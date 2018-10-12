@@ -1,10 +1,10 @@
 .AppHeaderLogo {
-    color: white;
-    text-decoration: none;
-    opacity: .8;
-    transition: all 100ms ease;
+  color: white;
+  text-decoration: none;
+  opacity: .8;
+  transition: all 100ms ease;
 }
 
 .AppHeaderLogo:hover {
-    opacity: 1;
+  opacity: 1;
 }

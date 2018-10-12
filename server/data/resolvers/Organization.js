@@ -1,17 +1,18 @@
-import { User, Organization } from '../models'
+import { User, Organization } from '../models';
 import transporter from '../../helpers/emailTransporter';
 
 const OrganizationResolver = {
   Query: {
     currentOrganization: async (root, { _id }, { user }) => {
-
       if (!user) throw new Error('Must be logged in');
       if (!_id) throw new Error('Must have organization id');
 
-      const orgFound = await Organization.findOne({ _id }, (err, org) => { if (err) console.error(err) });
+      const orgFound = await Organization.findOne({ _id }, (err, org) => {
+        if (err) console.error(err);
+      });
 
       return orgFound;
-    },
+    }
   },
   Mutation: {
     createOrganization: async (root, { name, logoUrl }, { user }) => {
@@ -25,12 +26,15 @@ const OrganizationResolver = {
         name,
         createdById,
         createdAt,
-        logoUrl,
+        logoUrl
       });
 
-      await User.update({ _id: user._id }, { $set: { organizationId: organization._id }});
+      await User.update(
+        { _id: user._id },
+        { $set: { organizationId: organization._id } }
+      );
 
-      return organization
+      return organization;
     },
     inviteToOrganization: async (root, { email }, { user }) => {
       if (!user._id) throw new Error('Must be logged in');
@@ -38,7 +42,7 @@ const OrganizationResolver = {
 
       const inviteUser = await User.findOne({ email });
 
-      if(!inviteUser) throw new Error('Must be a valid user');
+      if (!inviteUser) throw new Error('Must be a valid user');
 
       const { organizationId } = await User.findOne({ _id: user._id });
       const { name } = await Organization.findOne({ _id: organizationId });
@@ -54,9 +58,9 @@ const OrganizationResolver = {
 
       transporter.sendMail(message, (error, response) => {
         if (error) {
-            console.log(error);
+          console.log(error);
         } else {
-            console.log("Message sent: " + response);
+          console.log('Message sent: ' + response);
         }
       });
 
@@ -69,11 +73,11 @@ const OrganizationResolver = {
 
       const inviteUser = await User.findOne({ email });
 
-      if(!inviteUser) throw new Error('Must be a valid user');
+      if (!inviteUser) throw new Error('Must be a valid user');
 
       const { name } = await Organization.findOne({ _id: organizationId });
 
-      await User.update({ _id: user._id }, { $set: { organizationId }});
+      await User.update({ _id: user._id }, { $set: { organizationId } });
 
       const message = {
         from: 'sender@server.com',
@@ -85,15 +89,15 @@ const OrganizationResolver = {
 
       transporter.sendMail(message, (error, response) => {
         if (error) {
-            console.log(error);
+          console.log(error);
         } else {
-            console.log("Message sent: " + response);
+          console.log('Message sent: ' + response);
         }
       });
 
       return user;
     }
   }
-}
+};
 
 export default OrganizationResolver;
