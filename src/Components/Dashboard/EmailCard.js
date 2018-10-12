@@ -104,7 +104,8 @@ class EmailCard extends Component {
   render() {
     const styles = {
       card: {
-        marginTop: 20
+        marginTop: 20,
+        position: 'relative'
       },
       heading: {
         marginBottom: 20
@@ -113,9 +114,6 @@ class EmailCard extends Component {
         position: 'absolute',
         left: 20,
         top: 20
-      },
-      card: {
-        position: 'relative'
       },
       image: {
         marginLeft: -24,

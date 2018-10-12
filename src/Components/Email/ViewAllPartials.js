@@ -38,7 +38,6 @@ class ViewAllPartials extends Component {
       this.props.getEmailPartialsCount.getEmailPartialsCount;
 
     let renderEmailPartials;
-    let renderPagination;
 
     if (emailPartials) {
       renderEmailPartials = emailPartials.map(({ title, _id }) => {

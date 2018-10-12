@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
