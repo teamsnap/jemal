@@ -3,7 +3,7 @@ import dotenv from 'dotenv-flow';
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-dotenv.config()
+dotenv.config();
 
 const options = {
   service: process.env.NODEMAILER_SERVICE,
