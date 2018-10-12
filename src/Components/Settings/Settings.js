@@ -109,7 +109,7 @@ class Settings extends Component {
                                               <div className="field-line">
                                                 <TextField
                                                   name="org-name"
-                                                  placeholder={`Current Org Name: ${user && user.organization.name || 'none'}`}
+                                                  placeholder={`Current Org Name: ${user && user.organization && user.organization.name || 'none'}`}
                                                   fullWidth
                                                   onChange={this.handleChange}
                                                 />
@@ -117,7 +117,7 @@ class Settings extends Component {
                                             <div className="field-line">
                                               <TextField
                                                 name="org-id"
-                                                placeholder={`Current Org id: ${user && user.organization._id || 'none'}`}
+                                                placeholder={`Current Org id: ${user && user.organization && user.organization._id || 'none'}`}
                                                 fullWidth
                                                 onChange={this.handleChange}
                                               />

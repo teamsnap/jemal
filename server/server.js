@@ -37,11 +37,11 @@ const server = new ApolloServer({
 app.use(express.static(path.resolve(__dirname, '../build')))
 app.use('/emails', express.static(path.join(__dirname, 'emails')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
-app.use('*', express.static(path.join(__dirname, '../build')));
+app.use(express.static(path.join(__dirname, '../build')));
 
 // All remaining requests return the React app, so it can handle routing.
 app.get('*', (request, response) => {
-  response.sendFile(path.resolve(__dirname, '../build', 'index.html'))
+  response.sendFile(path.join(__dirname, '../build/index.html'))
 })
 
 app.use(

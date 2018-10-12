@@ -36,6 +36,7 @@
     "node-fetch": "2.2.0",
     "nodemailer": "4.6.8",
     "normalize.css": "^8.0.0",
+    "pkg": "^4.3.4",
     "react": "^16.3.2",
     "react-apollo": "^2.1.0-beta.3",
     "react-codemirror2": "^5.0.1",
@@ -51,10 +52,10 @@
       "env"
     ]
   },
-  "homepage": "./",
+  "homepage": "/",
   "main": "./client/src/index.js",
   "scripts": {
-    "start": "nodemon ./server/server.js --exec babel-node",
+    "start": "babel-node ./server/server.js",
     "develop": "nf start -p 4000",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

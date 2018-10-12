@@ -1,0 +1,10 @@
+.git
+.idea
+node_modules
+build
+emails
+server/emails
+.env.development.local
+app.gif
+*.md
+Procfile
