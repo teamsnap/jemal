@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
-import { Link } from 'react-router-dom';
 
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-
-import EmailCard from '../Components/Dashboard/EmailCard';
+import OrgSetup from '../Components/Dashboard/OrgSetup';
+import MainDashboard from '../Components/Dashboard/MainDashboard';
 import Loading from '../Components/Loading/Loading';
 
 class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      success: '',
+      errorMessage: ''
+    };
+    // this.handleChange = this.handleChange.bind(this);
+  }
+
   render() {
     const styles = {
       root: {
@@ -38,94 +43,21 @@ class Dashboard extends Component {
       }
     };
 
-    if (this.props.getAllEmails.loading) return <Loading />;
-    const user =
-      this.props.currentUser.currentUser && this.props.currentUser.currentUser;
-    const emails =
-      this.props.getAllEmails && this.props.getAllEmails.getAllEmails;
+    const { getAllEmails, currentUser } = this.props;
 
-    console.log(user);
+    if (getAllEmails.loading) return <Loading />;
+    if (currentUser.loading) return <Loading />;
 
-    let renderEmails;
-
-    if (emails) {
-      renderEmails = emails.map(
-        ({
-          title,
-          isDraft,
-          hasBeenSent,
-          isApproved,
-          updatedAt,
-          createdAt,
-          updatedById,
-          createdById,
-          screenshot,
-          _id,
-          favorited
-        }) => {
-          return (
-            <EmailCard
-              key={_id}
-              title={title}
-              _id={_id}
-              link={`/email/edit/${_id}`}
-              email={true}
-              isDraft={isDraft}
-              hasBeenSent={hasBeenSent}
-              isApproved={isApproved}
-              updatedAt={updatedAt}
-              createdAt={createdAt}
-              updatedById={updatedById}
-              createdById={createdById}
-              image={screenshot}
-              favorited={favorited}
-            />
-          );
-        }
-      );
-    }
+    const user = currentUser && currentUser.currentUser;
+    const emails = getAllEmails && getAllEmails.getAllEmails;
 
     return (
       <div style={styles.root}>
-        <Grid container spacing={24}>
-          <Grid item sm={12}>
-            <Paper style={styles.paper}>
-              <Typography
-                variant="display1"
-                component="h1"
-                style={styles.heading}
-              >
-                Welcome {user && user.firstname}
-              </Typography>
-              <Paper style={styles.paper}>
-                <Grid container spacing={24}>
-                  <Grid item sm={8}>
-                    <Typography variant="title" style={styles.heading}>
-                      Recent emails
-                    </Typography>
-                  </Grid>
-                  <Grid item sm={4}>
-                    <div style={styles.flexEnd}>
-                      <Link to="/email/create" style={styles.button}>
-                        <Button variant="raised" color="primary" size="large">
-                          New email
-                        </Button>
-                      </Link>
-                      <Link to="/email/view/page/1" style={styles.button}>
-                        <Button variant="raised" size="large">
-                          View all emails
-                        </Button>
-                      </Link>
-                    </div>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={24}>
-                  {renderEmails}
-                </Grid>
-              </Paper>
-            </Paper>
-          </Grid>
-        </Grid>
+        {user && !user.organizationId ? (
+          <OrgSetup user={user} />
+        ) : (
+          <MainDashboard user={user} emails={emails} />
+        )}
       </div>
     );
   }

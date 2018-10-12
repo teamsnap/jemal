@@ -8,9 +8,9 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Select from 'material-ui/Select';
-import Input, { InputLabel } from 'material-ui/Input';
+import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import { FormControl } from 'material-ui/Form';
 
 import Loading from '../../Components/Loading/Loading';
 
@@ -21,7 +21,6 @@ class CreateEmailView extends Component {
       title: '',
       mjmlSource:
         '<mjml>\n   <mj-body >\n       <mj-section >\n         <mj-column>\n               <mj-text>Empty Templates</mj-text >\n          </mj-column>\n      </mj-section>\n     </mj-body>\n</mjml >\n',
-      baseTemplate: false,
       duplicatedFrom: '',
       folderPath: '',
       favorited: false,
@@ -29,7 +28,7 @@ class CreateEmailView extends Component {
       hasBeenSent: false,
       isDraft: true,
       errorMessage: '',
-      baseTemplate: '',
+      baseTemplate: false,
       baseTemplateTitle: ''
     };
     this.createEmail = this.createEmail.bind(this);
