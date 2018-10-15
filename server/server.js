@@ -40,7 +40,8 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '../build')));
 
 // All remaining requests return the React app, so it can handle routing.
-app.get('*', (request, response) => {
+app.get('*', (request, response, next) => {
+  if (request.originalUrl === '/graphql') return next();
   response.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
