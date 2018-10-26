@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 
 import { renderEmail, saveTemplatePartial } from '../../helpers';
-import { Email } from '../models';
+import { Email, Organization, User } from '../models';
 
 // With async/await:
 async function file(f) {
@@ -115,8 +115,6 @@ const EmailResolver = {
       if (!user) throw new Error('Must be logged in');
       if (!_id) throw new Error('Must have organization id');
 
-      console.log(_id, baseTemplate);
-
       const emails = await Email.find(
         { organizationId: _id, baseTemplate },
         (err, org) => {
@@ -129,10 +127,13 @@ const EmailResolver = {
     getCurrentEmail: async (root, { _id }, { user }) => {
       if (!user) throw new Error('Must be logged in');
       if (!_id) throw new Error('Must have email id');
-
-      const emailFound = await Email.findOne({ _id }, (err, org) => {
-        if (err) console.error(err);
-      });
+      
+      const userId = user._id;
+      const userFound = await User.findOne({ _id: userId });
+      const emailFound = await Email.findOne({ _id });
+      
+      // Throw error if userOrg id doesn't match org id of email
+      if (userFound.organizationId !== emailFound.organizationId) throw new Error('Must be associated with an organization');
 
       return emailFound;
     }
