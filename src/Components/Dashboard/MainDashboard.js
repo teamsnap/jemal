@@ -63,13 +63,6 @@ class MainDashboard extends Component {
               _id={_id}
               link={`/email/edit/${_id}`}
               email={true}
-              isDraft={isDraft}
-              hasBeenSent={hasBeenSent}
-              isApproved={isApproved}
-              updatedAt={updatedAt}
-              createdAt={createdAt}
-              updatedById={updatedById}
-              createdById={createdById}
               image={screenshot}
               favorited={favorited}
             />
@@ -91,12 +84,12 @@ class MainDashboard extends Component {
             </Typography>
             <Paper style={styles.paper}>
               <Grid container spacing={24}>
-                <Grid item sm={8}>
+                <Grid item sm={6}>
                   <Typography variant="title" style={styles.heading}>
                     Recent emails
                   </Typography>
                 </Grid>
-                <Grid item sm={4}>
+                <Grid item sm={6}>
                   <div style={styles.flexEnd}>
                     <Link to="/email/create" style={styles.button}>
                       <Button variant="raised" color="primary" size="large">

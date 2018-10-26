@@ -15,7 +15,7 @@ import Switch from 'material-ui/Switch';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import 'codemirror/mode/xml/xml';
-import 'codemirror/mode/javascript/javascript';
+import { countColumn } from 'codemirror';
 
 import Loading from '../../Components/Loading/Loading';
 
@@ -394,7 +394,8 @@ class EditEmailView extends Component {
       },
       iframe: {
         width: '100%',
-        height: '80vh'
+        height: '80vh',
+        border: 'none'
       }
     };
 
@@ -412,12 +413,14 @@ class EditEmailView extends Component {
                 <Grid item sm={12}>
                   <Paper style={styles.paper}>
                     <Grid container spacing={24}>
-                      <Grid item sm={2}>
-                        <Typography variant="display1" component="h1">
+                      <Grid item sm={4}>
+                        <Typography
+                          variant="title"
+                          component="h4"
+                          style={{ marginBottom: 20 }}
+                        >
                           Email Editor
                         </Typography>
-                      </Grid>
-                      <Grid item sm={3}>
                         <TextField
                           name="title"
                           placeholder="title"
@@ -426,7 +429,16 @@ class EditEmailView extends Component {
                           value={this.state.title || ''}
                         />
                       </Grid>
-                      <Grid item sm={4}>
+                      <Grid
+                        item
+                        sm={4}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexWrap: 'wrap'
+                        }}
+                      >
                         <FormControlLabel
                           control={
                             <Switch
@@ -487,7 +499,15 @@ class EditEmailView extends Component {
                           />
                         )}
                       </Grid>
-                      <Grid item sm={3}>
+                      <Grid
+                        item
+                        sm={4}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'flex-end'
+                        }}
+                      >
                         {this.state.copied ? (
                           <span
                             onClick={() => this.setState({ copied: false })}
@@ -516,21 +536,26 @@ class EditEmailView extends Component {
                           text={email.urlPreview}
                           onCopy={() => this.setState({ copied: true })}
                         >
-                          <Button variant="raised" color="primary" size="small">
+                          <Button
+                            color="primary"
+                            size="small"
+                            style={{ marginLeft: 10 }}
+                          >
                             Copy HTML
                           </Button>
                         </CopyToClipboard>
                         <Button
-                          variant="raised"
                           size="small"
                           onClick={this.duplicate}
+                          style={{ marginLeft: 10 }}
                         >
                           Duplicate
                         </Button>
                         <Button
-                          variant="raised"
                           size="small"
+                          color="secondary"
                           onClick={this.delete}
+                          style={{ marginLeft: 10 }}
                         >
                           Delete
                         </Button>
@@ -541,7 +566,7 @@ class EditEmailView extends Component {
               </Grid>
             </div>
             <Grid container spacing={24}>
-              <Grid item sm={6}>
+              <Grid item sm={6} style={{ paddingLeft: 0, paddingRight: 0 }}>
                 <CodeMirror
                   value={this.state.mjmlSource}
                   options={{
@@ -554,15 +579,25 @@ class EditEmailView extends Component {
                     this.setState({
                       mjmlSource: value
                     });
+                    console.log(value);
                   }}
                   onChange={(editor, data, value) => {
                     this.setState({
                       mjmlSource: value
                     });
                   }}
+                  onRenderLine={(editor, cm, line) => {
+                    const charWidth = editor.defaultCharWidth(),
+                      basePadding = 4;
+                    const off =
+                      countColumn(cm.text, null, editor.options.tabSize) *
+                      charWidth;
+                    line.style.textIndent = '-' + off + 'px';
+                    line.style.paddingLeft = basePadding + off + 'px';
+                  }}
                 />
               </Grid>
-              <Grid item sm={6} style={{ paddingRight: 40 }}>
+              <Grid item sm={6} style={{ paddingLeft: 0, paddingRight: 0 }}>
                 <Iframe
                   style={styles.iframe}
                   content={email.urlPreview}
