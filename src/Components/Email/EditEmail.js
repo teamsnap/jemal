@@ -316,9 +316,8 @@ class EditEmailView extends Component {
 
   componentWillReceiveProps(newProps) {
     if (!newProps.loading) {
-
       if (newProps.getCurrentEmail.error) {
-        console.log(newProps.getCurrentEmail.error)
+        console.log(newProps.getCurrentEmail.error);
         this.setState({
           errorMessage: newProps.getCurrentEmail.error.message.split(':')[1]
         });
@@ -338,7 +337,7 @@ class EditEmailView extends Component {
       } =
         !newProps.getCurrentEmail.loading &&
         newProps.getCurrentEmail.getCurrentEmail;
-        
+
       this.setState({
         title,
         mjmlSource,
@@ -406,7 +405,7 @@ class EditEmailView extends Component {
 
     return (
       <React.Fragment>
-      {!this.state.errorMessage ? (
+        {!this.state.errorMessage ? (
           <div style={styles.root}>
             <div style={styles.container}>
               <Grid container spacing={24}>
@@ -416,7 +415,7 @@ class EditEmailView extends Component {
                       <Grid item sm={2}>
                         <Typography variant="display1" component="h1">
                           Email Editor
-                    </Typography>
+                        </Typography>
                       </Grid>
                       <Grid item sm={3}>
                         <TextField
@@ -482,11 +481,11 @@ class EditEmailView extends Component {
                             onClick={this.toggleFavorite(true)}
                           />
                         ) : (
-                            <HeartOutlineIcon
-                              color="secondary"
-                              onClick={this.toggleFavorite(false)}
-                            />
-                          )}
+                          <HeartOutlineIcon
+                            color="secondary"
+                            onClick={this.toggleFavorite(false)}
+                          />
+                        )}
                       </Grid>
                       <Grid item sm={3}>
                         {this.state.copied ? (
@@ -503,7 +502,7 @@ class EditEmailView extends Component {
                             }}
                           >
                             Copied. [Close]
-                      </span>
+                          </span>
                         ) : null}
                         <Button
                           variant="raised"
@@ -512,14 +511,14 @@ class EditEmailView extends Component {
                           onClick={this.editEmail}
                         >
                           Save
-                    </Button>
+                        </Button>
                         <CopyToClipboard
                           text={email.urlPreview}
                           onCopy={() => this.setState({ copied: true })}
                         >
                           <Button variant="raised" color="primary" size="small">
                             Copy HTML
-                      </Button>
+                          </Button>
                         </CopyToClipboard>
                         <Button
                           variant="raised"
@@ -527,10 +526,14 @@ class EditEmailView extends Component {
                           onClick={this.duplicate}
                         >
                           Duplicate
-                    </Button>
-                        <Button variant="raised" size="small" onClick={this.delete}>
+                        </Button>
+                        <Button
+                          variant="raised"
+                          size="small"
+                          onClick={this.delete}
+                        >
                           Delete
-                    </Button>
+                        </Button>
                       </Grid>
                     </Grid>
                   </Paper>
@@ -568,22 +571,34 @@ class EditEmailView extends Component {
               </Grid>
             </Grid>
           </div>
-      ) : (
-            <div style={styles.root}>
-              <div style={styles.container}>
-                <Grid container spacing={24}>
-                  <Grid item sm={12}>
+        ) : (
+          <div style={styles.root}>
+            <div style={styles.container}>
+              <Grid container spacing={24}>
+                <Grid item sm={12}>
+                  <Paper style={styles.paper}>
                     <Paper style={styles.paper}>
-                      <Paper style={styles.paper}>
-                        <Typography variant="display1" component="h1" style={{ paddingBottom: 20 }}>Error: {this.state.errorMessage}</Typography>
-                        <Button variant="raised" size="small" onClick={this.goBack}>Go back</Button>
-                      </Paper>
+                      <Typography
+                        variant="display1"
+                        component="h1"
+                        style={{ paddingBottom: 20 }}
+                      >
+                        Error: {this.state.errorMessage}
+                      </Typography>
+                      <Button
+                        variant="raised"
+                        size="small"
+                        onClick={this.goBack}
+                      >
+                        Go back
+                      </Button>
                     </Paper>
-                  </Grid>
+                  </Paper>
                 </Grid>
-              </div>
+              </Grid>
             </div>
-      )}
+          </div>
+        )}
       </React.Fragment>
     );
   }
