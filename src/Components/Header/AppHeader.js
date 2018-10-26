@@ -4,6 +4,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
+import Tooltip, { ClickAwayListener } from 'material-ui/Tooltip';
 import { withRouter } from 'react-router-dom';
 
 import './AppHeader.css';
@@ -15,11 +16,22 @@ class AppHeader extends Component {
     super(props);
     this.logoutUser = this.logoutUser.bind(this);
     this.loginPush = this.loginPush.bind(this);
+    this.handleTooltipClose = this.handleTooltipClose.bind(this);
+    this.handleTooltipOpen = this.handleTooltipOpen.bind(this);
 
     this.state = {
-      left: false
+      left: false,
+      open: false
     };
   }
+
+  handleTooltipClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleTooltipOpen = () => {
+    this.setState({ open: true });
+  };
 
   loginPush() {
     this.props.history.push('/login');
@@ -75,9 +87,14 @@ class AppHeader extends Component {
             )}
 
             <Typography variant="title" color="inherit" style={styles.flex}>
-              <Link to="/" className="AppHeaderLogo">
-                MJML Template Engine
-              </Link>
+              <Tooltip
+                disableFocusListener
+                title="Jolly Email Management Application Laboratory"
+              >
+                <Link to="/" className="AppHeaderLogo">
+                  J.E.M.A.L
+                </Link>
+              </Tooltip>
             </Typography>
             {Auth.isUserAuthenticated() ? (
               <Button color="inherit" onClick={this.logoutUser}>
