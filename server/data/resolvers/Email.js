@@ -133,7 +133,7 @@ const EmailResolver = {
       const emailFound = await Email.findOne({ _id });
       
       // Throw error if userOrg id doesn't match org id of email
-      if (userFound.organizationId !== emailFound.organizationId) throw new Error('Must be associated with an organization');
+      if (userFound.organizationId !== emailFound.organizationId) throw new Error('Must be associated with a certain organization to view this email');
 
       return emailFound;
     }

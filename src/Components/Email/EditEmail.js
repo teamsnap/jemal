@@ -316,6 +316,15 @@ class EditEmailView extends Component {
 
   componentWillReceiveProps(newProps) {
     if (!newProps.loading) {
+
+      if (newProps.getCurrentEmail.error) {
+        console.log(newProps.getCurrentEmail.error)
+        this.setState({
+          errorMessage: newProps.getCurrentEmail.error.message.split(':')[1]
+        });
+        return;
+      }
+
       const {
         title,
         mjmlSource,
@@ -329,6 +338,7 @@ class EditEmailView extends Component {
       } =
         !newProps.getCurrentEmail.loading &&
         newProps.getCurrentEmail.getCurrentEmail;
+        
       this.setState({
         title,
         mjmlSource,
@@ -395,167 +405,186 @@ class EditEmailView extends Component {
       this.props.getCurrentEmail.getCurrentEmail;
 
     return (
-      <div style={styles.root}>
-        <div style={styles.container}>
-          <Grid container spacing={24}>
-            <Grid item sm={12}>
-              <Paper style={styles.paper}>
-                <Grid container spacing={24}>
-                  <Grid item sm={2}>
-                    <Typography variant="display1" component="h1">
-                      Email Editor
+      <React.Fragment>
+      {!this.state.errorMessage ? (
+          <div style={styles.root}>
+            <div style={styles.container}>
+              <Grid container spacing={24}>
+                <Grid item sm={12}>
+                  <Paper style={styles.paper}>
+                    <Grid container spacing={24}>
+                      <Grid item sm={2}>
+                        <Typography variant="display1" component="h1">
+                          Email Editor
                     </Typography>
-                  </Grid>
-                  <Grid item sm={3}>
-                    <TextField
-                      name="title"
-                      placeholder="title"
-                      fullWidth
-                      onChange={this.handleChange}
-                      value={this.state.title || ''}
-                    />
-                  </Grid>
-                  <Grid item sm={4}>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          value="isApproved"
-                          checked={this.state.isApproved}
-                          onChange={this.handleToggle('isApproved')}
-                          color="primary"
-                          name="isApproved"
+                      </Grid>
+                      <Grid item sm={3}>
+                        <TextField
+                          name="title"
+                          placeholder="title"
+                          fullWidth
+                          onChange={this.handleChange}
+                          value={this.state.title || ''}
                         />
-                      }
-                      label="Approved"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          value="isDraft"
-                          checked={this.state.isDraft}
-                          onChange={this.handleToggle('isDraft')}
-                          color="primary"
-                          name="isDraft"
+                      </Grid>
+                      <Grid item sm={4}>
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              value="isApproved"
+                              checked={this.state.isApproved}
+                              onChange={this.handleToggle('isApproved')}
+                              color="primary"
+                              name="isApproved"
+                            />
+                          }
+                          label="Approved"
                         />
-                      }
-                      label="Draft"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          value="hasBeenSent"
-                          checked={this.state.hasBeenSent}
-                          onChange={this.handleToggle('hasBeenSent')}
-                          color="primary"
-                          name="hasBeenSent"
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              value="isDraft"
+                              checked={this.state.isDraft}
+                              onChange={this.handleToggle('isDraft')}
+                              color="primary"
+                              name="isDraft"
+                            />
+                          }
+                          label="Draft"
                         />
-                      }
-                      label="Sent"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          value="baseTemplate"
-                          checked={this.state.baseTemplate}
-                          onChange={this.handleToggle('baseTemplate')}
-                          color="primary"
-                          name="baseTemplate"
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              value="hasBeenSent"
+                              checked={this.state.hasBeenSent}
+                              onChange={this.handleToggle('hasBeenSent')}
+                              color="primary"
+                              name="hasBeenSent"
+                            />
+                          }
+                          label="Sent"
                         />
-                      }
-                      label="Base Template"
-                    />
-                    {this.state.favorited ? (
-                      <HeartIcon
-                        color="primary"
-                        onClick={this.toggleFavorite(true)}
-                      />
-                    ) : (
-                      <HeartOutlineIcon
-                        color="secondary"
-                        onClick={this.toggleFavorite(false)}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item sm={3}>
-                    {this.state.copied ? (
-                      <span
-                        onClick={() => this.setState({ copied: false })}
-                        style={{
-                          position: 'absolute',
-                          backgroundColor: 'white',
-                          padding: 20,
-                          borderRadius: 8,
-                          right: 200,
-                          top: 20,
-                          zIndex: 100
-                        }}
-                      >
-                        Copied. [Close]
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              value="baseTemplate"
+                              checked={this.state.baseTemplate}
+                              onChange={this.handleToggle('baseTemplate')}
+                              color="primary"
+                              name="baseTemplate"
+                            />
+                          }
+                          label="Base Template"
+                        />
+                        {this.state.favorited ? (
+                          <HeartIcon
+                            color="primary"
+                            onClick={this.toggleFavorite(true)}
+                          />
+                        ) : (
+                            <HeartOutlineIcon
+                              color="secondary"
+                              onClick={this.toggleFavorite(false)}
+                            />
+                          )}
+                      </Grid>
+                      <Grid item sm={3}>
+                        {this.state.copied ? (
+                          <span
+                            onClick={() => this.setState({ copied: false })}
+                            style={{
+                              position: 'absolute',
+                              backgroundColor: 'white',
+                              padding: 20,
+                              borderRadius: 8,
+                              right: 200,
+                              top: 20,
+                              zIndex: 100
+                            }}
+                          >
+                            Copied. [Close]
                       </span>
-                    ) : null}
-                    <Button
-                      variant="raised"
-                      color="primary"
-                      size="small"
-                      onClick={this.editEmail}
-                    >
-                      Save
+                        ) : null}
+                        <Button
+                          variant="raised"
+                          color="primary"
+                          size="small"
+                          onClick={this.editEmail}
+                        >
+                          Save
                     </Button>
-                    <CopyToClipboard
-                      text={email.urlPreview}
-                      onCopy={() => this.setState({ copied: true })}
-                    >
-                      <Button variant="raised" color="primary" size="small">
-                        Copy HTML
+                        <CopyToClipboard
+                          text={email.urlPreview}
+                          onCopy={() => this.setState({ copied: true })}
+                        >
+                          <Button variant="raised" color="primary" size="small">
+                            Copy HTML
                       </Button>
-                    </CopyToClipboard>
-                    <Button
-                      variant="raised"
-                      size="small"
-                      onClick={this.duplicate}
-                    >
-                      Duplicate
+                        </CopyToClipboard>
+                        <Button
+                          variant="raised"
+                          size="small"
+                          onClick={this.duplicate}
+                        >
+                          Duplicate
                     </Button>
-                    <Button variant="raised" size="small" onClick={this.delete}>
-                      Delete
+                        <Button variant="raised" size="small" onClick={this.delete}>
+                          Delete
                     </Button>
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </div>
+            <Grid container spacing={24}>
+              <Grid item sm={6}>
+                <CodeMirror
+                  value={this.state.mjmlSource}
+                  options={{
+                    mode: 'xml',
+                    theme: 'material',
+                    lineNumbers: true,
+                    lineWrapping: true
+                  }}
+                  onBeforeChange={(editor, data, value) => {
+                    this.setState({
+                      mjmlSource: value
+                    });
+                  }}
+                  onChange={(editor, data, value) => {
+                    this.setState({
+                      mjmlSource: value
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item sm={6} style={{ paddingRight: 40 }}>
+                <Iframe
+                  style={styles.iframe}
+                  content={email.urlPreview}
+                  title={email.title}
+                />
+              </Grid>
+            </Grid>
+          </div>
+      ) : (
+            <div style={styles.root}>
+              <div style={styles.container}>
+                <Grid container spacing={24}>
+                  <Grid item sm={12}>
+                    <Paper style={styles.paper}>
+                      <Paper style={styles.paper}>
+                        <Typography variant="display1" component="h1" style={{ paddingBottom: 20 }}>Error: {this.state.errorMessage}</Typography>
+                        <Button variant="raised" size="small" onClick={this.goBack}>Go back</Button>
+                      </Paper>
+                    </Paper>
                   </Grid>
                 </Grid>
-              </Paper>
-            </Grid>
-          </Grid>
-        </div>
-        <Grid container spacing={24}>
-          <Grid item sm={6}>
-            <CodeMirror
-              value={this.state.mjmlSource}
-              options={{
-                mode: 'xml',
-                theme: 'material',
-                lineNumbers: true,
-                lineWrapping: true
-              }}
-              onBeforeChange={(editor, data, value) => {
-                this.setState({
-                  mjmlSource: value
-                });
-              }}
-              onChange={(editor, data, value) => {
-                this.setState({
-                  mjmlSource: value
-                });
-              }}
-            />
-          </Grid>
-          <Grid item sm={6} style={{ paddingRight: 40 }}>
-            <Iframe
-              style={styles.iframe}
-              content={email.urlPreview}
-              title={email.title}
-            />
-          </Grid>
-        </Grid>
-      </div>
+              </div>
+            </div>
+      )}
+      </React.Fragment>
     );
   }
 }
