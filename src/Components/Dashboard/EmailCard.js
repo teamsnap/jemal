@@ -22,7 +22,6 @@ class EmailCard extends Component {
   constructor(props) {
     super(props);
     this.duplicate = this.duplicate.bind(this);
-    this.delete = this.delete.bind(this);
 
     this.state = {
       errorMessage: ''
@@ -49,42 +48,6 @@ class EmailCard extends Component {
     } else {
       this.props
         .duplicateEmailPartial({
-          variables: {
-            _id: this.props._id
-          }
-        })
-        .then(data => {
-          this.props.client.resetStore();
-        })
-        .catch(error => {
-          console.error(error);
-          this.setState({
-            errorMessage: error.message.split(':')[1]
-          });
-        });
-    }
-  }
-
-  delete() {
-    if (this.props.email) {
-      this.props
-        .deleteEmail({
-          variables: {
-            _id: this.props._id
-          }
-        })
-        .then(data => {
-          this.props.client.resetStore();
-        })
-        .catch(error => {
-          console.error(error);
-          this.setState({
-            errorMessage: error.message.split(':')[1]
-          });
-        });
-    } else {
-      this.props
-        .deleteEmailPartial({
           variables: {
             _id: this.props._id
           }
@@ -129,13 +92,6 @@ class EmailCard extends Component {
     let renderImage;
 
     if (this.props.email) {
-      renderEmail = (
-        <Typography variant="body1">{`Email approved? ${
-          this.props.isApproved
-        } Email draft? ${this.props.isDraft} Email sent? ${
-          this.props.hasBeenSent
-        }`}</Typography>
-      );
       renderImage = (
         <Link to={this.props.link}>
           <img
@@ -160,9 +116,6 @@ class EmailCard extends Component {
                 {this.props.title}
               </Typography>
             </Link>
-            <Typography variant="body1">{`Updated on ${
-              this.props.updatedAt
-            } by ${this.props.updatedById}`}</Typography>
             {renderEmail}
           </CardContent>
           <CardActions>
@@ -173,9 +126,6 @@ class EmailCard extends Component {
             </Link>
             <Button variant="raised" size="small" onClick={this.duplicate}>
               Duplicate
-            </Button>
-            <Button variant="raised" size="small" onClick={this.delete}>
-              Delete
             </Button>
           </CardActions>
         </Card>
@@ -200,14 +150,6 @@ const duplicateEmailPartial = gql`
   }
 `;
 
-const deleteEmail = gql`
-  mutation deleteEmail($_id: String!) {
-    deleteEmail(_id: $_id) {
-      _id
-    }
-  }
-`;
-
 const deleteEmailPartial = gql`
   mutation deleteEmailPartial($_id: String!) {
     deleteEmailPartial(_id: $_id) {
@@ -222,9 +164,6 @@ export default compose(
   }),
   graphql(duplicateEmailPartial, {
     name: 'duplicateEmailPartial'
-  }),
-  graphql(deleteEmail, {
-    name: 'deleteEmail'
   }),
   graphql(deleteEmailPartial, {
     name: 'deleteEmailPartial'

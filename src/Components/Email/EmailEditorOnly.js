@@ -103,12 +103,10 @@ class EmailEditorOnly extends Component {
             <Grid item sm={12}>
               <Paper style={styles.paper}>
                 <Grid container spacing={24}>
-                  <Grid item sm={3}>
-                    <Typography variant="display1" component="h1">
+                  <Grid item sm={5}>
+                    <Typography variant="title" component="h4">
                       Email Partial Editor
                     </Typography>
-                  </Grid>
-                  <Grid item sm={3}>
                     <TextField
                       name="title"
                       placeholder="title"
@@ -117,28 +115,42 @@ class EmailEditorOnly extends Component {
                       value={this.state.title || ''}
                     />
                   </Grid>
-                  <Grid item sm={2}>
+                  <Grid item sm={4}>
                     <TextField
                       name="folderPath"
                       placeholder="folderPath"
                       fullWidth
                       onChange={this.handleChange}
                       value={this.state.folderPath || ''}
+                      style={{ marginTop: 23 }}
                     />
                   </Grid>
-                  <Grid item sm={3}>
+                  <Grid
+                    item
+                    sm={3}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end'
+                    }}
+                  >
                     <Button
                       variant="raised"
                       color="primary"
                       size="small"
                       onClick={this.editEmailPartial}
+                      style={{ marginLeft: 10 }}
                     >
                       Save
                     </Button>
-                    <Button variant="raised" size="small">
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      style={{ marginLeft: 10 }}
+                    >
                       Duplicate
                     </Button>
-                    <Button variant="raised" size="small">
+                    <Button variant="outlined" size="small" color="secondary">
                       Delete
                     </Button>
                   </Grid>
