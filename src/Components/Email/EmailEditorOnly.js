@@ -3,11 +3,12 @@ import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 
-import TextField from 'material-ui/TextField';
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/javascript/javascript';
@@ -104,7 +105,7 @@ class EmailEditorOnly extends Component {
               <Paper style={styles.paper}>
                 <Grid container spacing={24}>
                   <Grid item sm={5}>
-                    <Typography variant="title" component="h4">
+                    <Typography variant="h6" component="h4">
                       Email Partial Editor
                     </Typography>
                     <TextField
@@ -135,7 +136,7 @@ class EmailEditorOnly extends Component {
                     }}
                   >
                     <Button
-                      variant="raised"
+                      variant="contained"
                       color="primary"
                       size="small"
                       onClick={this.editEmailPartial}

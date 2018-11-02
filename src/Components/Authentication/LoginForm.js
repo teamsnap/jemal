@@ -3,10 +3,12 @@ import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
 import { Link } from 'react-router-dom';
 
-import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-import TextField from 'material-ui/TextField';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 
 class LoginForm extends Component {
   constructor(props) {
@@ -69,9 +71,7 @@ class LoginForm extends Component {
           <CardContent>
             <form action="/">
               {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
-              <Typography variant="headline" component="h1">
-                Login
-              </Typography>
+              <Typography variant="h5">Login</Typography>
               <div className="field-line">
                 <TextField
                   name="email"
@@ -93,7 +93,7 @@ class LoginForm extends Component {
           </CardContent>
           <CardActions>
             <Button
-              variant="raised"
+              variant="contained"
               color="primary"
               size="small"
               onClick={this.loginUser}
@@ -101,7 +101,7 @@ class LoginForm extends Component {
               Login
             </Button>
             <Link to="/signup">
-              <Button variant="raised" size="small">
+              <Button variant="contained" size="small">
                 New account
               </Button>
             </Link>

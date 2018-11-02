@@ -3,14 +3,16 @@ import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 
-import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-import TextField from 'material-ui/TextField';
-import Select from 'material-ui/Select';
-import { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl } from 'material-ui/Form';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
 
 import Loading from '../../Components/Loading/Loading';
 
@@ -130,7 +132,7 @@ class CreateEmailView extends Component {
         <Card style={styles.card}>
           <CardContent>
             <form action="/">
-              <Typography variant="headline" component="h1">
+              <Typography variant="h5">
                 Create a new email
               </Typography>
               <div style={styles.formControlPad}>
@@ -175,14 +177,14 @@ class CreateEmailView extends Component {
           </CardContent>
           <CardActions>
             <Button
-              variant="raised"
+              variant="contained"
               color="primary"
               size="small"
               onClick={this.createEmail}
             >
               Create
             </Button>
-            <Button variant="raised" size="small" onClick={this.goBack}>
+            <Button variant="contained" size="small" onClick={this.goBack}>
               Cancel
             </Button>
           </CardActions>

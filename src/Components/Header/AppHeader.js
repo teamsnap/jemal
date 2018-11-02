@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import Tooltip, { ClickAwayListener } from 'material-ui/Tooltip';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 import { withRouter } from 'react-router-dom';
 
 import './AppHeader.css';
@@ -86,7 +86,7 @@ class AppHeader extends Component {
               <div />
             )}
 
-            <Typography variant="title" color="inherit" style={styles.flex}>
+            <Typography variant="h6" color="inherit" style={styles.flex}>
               <Tooltip
                 disableFocusListener
                 title="Jolly Email Management Application Laboratory"

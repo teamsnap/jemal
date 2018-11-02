@@ -3,10 +3,12 @@ import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 
-import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-import TextField from 'material-ui/TextField';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 
 class EditOrganizationView extends Component {
   constructor(props) {
@@ -87,7 +89,7 @@ class EditOrganizationView extends Component {
           <CardContent>
             <form action="/">
               {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
-              <Typography variant="headline" component="h1">
+              <Typography variant="h5">
                 Edit your Organization
               </Typography>
               <div style={styles.formControlPad}>
@@ -111,10 +113,10 @@ class EditOrganizationView extends Component {
             </form>
           </CardContent>
           <CardActions>
-            <Button variant="raised" color="primary" size="small" disabled>
+            <Button variant="contained" color="primary" size="small" disabled>
               Save
             </Button>
-            <Button variant="raised" size="small" onClick={this.goBack}>
+            <Button variant="contained" size="small" onClick={this.goBack}>
               Cancel
             </Button>
           </CardActions>

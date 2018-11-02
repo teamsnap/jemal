@@ -3,10 +3,10 @@ import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
 
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 import EmailCard from '../../Components/Dashboard/EmailCard';
 import Pagination from '../../Components/Pagination/Pagination';
@@ -57,12 +57,12 @@ class ViewAllPartials extends Component {
         <Grid container spacing={24}>
           <Grid item sm={12}>
             <Paper style={styles.paper}>
-              <Typography variant="display1" component="h1">
+              <Typography variant="h4">
                 Viewing all email partials
               </Typography>
               <Paper style={styles.paper}>
                 <Link to="/email/partial/create">
-                  <Button variant="raised" color="primary" size="large">
+                  <Button variant="contained" color="primary" size="large">
                     New email partial
                   </Button>
                 </Link>

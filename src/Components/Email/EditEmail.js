@@ -4,14 +4,15 @@ import { withApollo, graphql, compose } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 
 import './EditEmail.css';
-import TextField from 'material-ui/TextField';
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import SvgIcon from 'material-ui/SvgIcon';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import { FormControlLabel } from 'material-ui/Form';
-import Switch from 'material-ui/Switch';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import SvgIcon from '@material-ui/core/SvgIcon';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import 'codemirror/mode/xml/xml';
@@ -415,7 +416,7 @@ class EditEmailView extends Component {
                     <Grid container spacing={24}>
                       <Grid item sm={4}>
                         <Typography
-                          variant="title"
+                          variant="h6"
                           component="h4"
                           style={{ marginBottom: 20 }}
                         >
@@ -525,7 +526,7 @@ class EditEmailView extends Component {
                           </span>
                         ) : null}
                         <Button
-                          variant="raised"
+                          variant="contained"
                           color="primary"
                           size="small"
                           onClick={this.editEmail}
@@ -614,14 +615,14 @@ class EditEmailView extends Component {
                   <Paper style={styles.paper}>
                     <Paper style={styles.paper}>
                       <Typography
-                        variant="display1"
-                        component="h1"
+                        variant="h4"
+                       
                         style={{ paddingBottom: 20 }}
                       >
                         Error: {this.state.errorMessage}
                       </Typography>
                       <Button
-                        variant="raised"
+                        variant="contained"
                         size="small"
                         onClick={this.goBack}
                       >

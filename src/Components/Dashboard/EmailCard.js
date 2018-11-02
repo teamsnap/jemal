@@ -3,11 +3,13 @@ import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
 import { Link } from 'react-router-dom';
 
-import SvgIcon from 'material-ui/SvgIcon';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import Grid from 'material-ui/Grid';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
+import SvgIcon from '@material-ui/core/SvgIcon';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 function HeartIcon(props) {
   return (
@@ -112,7 +114,7 @@ class EmailCard extends Component {
             ) : null}
             {renderImage}
             <Link to={this.props.link}>
-              <Typography variant="title" style={styles.heading}>
+              <Typography variant="h6" style={styles.heading}>
                 {this.props.title}
               </Typography>
             </Link>
@@ -120,11 +122,11 @@ class EmailCard extends Component {
           </CardContent>
           <CardActions>
             <Link to={this.props.link}>
-              <Button variant="raised" color="primary" size="small">
+              <Button variant="contained" color="primary" size="small">
                 Edit
               </Button>
             </Link>
-            <Button variant="raised" size="small" onClick={this.duplicate}>
+            <Button variant="contained" size="small" onClick={this.duplicate}>
               Duplicate
             </Button>
           </CardActions>

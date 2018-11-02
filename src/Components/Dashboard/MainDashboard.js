@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { withApollo } from 'react-apollo';
 import { Link } from 'react-router-dom';
 
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 import EmailCard from './EmailCard';
 
@@ -75,29 +75,25 @@ class MainDashboard extends Component {
       <Grid container spacing={24}>
         <Grid item sm={12}>
           <Paper style={styles.paper}>
-            <Typography
-              variant="display1"
-              component="h1"
-              style={styles.heading}
-            >
+            <Typography variant="h4" style={styles.heading}>
               Welcome {user && user.firstname}
             </Typography>
             <Paper style={styles.paper}>
               <Grid container spacing={24}>
                 <Grid item sm={6}>
-                  <Typography variant="title" style={styles.heading}>
+                  <Typography variant="h6" style={styles.heading}>
                     Recent emails
                   </Typography>
                 </Grid>
                 <Grid item sm={6}>
                   <div style={styles.flexEnd}>
                     <Link to="/email/create" style={styles.button}>
-                      <Button variant="raised" color="primary" size="large">
+                      <Button variant="contained" color="primary" size="large">
                         New email
                       </Button>
                     </Link>
                     <Link to="/email/view/page/1" style={styles.button}>
-                      <Button variant="raised" size="large">
+                      <Button variant="contained" size="large">
                         View all emails
                       </Button>
                     </Link>
