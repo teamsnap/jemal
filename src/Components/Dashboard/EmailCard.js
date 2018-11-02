@@ -114,7 +114,7 @@ class EmailCard extends Component {
             ) : null}
             {renderImage}
             <Link to={this.props.link}>
-              <Typography variant="title" style={styles.heading}>
+              <Typography variant="h6" style={styles.heading}>
                 {this.props.title}
               </Typography>
             </Link>
@@ -122,11 +122,11 @@ class EmailCard extends Component {
           </CardContent>
           <CardActions>
             <Link to={this.props.link}>
-              <Button variant="raised" color="primary" size="small">
+              <Button variant="contained" color="primary" size="small">
                 Edit
               </Button>
             </Link>
-            <Button variant="raised" size="small" onClick={this.duplicate}>
+            <Button variant="contained" size="small" onClick={this.duplicate}>
               Duplicate
             </Button>
           </CardActions>

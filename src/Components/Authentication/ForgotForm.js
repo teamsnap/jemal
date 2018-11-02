@@ -101,9 +101,7 @@ class ForgotForm extends Component {
               <form action="/">
                 {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
                 {this.state.success && <p>{this.state.success}</p>}
-                <Typography variant="headline" component="h1">
-                  Change your password
-                </Typography>
+                <Typography variant="h5">Change your password</Typography>
                 <div className="field-line">
                   <TextField
                     name="email"
@@ -132,7 +130,7 @@ class ForgotForm extends Component {
             </CardContent>
             <CardActions>
               <Button
-                variant="raised"
+                variant="contained"
                 color="primary"
                 size="small"
                 onClick={this.changePassword}
@@ -147,9 +145,7 @@ class ForgotForm extends Component {
               <form action="/">
                 {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
                 {this.state.success && <p>{this.state.success}</p>}
-                <Typography variant="headline" component="h1">
-                  Request password reset
-                </Typography>
+                <Typography variant="h5">Request password reset</Typography>
                 <div className="field-line">
                   <TextField
                     name="email"
@@ -162,7 +158,7 @@ class ForgotForm extends Component {
             </CardContent>
             <CardActions>
               <Button
-                variant="raised"
+                variant="contained"
                 color="primary"
                 size="small"
                 onClick={this.requestResetPassword}
@@ -170,7 +166,7 @@ class ForgotForm extends Component {
                 Send me password reset link
               </Button>
               <Link to="/login">
-                <Button variant="raised" size="small">
+                <Button variant="contained" size="small">
                   Log in
                 </Button>
               </Link>

@@ -71,7 +71,7 @@ class InviteToOrganizationView extends Component {
             <form action="/">
               {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
               {this.state.success && <p>{this.state.success}</p>}
-              <Typography variant="headline" component="h1">
+              <Typography variant="h5">
                 Invite to Organization
               </Typography>
               <div style={styles.formControlPad}>
@@ -86,14 +86,14 @@ class InviteToOrganizationView extends Component {
           </CardContent>
           <CardActions>
             <Button
-              variant="raised"
+              variant="contained"
               color="primary"
               size="small"
               onClick={this.inviteToOrganization}
             >
               Invite
             </Button>
-            <Button variant="raised" size="small" onClick={this.goBack}>
+            <Button variant="contained" size="small" onClick={this.goBack}>
               Cancel
             </Button>
           </CardActions>

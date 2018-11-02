@@ -416,7 +416,7 @@ class EditEmailView extends Component {
                     <Grid container spacing={24}>
                       <Grid item sm={4}>
                         <Typography
-                          variant="title"
+                          variant="h6"
                           component="h4"
                           style={{ marginBottom: 20 }}
                         >
@@ -526,7 +526,7 @@ class EditEmailView extends Component {
                           </span>
                         ) : null}
                         <Button
-                          variant="raised"
+                          variant="contained"
                           color="primary"
                           size="small"
                           onClick={this.editEmail}
@@ -615,14 +615,14 @@ class EditEmailView extends Component {
                   <Paper style={styles.paper}>
                     <Paper style={styles.paper}>
                       <Typography
-                        variant="display1"
-                        component="h1"
+                        variant="h4"
+                       
                         style={{ paddingBottom: 20 }}
                       >
                         Error: {this.state.errorMessage}
                       </Typography>
                       <Button
-                        variant="raised"
+                        variant="contained"
                         size="small"
                         onClick={this.goBack}
                       >

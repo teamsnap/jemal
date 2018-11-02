@@ -105,7 +105,7 @@ class EmailEditorOnly extends Component {
               <Paper style={styles.paper}>
                 <Grid container spacing={24}>
                   <Grid item sm={5}>
-                    <Typography variant="title" component="h4">
+                    <Typography variant="h6" component="h4">
                       Email Partial Editor
                     </Typography>
                     <TextField
@@ -136,7 +136,7 @@ class EmailEditorOnly extends Component {
                     }}
                   >
                     <Button
-                      variant="raised"
+                      variant="contained"
                       color="primary"
                       size="small"
                       onClick={this.editEmailPartial}

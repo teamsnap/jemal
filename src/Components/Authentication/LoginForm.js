@@ -71,9 +71,7 @@ class LoginForm extends Component {
           <CardContent>
             <form action="/">
               {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
-              <Typography variant="headline" component="h1">
-                Login
-              </Typography>
+              <Typography variant="h5">Login</Typography>
               <div className="field-line">
                 <TextField
                   name="email"
@@ -95,7 +93,7 @@ class LoginForm extends Component {
           </CardContent>
           <CardActions>
             <Button
-              variant="raised"
+              variant="contained"
               color="primary"
               size="small"
               onClick={this.loginUser}
@@ -103,7 +101,7 @@ class LoginForm extends Component {
               Login
             </Button>
             <Link to="/signup">
-              <Button variant="raised" size="small">
+              <Button variant="contained" size="small">
                 New account
               </Button>
             </Link>

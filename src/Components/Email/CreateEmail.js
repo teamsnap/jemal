@@ -132,7 +132,7 @@ class CreateEmailView extends Component {
         <Card style={styles.card}>
           <CardContent>
             <form action="/">
-              <Typography variant="headline" component="h1">
+              <Typography variant="h5">
                 Create a new email
               </Typography>
               <div style={styles.formControlPad}>
@@ -177,14 +177,14 @@ class CreateEmailView extends Component {
           </CardContent>
           <CardActions>
             <Button
-              variant="raised"
+              variant="contained"
               color="primary"
               size="small"
               onClick={this.createEmail}
             >
               Create
             </Button>
-            <Button variant="raised" size="small" onClick={this.goBack}>
+            <Button variant="contained" size="small" onClick={this.goBack}>
               Cancel
             </Button>
           </CardActions>

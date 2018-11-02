@@ -75,9 +75,7 @@ class SignupForm extends Component {
         <Card style={styles.card}>
           <CardContent>
             <form action="/">
-              <Typography variant="headline" component="h1">
-                Create account
-              </Typography>
+              <Typography variant="h5">Create account</Typography>
               <div className="field-line">
                 <TextField
                   name="firstname"
@@ -115,7 +113,7 @@ class SignupForm extends Component {
           </CardContent>
           <CardActions>
             <Button
-              variant="raised"
+              variant="contained"
               color="primary"
               size="small"
               onClick={this.createUser}
@@ -123,7 +121,7 @@ class SignupForm extends Component {
               Create account
             </Button>
             <Link to="/login">
-              <Button variant="raised" size="small">
+              <Button variant="contained" size="small">
                 Log in
               </Button>
             </Link>

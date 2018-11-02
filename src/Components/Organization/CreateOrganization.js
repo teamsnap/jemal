@@ -75,7 +75,7 @@ class CreateOrganizationView extends Component {
           <CardContent>
             <form action="/">
               {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
-              <Typography variant="headline" component="h1">
+              <Typography variant="h5">
                 Create a new Organization
               </Typography>
               <div style={styles.formControlPad}>
@@ -98,14 +98,14 @@ class CreateOrganizationView extends Component {
           </CardContent>
           <CardActions>
             <Button
-              variant="raised"
+              variant="contained"
               color="primary"
               size="small"
               onClick={this.createOrganization}
             >
               Create
             </Button>
-            <Button variant="raised" size="small" onClick={this.goBack}>
+            <Button variant="contained" size="small" onClick={this.goBack}>
               Cancel
             </Button>
           </CardActions>

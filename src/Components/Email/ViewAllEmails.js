@@ -87,17 +87,13 @@ class ViewAllEmails extends Component {
         <Grid container spacing={24}>
           <Grid item sm={12}>
             <Paper style={styles.paper}>
-              <Typography
-                variant="display1"
-                component="h1"
-                style={styles.heading}
-              >
+              <Typography variant="h4" style={styles.heading}>
                 Viewing all emails
               </Typography>
               <Paper style={styles.paper}>
                 <div style={styles.flexEnd}>
                   <Link to="/email/create">
-                    <Button variant="raised" color="primary" size="large">
+                    <Button variant="contained" color="primary" size="large">
                       New email
                     </Button>
                   </Link>

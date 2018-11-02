@@ -96,16 +96,12 @@ class Settings extends Component {
         <Grid container spacing={24}>
           <Grid item sm={12}>
             <Paper style={styles.paper}>
-              <Typography
-                variant="display1"
-                component="h1"
-                style={styles.heading}
-              >
+              <Typography variant="h4" style={styles.heading}>
                 Settings
               </Typography>
               <Paper style={styles.paper}>
                 <div style={styles.flexEnd}>
-                  {/* <Link to="/email/create"><Button variant="raised" color="primary" size="large">New email</Button></Link> */}
+                  {/* <Link to="/email/create"><Button variant="contained" color="primary" size="large">New email</Button></Link> */}
                 </div>
                 <Grid container spacing={24}>
                   <Grid item md={6}>
@@ -116,7 +112,7 @@ class Settings extends Component {
                             <p>{this.state.errorMessage}</p>
                           )}
                           {this.state.success && <p>{this.state.success}</p>}
-                          <Typography variant="headline" component="h1">
+                          <Typography variant="h5">
                             Add or Change Organization
                           </Typography>
                           <div className="field-line">
@@ -145,7 +141,7 @@ class Settings extends Component {
                       </CardContent>
                       <CardActions>
                         <Button
-                          variant="raised"
+                          variant="contained"
                           color="primary"
                           size="small"
                           onClick={this.changePassword}
@@ -159,7 +155,7 @@ class Settings extends Component {
                     <Card style={styles.card}>
                       <CardContent>
                         <form action="/">
-                          <Typography variant="headline" component="h1">
+                          <Typography variant="h5">
                             Reset password
                           </Typography>
                           <div className="field-line">
@@ -184,7 +180,7 @@ class Settings extends Component {
                       </CardContent>
                       <CardActions>
                         <Button
-                          variant="raised"
+                          variant="contained"
                           color="primary"
                           size="small"
                           onClick={this.changePassword}

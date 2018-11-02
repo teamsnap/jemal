@@ -81,11 +81,7 @@ class OrgSetup extends Component {
       <Grid container spacing={24}>
         <Grid item sm={12}>
           <Paper style={styles.paper}>
-            <Typography
-              variant="display1"
-              component="h1"
-              style={styles.heading}
-            >
+            <Typography variant="h4" style={styles.heading}>
               Welcome {user && user.firstname}
             </Typography>
             <Paper style={styles.paper}>
@@ -97,7 +93,7 @@ class OrgSetup extends Component {
                         {this.state.errorMessage && (
                           <p>{this.state.errorMessage}</p>
                         )}
-                        <Typography variant="headline" component="h1">
+                        <Typography variant="h5">
                           Create a new Organization
                         </Typography>
                         <div style={styles.formControlPad}>
@@ -120,7 +116,7 @@ class OrgSetup extends Component {
                     </CardContent>
                     <CardActions>
                       <Button
-                        variant="raised"
+                        variant="contained"
                         color="primary"
                         size="small"
                         onClick={this.createOrganization}
@@ -133,7 +129,7 @@ class OrgSetup extends Component {
                 <Grid item sm={6}>
                   <Card style={styles.card}>
                     <CardContent>
-                      <Typography variant="headline" component="h1">
+                      <Typography variant="h5">
                         Existing organization
                       </Typography>
                       <Typography component="h3">

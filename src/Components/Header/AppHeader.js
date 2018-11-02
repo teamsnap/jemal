@@ -86,7 +86,7 @@ class AppHeader extends Component {
               <div />
             )}
 
-            <Typography variant="title" color="inherit" style={styles.flex}>
+            <Typography variant="h6" color="inherit" style={styles.flex}>
               <Tooltip
                 disableFocusListener
                 title="Jolly Email Management Application Laboratory"

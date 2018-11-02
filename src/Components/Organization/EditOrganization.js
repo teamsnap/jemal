@@ -89,7 +89,7 @@ class EditOrganizationView extends Component {
           <CardContent>
             <form action="/">
               {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
-              <Typography variant="headline" component="h1">
+              <Typography variant="h5">
                 Edit your Organization
               </Typography>
               <div style={styles.formControlPad}>
@@ -113,10 +113,10 @@ class EditOrganizationView extends Component {
             </form>
           </CardContent>
           <CardActions>
-            <Button variant="raised" color="primary" size="small" disabled>
+            <Button variant="contained" color="primary" size="small" disabled>
               Save
             </Button>
-            <Button variant="raised" size="small" onClick={this.goBack}>
+            <Button variant="contained" size="small" onClick={this.goBack}>
               Cancel
             </Button>
           </CardActions>
