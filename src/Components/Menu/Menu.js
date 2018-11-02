@@ -4,9 +4,9 @@ import { withApollo, graphql, compose } from 'react-apollo';
 import { NavLink, Link } from 'react-router-dom';
 
 import './Menu.css';
-import Drawer from 'material-ui/Drawer';
-import List from 'material-ui/List';
-import Divider from 'material-ui/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
 
 class Menu extends Component {
   state = {

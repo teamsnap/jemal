@@ -3,12 +3,14 @@ import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import TextField from '@material-ui/core/TextField';
 
 class OrgSetup extends Component {
   constructor(props) {

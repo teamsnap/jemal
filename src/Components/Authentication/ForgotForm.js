@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
-import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-import TextField from 'material-ui/TextField';
+
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 
 class ForgotForm extends Component {
   constructor(props) {

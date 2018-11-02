@@ -3,11 +3,13 @@ import gql from 'graphql-tag';
 import { withApollo, graphql, compose } from 'react-apollo';
 import { Link } from 'react-router-dom';
 
-import SvgIcon from 'material-ui/SvgIcon';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import Grid from 'material-ui/Grid';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
+import SvgIcon from '@material-ui/core/SvgIcon';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 function HeartIcon(props) {
   return (
