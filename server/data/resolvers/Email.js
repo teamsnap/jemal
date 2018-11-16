@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 
-import { renderEmail, saveTemplatePartial } from '../../helpers';
-import { Email, Organization, User } from '../models';
+import { renderEmail, renderEmailLarge } from '../../helpers';
+import { Email, User } from '../models';
 
 // With async/await:
 async function file(f) {
@@ -329,6 +329,22 @@ const EmailResolver = {
       await Email.findOneAndRemove({ _id });
 
       return { _id: '' };
+    },
+    createCurrentEmailScreenshot: async (root, { _id }, { user }) => {
+      if (!user._id) throw new Error('Must be logged in');
+      if (!_id) throw new Error('Must have email Id');
+
+      const templatePath = './server/emails/';
+      const { mjmlSource } = await Email.findOne({ _id });
+      const screenshotDownloadUrl = await renderEmailLarge(
+        `${_id}.mjml`,
+        mjmlSource
+      );
+
+      return {
+        _id,
+        screenshotDownloadUrl
+      };
     }
   }
 };

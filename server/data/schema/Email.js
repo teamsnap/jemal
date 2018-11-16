@@ -31,6 +31,7 @@ const Email = gql`
     userId: String
     urlPreview: String
     screenshot: String
+    screenshotDownloadUrl: String
   }
   type Count {
     count: String
@@ -64,6 +65,7 @@ const Email = gql`
     ): Email
     deleteEmail(_id: String!): Email
     duplicateEmail(_id: String!): Email
+    createCurrentEmailScreenshot(_id: String!): Email
   }
 `;
 
