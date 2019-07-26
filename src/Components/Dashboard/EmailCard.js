@@ -70,7 +70,8 @@ class EmailCard extends Component {
     const styles = {
       card: {
         marginTop: 20,
-        position: 'relative'
+        position: 'relative',
+        marginRight: 20
       },
       heading: {
         marginBottom: 20
