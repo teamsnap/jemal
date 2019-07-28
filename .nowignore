@@ -3,3 +3,13 @@ node_modules
 emails
 .env
 .env.development.local
+Dockerfile
+app.gif
+Procfile
+.prettierrc
+create-react-app-readme.md
+README.md
+.git
+build
+.dockerignore
+.editorconfig
