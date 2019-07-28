@@ -1,11 +1,12 @@
-import { gql } from 'apollo-server';
+const { gql } = require('apollo-server-express');
 
 const User = gql`
   type Query {
     currentUser: User
+    hello: String
   }
   type User {
-    _id: ObjectID
+    _id: String!
     firstname: String
     lastname: String
     email: String
@@ -35,4 +36,4 @@ const User = gql`
   scalar ObjectID
 `;
 
-export default User;
+module.exports = User;

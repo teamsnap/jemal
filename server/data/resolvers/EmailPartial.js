@@ -1,5 +1,5 @@
-import { EmailPartial } from '../models';
-import { saveTemplatePartial } from '../../helpers';
+const { EmailPartial } = require('../models');
+const { saveTemplatePartial } = require('../../helpers');
 
 const EmailPartialResolver = {
   Query: {
@@ -185,4 +185,4 @@ const EmailPartialResolver = {
   }
 };
 
-export default EmailPartialResolver;
+module.exports = EmailPartialResolver;

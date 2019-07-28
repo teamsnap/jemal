@@ -1,8 +1,8 @@
-import fs from 'fs-extra';
+const fs = require('fs-extra');
 
 const templatePath = './emails/templates-partials';
 
-export async function saveTemplatePartial(file, folderPath, source) {
+const saveTemplatePartial = async (file, folderPath, source) => {
   try {
     await fs.outputFile(
       `${templatePath}${folderPath}/${file
@@ -14,3 +14,5 @@ export async function saveTemplatePartial(file, folderPath, source) {
     throw new Error(err);
   }
 }
+
+module.exports = { saveTemplatePartial }

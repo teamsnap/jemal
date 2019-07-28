@@ -1,10 +1,10 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
-import fs from 'fs-extra';
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const fs = require('fs-extra');
 
-import { User, Organization, EmailPartial } from '../models';
-import transporter from '../../helpers/emailTransporter';
+const { User, Organization } = require('../models');
+const transporter = require('../../helpers/emailTransporter');
 
 const UserResolver = {
   Query: {
@@ -17,7 +17,8 @@ const UserResolver = {
       });
 
       return userFound;
-    }
+    },
+    hello: async () => 'Hello world!'
   },
   User: {
     organization: async ({ organizationId }, args, context) => {
@@ -44,37 +45,6 @@ const UserResolver = {
 
       // Generate the jwt and add it to the user document being returned.
       user.jwt = await jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-
-      // On login download all partials for rendering
-      // the resolver will update on save if any changes
-      // we just need the initial partials to render
-      const templatePath = './emails/templates-partials';
-      const options = {};
-
-      async function saveTemplatePartial(file, folderPath, source) {
-        try {
-          await fs.outputFile(
-            `${templatePath}${folderPath}/${file
-              .replace(/\s+/g, '-')
-              .toLowerCase()}.mjml`,
-            source
-          );
-        } catch (err) {
-          throw new Error(err);
-        }
-      }
-
-      const emailPartialsFound = await EmailPartial.find(
-        { organizationId: user.organizationId },
-        (err, org) => {
-          if (err) console.error(err);
-        }
-      );
-
-      emailPartialsFound.forEach(me => {
-        saveTemplatePartial(me.title, me.folderPath, me.mjmlSource);
-      });
-
       // Return signed token
 
       return user;
@@ -237,4 +207,4 @@ const UserResolver = {
   }
 };
 
-export default UserResolver;
+module.exports = UserResolver;

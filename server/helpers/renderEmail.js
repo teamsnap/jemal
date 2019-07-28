@@ -1,47 +1,34 @@
-import webshot from 'webshot';
-import mjml2html from 'mjml';
-import fs from 'fs-extra';
-import { promisify } from 'util';
+const mjml2html = require('mjml');
+const fs = require('fs-extra');
 
 // todo: refactor render email function to one function to be reused
 const templatePath = './server/emails/';
 const options = {};
 
-export async function renderEmail(file, source) {
+const renderEmail = async (file, source) => {
   try {
     await fs.outputFile(`${templatePath}/${file}`, source);
     const readEmail = await fs.readFile(`${templatePath}/${file}`, 'utf8');
     const data = await mjml2html(readEmail, options);
 
-    const optionsScreeny = {
-      siteType: 'html',
-      screenSize: {
-        width: 405,
-        height: 250
-      },
-      shotSize: {
-        width: 405,
-        height: 250
-      },
-      defaultWhiteBackground: true
-    };
+    // const browser = await puppeteer.launch({
+    //     args: chrome.args,
+    //     executablePath: await chrome.executablePath,
+    //     headless: chrome.headless,
+    // });
 
-    webshot(
-      data.html,
-      `${templatePath}screenshots/${file}.jpg`,
-      optionsScreeny,
-      err => {
-        if (err) throw new Error(err);
-      }
-    );
+    // const page = await browser.newPage();
+    // await page.setContent(data.html)
+    // const file = await page.screenshot({ type: 'jpg', path: `${templatePath}screenshots/${file}.jpg` });
+    // await browser.close();
 
     return data;
   } catch (err) {
     throw new Error(err);
   }
-}
+};
 
-export async function renderEmailLarge(file, source) {
+const renderEmailLarge = async (file, source) => {
   try {
     await fs.outputFile(`${templatePath}/${file}`, source);
     const readEmail = await fs.readFile(`${templatePath}/${file}`, 'utf8');
@@ -51,28 +38,29 @@ export async function renderEmailLarge(file, source) {
       process.env.APP_URL
     }/emails/screenshots/${file}-large.jpg`;
 
-    const optionsLarge = {
-      siteType: 'html',
-      screenSize: {
-        width: 1440,
-        height: 2000
-      },
-      shotSize: {
-        width: 'all',
-        height: 'all'
-      },
-      defaultWhiteBackground: true
-    };
+    // const optionsLarge = {
+    //   siteType: 'html',
+    //   screenSize: {
+    //     width: 1440,
+    //     height: 2000
+    //   },
+    //   shotSize: {
+    //     width: 'all',
+    //     height: 'all'
+    //   },
+    //   defaultWhiteBackground: true
+    // };
 
-    const webshotPromise = async (html, screenPath, optionsLarge) =>
-      new Promise((resolve, reject) => {
-        webshot(
-          html,
-          screenPath,
-          optionsLarge,
-          e => (!e ? resolve(screenPathPublic) : reject(e))
-        );
-      });
+    // const webshotPromise = async (html, screenPath, optionsLarge) =>
+    //   new Promise((resolve, reject) => {
+    //     resolve('test')
+    //     // webshot(
+    //     //   html,
+    //     //   screenPath,
+    //     //   optionsLarge,
+    //     //   e => (!e ? resolve(screenPathPublic) : reject(e))
+    //     // );
+    //   });
 
     const finishedImage = await webshotPromise(html, screenPath, optionsLarge);
 
@@ -80,4 +68,6 @@ export async function renderEmailLarge(file, source) {
   } catch (err) {
     throw new Error(err);
   }
-}
+};
+
+module.exports = { renderEmail, renderEmailLarge };

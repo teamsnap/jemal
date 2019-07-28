@@ -54,3 +54,4 @@ blog.sqlite
 
 emails/
 server/emails/
+.env

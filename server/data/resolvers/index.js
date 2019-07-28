@@ -1,12 +1,12 @@
-import merge from 'lodash/merge';
-import { registerComponent } from 'mjml-core';
-import { mjBulletProofButton } from '../../components';
+const merge = require('lodash/merge');
+const { registerComponent } = require('mjml-core');
+const { mjBulletProofButton } = require('../../components');
 
-import UserResolver from './User';
-import OrganizationResolver from './Organization';
-import EmailResolver from './Email';
-import EmailPartialResolver from './EmailPartial';
-import ObjectIDResolver from './ObjectID';
+const UserResolver = require('./User');
+const OrganizationResolver = require('./Organization');
+const EmailResolver = require('./Email');
+const EmailPartialResolver = require('./EmailPartial');
+// const ObjectIDResolver = require('./ObjectID');
 
 registerComponent(mjBulletProofButton);
 
@@ -14,8 +14,7 @@ const resolvers = merge(
   UserResolver,
   OrganizationResolver,
   EmailResolver,
-  EmailPartialResolver,
-  ObjectIDResolver
+  EmailPartialResolver
 );
 
-export default resolvers;
+module.exports = resolvers;

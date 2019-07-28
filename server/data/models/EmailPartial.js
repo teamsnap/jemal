@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 const EmailPartialSchema = new Schema({
@@ -14,4 +14,4 @@ const EmailPartialSchema = new Schema({
 
 const EmailPartial = mongoose.model('EmailPartial', EmailPartialSchema);
 
-export default EmailPartial;
+module.exports = EmailPartial;

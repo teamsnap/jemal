@@ -43,7 +43,7 @@ Refer to Create React App for the different type of .env filenames it supports; 
 NODE_ENV=development
 
 # CLIENT
-REACT_APP_GRAPHQL_URI=http://localhost:4100/graphql
+REACT_APP_GRAPHQL_URI=http://localhost:300/graphql
 
 # SERVER
 SERVER_PORT=4000

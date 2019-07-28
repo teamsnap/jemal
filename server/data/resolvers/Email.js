@@ -1,7 +1,8 @@
-import fs from 'fs-extra';
+const fs = require('fs-extra');
+const fetch = require('node-fetch');
 
-import { renderEmail, renderEmailLarge } from '../../helpers';
-import { Email, User } from '../models';
+const { renderEmail, renderEmailLarge } = require('../../helpers');
+const { Email, User, EmailPartial } = require('../models');
 
 // With async/await:
 async function file(f) {
@@ -142,14 +143,30 @@ const EmailResolver = {
     }
   },
   Email: {
-    urlPreview: async email => {
-      const templatePath = './server/emails/';
-      const options = {};
+    urlPreview: async (root, {}, { user }) => {
+      const userFound = await User.findOne({ _id: user._id });
 
-      const emailRender = await renderEmail(
-        `${email._id}.mjml`,
-        email.mjmlSource
+      const emailPartialsFound = await EmailPartial.find(
+        { organizationId: userFound.organizationId },
+        (err, org) => {
+          if (err) console.error(err);
+        }
       );
+
+      const body = JSON.stringify({
+        _id: root._id,
+        mjmlSource: root.mjmlSource,
+        partials: emailPartialsFound
+      });
+
+      const fetchEmail = await fetch('http://localhost:3000/renderEmail', {
+        method: 'POST',
+        body,
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const emailRender = await fetchEmail.json();
+
       return emailRender.html;
     },
     screenshot: async email => {
@@ -158,7 +175,7 @@ const EmailResolver = {
       );
 
       if (!exists) {
-        return `${process.env.APP_URL}/public/placeholder.jpg`;
+        return `${process.env.APP_URL}/images/placeholder.jpg`;
       } else {
         return `${process.env.APP_URL}/emails/screenshots/${
           email._id
@@ -349,4 +366,4 @@ const EmailResolver = {
   }
 };
 
-export default EmailResolver;
+module.exports = EmailResolver;

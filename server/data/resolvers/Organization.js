@@ -1,5 +1,5 @@
-import { User, Organization } from '../models';
-import transporter from '../../helpers/emailTransporter';
+const { User, Organization } = require('../models');
+const transporter = require('../../helpers/emailTransporter');
 
 const OrganizationResolver = {
   Query: {
@@ -100,4 +100,4 @@ const OrganizationResolver = {
   }
 };
 
-export default OrganizationResolver;
+module.exports = OrganizationResolver;

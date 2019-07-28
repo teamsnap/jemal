@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+const { gql } = require('apollo-server-express');
 
 const Email = gql`
   extend type Query {
@@ -13,7 +13,7 @@ const Email = gql`
     getEmailsByUser: [Email]
   }
   type Email {
-    _id: ObjectID
+    _id: String!
     title: String!
     createdAt: String
     createdById: String
@@ -69,4 +69,4 @@ const Email = gql`
   }
 `;
 
-export default Email;
+module.exports = Email;

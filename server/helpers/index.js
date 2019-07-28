@@ -1,4 +1,4 @@
-import { renderEmail, renderEmailLarge } from './renderEmail';
-import { saveTemplatePartial } from './saveTemplatePartial';
+const { renderEmail, renderEmailLarge } = require('./renderEmail');
+const { saveTemplatePartial } = require('./saveTemplatePartial');
 
-export { renderEmail, saveTemplatePartial, renderEmailLarge };
+module.exports = { renderEmail, saveTemplatePartial, renderEmailLarge };
