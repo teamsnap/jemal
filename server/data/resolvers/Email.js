@@ -16,22 +16,6 @@ const EmailResolver = {
       if (!_id) throw new Error('Must have organization id');
 
       let emailsFound;
-      let offsetTest;
-
-      const images = async emailsFound => {
-        // loop over to get images
-        await emailsFound.forEach(async email => {
-          // check if it exists, render if not
-          const exists = await file(
-            `./server/emails/screenshots/${email._id}.mjml.jpg`
-          );
-          if (!exists) {
-            await renderEmail(`${email._id}.mjml`, email.mjmlSource);
-          } else {
-            return;
-          }
-        });
-      };
 
       if (offset || limit) {
         emailsFound = await Email.find({ organizationId: _id }, (err, org) => {
@@ -40,13 +24,10 @@ const EmailResolver = {
           .skip(offset)
           .limit(limit)
           .sort({ createdAt: 'desc' });
-
-        await images(emailsFound);
       } else {
         emailsFound = await Email.find({ organizationId: _id }, (err, org) => {
           if (err) console.error(err);
         }).sort({ createdAt: 'desc' });
-        await images(emailsFound);
       }
 
       return emailsFound;
@@ -56,7 +37,6 @@ const EmailResolver = {
       if (!_id) throw new Error('Must have organization id');
 
       let emailsFound;
-      let offsetTest;
 
       if (offset || limit) {
         emailsFound = await Email.find(
@@ -159,7 +139,7 @@ const EmailResolver = {
         partials: emailPartialsFound
       });
 
-      const fetchEmail = await fetch('http://localhost:3000/renderEmail', {
+      const fetchEmail = await fetch(`${process.env.APP_URL}/renderEmail`, {
         method: 'POST',
         body,
         headers: { 'Content-Type': 'application/json' }
@@ -169,18 +149,36 @@ const EmailResolver = {
 
       return emailRender.html;
     },
-    screenshot: async email => {
-      const exists = await file(
-        `./server/emails/screenshots/${email._id}.mjml.jpg`
+    screenshot: async (root, {}, { user }) => {
+      const userFound = await User.findOne({ _id: user._id });
+
+      const emailPartialsFound = await EmailPartial.find(
+        { organizationId: userFound.organizationId },
+        (err, org) => {
+          if (err) console.error(err);
+        }
       );
 
-      if (!exists) {
-        return `${process.env.APP_URL}/images/placeholder.jpg`;
-      } else {
-        return `${process.env.APP_URL}/emails/screenshots/${
-          email._id
-        }.mjml.jpg`;
-      }
+      const body = JSON.stringify({
+        _id: root._id,
+        mjmlSource: root.mjmlSource,
+        partials: emailPartialsFound
+      });
+
+      const fetchScreenshot = await fetch(
+        `${process.env.APP_URL}/screenshot/${root._id}`,
+        {
+          method: 'POST',
+          body,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+
+      const buffer = await fetchScreenshot.buffer();
+      const base64 = buffer.toString('base64');
+      const base64Image = `data:image/png;base64,${base64}`
+    
+      return base64Image;
     }
   },
   Mutation: {
