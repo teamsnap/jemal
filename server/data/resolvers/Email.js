@@ -117,7 +117,7 @@ const EmailResolver = {
     }
   },
   Email: {
-    urlPreview: async (root, {}, { user }) => {
+    urlPreview: async (root, {}, { user, appUrl }) => {
       const userFound = await User.findOne({ _id: user._id });
 
       const emailPartialsFound = await EmailPartial.find(
@@ -133,7 +133,7 @@ const EmailResolver = {
         partials: emailPartialsFound
       });
 
-      const fetchEmail = await fetch(`${process.env.APP_URL}/renderEmail`, {
+      const fetchEmail = await fetch(`${appUrl}/renderEmail`, {
         method: 'POST',
         body,
         headers: { 'Content-Type': 'application/json' }
@@ -143,7 +143,7 @@ const EmailResolver = {
 
       return emailRender.html;
     },
-    screenshot: async (root, {}, { user }) => {
+    screenshot: async (root, {}, { user, appUrl }) => {
       const userFound = await User.findOne({ _id: user._id });
 
       const emailPartialsFound = await EmailPartial.find(
@@ -159,14 +159,11 @@ const EmailResolver = {
         partials: emailPartialsFound
       });
 
-      const fetchScreenshot = await fetch(
-        `${process.env.APP_URL}/screenshot/${root._id}`,
-        {
-          method: 'POST',
-          body,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
+      const fetchScreenshot = await fetch(`${appUrl}/screenshot/${root._id}`, {
+        method: 'POST',
+        body,
+        headers: { 'Content-Type': 'application/json' }
+      });
 
       const buffer = await fetchScreenshot.buffer();
       const base64 = buffer.toString('base64');

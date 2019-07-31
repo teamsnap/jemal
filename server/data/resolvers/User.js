@@ -85,11 +85,11 @@ const UserResolver = {
 
       return user;
     },
-    requestResetPassword: async (root, { email }, {}) => {
+    requestResetPassword: async (root, { email }, { appUrl }) => {
       const resetPasswordToken = await crypto.randomBytes(48).toString('hex');
       // expires in 1 hour
       const resetPasswordExpires = Date.now() + 1 * 60 * 60 * 1000;
-      const url = process.env.APP_URL || process.env.NOW_URL;
+      const url = appUrl;
 
       const message = {
         from: 'sender@server.com',

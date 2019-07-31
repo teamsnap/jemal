@@ -36,7 +36,7 @@ const OrganizationResolver = {
 
       return organization;
     },
-    inviteToOrganization: async (root, { email }, { user }) => {
+    inviteToOrganization: async (root, { email }, { user, appUrl }) => {
       if (!user._id) throw new Error('Must be logged in');
       if (!email) throw new Error('Must have an email');
 
@@ -46,7 +46,7 @@ const OrganizationResolver = {
 
       const { organizationId } = await User.findOne({ _id: user._id });
       const { name } = await Organization.findOne({ _id: organizationId });
-      const url = process.env.APP_URL || process.env.NOW_URL;
+      const url = appUrl;
 
       const message = {
         from: 'sender@server.com',
