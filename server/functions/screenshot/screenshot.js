@@ -1,12 +1,28 @@
+const fetch = require('node-fetch');
 const { getScreenshot } = require('./chromium');
-const renderEmail = require('../renderEmail/renderEmailSingle');
 
 module.exports = async function(req, res) {
   try {
-    const { body } = req;
-    const html = await renderEmail(body.mjmlSource, body.partials);
+    const { body, headers } = req;
+    const appUrl =
+      headers['x-now-deployment-url'] === 'localhost:3000'
+        ? `http://${req.headers['x-now-deployment-url']}`
+        : `https://${req.headers['x-now-deployment-url']}`;
 
-    const file = await getScreenshot(html.html);
+    const serverlessBody = JSON.stringify({
+      mjmlSource: body.mjmlSource,
+      partials: body.partials
+    });
+
+    const fetchEmail = await fetch(`${appUrl}/renderEmail`, {
+      method: 'POST',
+      body: serverlessBody,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    const emailRender = await fetchEmail.json();
+
+    const file = await getScreenshot(emailRender.html);
     res.setHeader('Content-Type', `image/jpeg`);
     res.status(200).send(file);
   } catch (e) {
