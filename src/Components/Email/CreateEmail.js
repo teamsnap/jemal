@@ -53,7 +53,6 @@ class CreateEmailView extends Component {
     const organizationId =
       this.props.currentUser.currentUser &&
       this.props.currentUser.currentUser.organizationId;
-    console.log(organizationId);
 
     this.props
       .createEmail({

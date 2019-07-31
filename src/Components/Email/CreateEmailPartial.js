@@ -29,7 +29,6 @@ class CreateEmailPartialView extends Component {
     const organizationId =
       this.props.currentUser.currentUser &&
       this.props.currentUser.currentUser.organizationId;
-    console.log(organizationId);
 
     this.props
       .createEmailPartial({
@@ -68,15 +67,12 @@ class CreateEmailPartialView extends Component {
         margin: '0 auto'
       },
       formControl: {
-        // margin: theme.spacing.unit,
         minWidth: 120
       },
       formControlPad: {
         marginTop: 20
       },
-      selectEmpty: {
-        // marginTop: theme.spacing.unit * 2,
-      }
+      selectEmpty: {}
     };
     return (
       <div>

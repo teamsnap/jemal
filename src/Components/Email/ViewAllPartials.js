@@ -57,9 +57,7 @@ class ViewAllPartials extends Component {
         <Grid container spacing={24}>
           <Grid item sm={12}>
             <Paper style={styles.paper}>
-              <Typography variant="h4">
-                Viewing all email partials
-              </Typography>
+              <Typography variant="h4">Viewing all email partials</Typography>
               <Paper style={styles.paper}>
                 <Link to="/email/partial/create">
                   <Button variant="contained" color="primary" size="large">

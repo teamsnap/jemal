@@ -42,7 +42,6 @@ class SignupForm extends Component {
         }
       })
       .then(data => {
-        console.log(data.data);
         localStorage.setItem(token, data.data.signup.jwt);
       })
       .then(() => (window.location.href = '/'))
@@ -60,7 +59,6 @@ class SignupForm extends Component {
   handleChange(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
-    console.log(this.state);
   }
 
   render() {

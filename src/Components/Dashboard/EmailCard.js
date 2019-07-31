@@ -73,8 +73,8 @@ class EmailCard extends Component {
         position: 'relative',
         marginRight: 20
       },
-      heading: {
-        marginBottom: 20
+      cardContent: {
+        position: 'relative'
       },
       icon: {
         position: 'absolute',
@@ -87,6 +87,10 @@ class EmailCard extends Component {
         marginTop: -16,
         display: 'block',
         marginBottom: 16
+      },
+      link: {
+        textDecoration: 'none',
+        color: '#3f51b5'
       }
     };
 
@@ -109,15 +113,13 @@ class EmailCard extends Component {
     return (
       <Grid item sm={4}>
         <Card style={styles.card}>
-          <CardContent style={styles.card}>
+          <CardContent style={styles.cardContent}>
             {this.props.favorited ? (
               <HeartIcon color="primary" style={styles.icon} />
             ) : null}
             {renderImage}
-            <Link to={this.props.link}>
-              <Typography variant="h6" style={styles.heading}>
-                {this.props.title}
-              </Typography>
+            <Link to={this.props.link} style={styles.link}>
+              <Typography variant="h6">{this.props.title}</Typography>
             </Link>
             {renderEmail}
           </CardContent>

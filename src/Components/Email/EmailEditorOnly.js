@@ -13,6 +13,8 @@ import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/javascript/javascript';
 
+import Loading from '../../Components/Loading/Loading';
+
 class EmailEditorOnly extends Component {
   constructor(props) {
     super(props);
@@ -30,11 +32,10 @@ class EmailEditorOnly extends Component {
   editEmailPartial() {
     const { title, mjmlSource, folderPath } = this.state;
     const organizationId =
+      !this.props.currentUser.loading &&
       this.props.currentUser.currentUser &&
       this.props.currentUser.currentUser.organizationId;
     const _id = this.props.match.params.id;
-
-    console.log(this.state);
 
     this.props
       .editEmailPartial({
@@ -46,9 +47,6 @@ class EmailEditorOnly extends Component {
           organizationId
         },
         refetchQueries: [`getCurrentEmailPartial`]
-      })
-      .then(data => {
-        console.log(data);
       })
       .catch(error => {
         console.error(error);
@@ -68,7 +66,7 @@ class EmailEditorOnly extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (!newProps.loading) {
+    if (!newProps.getCurrentEmailPartial.loading) {
       const { title, mjmlSource, folderPath } =
         !newProps.getCurrentEmailPartial.loading &&
         newProps.getCurrentEmailPartial.getCurrentEmailPartial;
@@ -96,6 +94,8 @@ class EmailEditorOnly extends Component {
         height: '80vh'
       }
     };
+
+    if (this.props.getCurrentEmailPartial.loading) return <Loading />;
 
     return (
       <div style={styles.root}>

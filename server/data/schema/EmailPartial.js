@@ -8,6 +8,7 @@ const EmailPartial = gql`
     downloadAllPartials: [EmailPartial]
   }
   type EmailPartial {
+    _id: String!
     title: String!
     createdAt: String
     createdById: String

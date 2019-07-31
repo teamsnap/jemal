@@ -55,7 +55,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "now-dev-start": "now dev -d",
+    "now-dev-start": "now dev",
     "renderEmail-function": "nodemon --watch ./server/functions/renderEmail --ignore dist/ --exec 'ncc build ./server/functions/renderEmail/renderEmail.js -o ./server/functions/renderEmail/dist'",
     "deploy": "ncc build ./server/functions/renderEmail/renderEmail.js -o ./server/functions/renderEmail/dist && now deploy"
   },

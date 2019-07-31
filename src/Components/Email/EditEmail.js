@@ -144,8 +144,6 @@ class EditEmailView extends Component {
       this.props.currentUser.currentUser.organizationId;
     const _id = this.props.match.params.id;
 
-    console.log(this.state);
-
     this.props
       .editEmail({
         variables: {
@@ -162,9 +160,6 @@ class EditEmailView extends Component {
           organizationId
         },
         refetchQueries: [`getCurrentEmail`]
-      })
-      .then(data => {
-        console.log(data);
       })
       .catch(error => {
         console.error(error);
@@ -212,9 +207,6 @@ class EditEmailView extends Component {
           organizationId
         },
         refetchQueries: [`getCurrentEmail`]
-      })
-      .then(data => {
-        console.log(data);
       })
       .catch(error => {
         console.error(error);
@@ -276,9 +268,6 @@ class EditEmailView extends Component {
         },
         refetchQueries: [`getCurrentEmail`]
       })
-      .then(data => {
-        console.log(data);
-      })
       .catch(error => {
         console.error(error);
         this.setState({
@@ -300,7 +289,6 @@ class EditEmailView extends Component {
   componentWillReceiveProps(newProps) {
     if (!newProps.loading) {
       if (newProps.getCurrentEmail.error) {
-        console.log(newProps.getCurrentEmail.error);
         this.setState({
           errorMessage: newProps.getCurrentEmail.error.message.split(':')[1]
         });
@@ -386,11 +374,6 @@ class EditEmailView extends Component {
     const email =
       !this.props.getCurrentEmail.loading &&
       this.props.getCurrentEmail.getCurrentEmail;
-
-    console.log(
-      this.props.createCurrentEmailScreenshot &&
-        this.props.createCurrentEmailScreenshot.screenshotDownloadUrl
-    );
 
     return (
       <React.Fragment>
@@ -575,7 +558,6 @@ class EditEmailView extends Component {
                     this.setState({
                       mjmlSource: value
                     });
-                    console.log(value);
                   }}
                   onChange={(editor, data, value) => {
                     this.setState({
