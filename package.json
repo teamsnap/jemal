@@ -51,13 +51,15 @@
   },
   "main": "./client/src/index.js",
   "scripts": {
-    "start": "node ./server/index.js",
-    "develop": "nf start -p 4000",
+    "start": "nf start",
+    "develop": "nf start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "react-start": "react-scripts start",
-    "server-start": "nodemon ./server/index.js"
+    "now-dev-start": "now dev -d",
+    "screenshot-function": "nodemon --watch ./server/functions/screenshot --ignore dist/ --exec 'ncc build ./server/functions/screenshot/screenshot.js -o ./server/functions/screenshot/dist'",
+    "renderEmail-function": "nodemon --watch ./server/functions/renderEmail --ignore dist/ --exec 'ncc build ./server/functions/renderEmail/renderEmail.js -o ./server/functions/renderEmail/dist'",
+    "deploy": "ncc build ./server/functions/renderEmail/renderEmail.js -o ./server/functions/renderEmail/dist && ncc build ./server/functions/screenshot/screenshot.js -o ./server/functions/screenshot/dist && now deploy"
   },
   "engines": {
     "node": "10.11.0"
