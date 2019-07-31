@@ -13,18 +13,14 @@
       "use": "@now/node"
     },
     {
-      "src": "server/functions/screenshot/screenshot.js",
+      "src": "server/functions/screenshot/dist/index.js",
       "use": "@now/node",
       "config": {
         "maxLambdaSize": "40mb"
       }
     },
     {
-      "src": "server/functions/renderEmail/renderEmail.js",
-      "use": "@now/node"
-    },
-    {
-      "src": "server/functions/renderEmail/renderEmailLarge.js",
+      "src": "server/functions/renderEmail/dist/index.js",
       "use": "@now/node"
     }
   ],
@@ -65,15 +61,11 @@
     },
     {
       "src": "/screenshot/(.+)",
-      "dest": "/server/functions/screenshot/screenshot.js"
+      "dest": "/server/functions/screenshot/dist/index.js"
     },
     {
       "src": "/renderEmail",
-      "dest": "/server/functions/renderEmail/renderEmail.js"
-    },
-    {
-      "src": "/renderEmailLarge",
-      "dest": "/server/functions/renderEmail/renderEmailLarge.js"
+      "dest": "/server/functions/renderEmail/dist/index.js"
     },
     {
       "src": "/graphql",

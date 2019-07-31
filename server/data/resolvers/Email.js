@@ -1,13 +1,7 @@
 const fs = require('fs-extra');
 const fetch = require('node-fetch');
 
-const { renderEmail, renderEmailLarge } = require('../../helpers');
 const { Email, User, EmailPartial } = require('../models');
-
-// With async/await:
-async function file(f) {
-  return await fs.pathExists(f);
-}
 
 const EmailResolver = {
   Query: {
@@ -176,8 +170,8 @@ const EmailResolver = {
 
       const buffer = await fetchScreenshot.buffer();
       const base64 = buffer.toString('base64');
-      const base64Image = `data:image/png;base64,${base64}`
-    
+      const base64Image = `data:image/png;base64,${base64}`;
+
       return base64Image;
     }
   },
@@ -270,11 +264,6 @@ const EmailResolver = {
         userId: user._id
       });
 
-      const emailRender = await renderEmail(
-        `${newEmail._id}.mjml`,
-        newEmail.mjmlSource
-      );
-
       console.error(emailRender.errors);
 
       return newEmail;
@@ -349,12 +338,7 @@ const EmailResolver = {
       if (!user._id) throw new Error('Must be logged in');
       if (!_id) throw new Error('Must have email Id');
 
-      const templatePath = './server/emails/';
       const { mjmlSource } = await Email.findOne({ _id });
-      const screenshotDownloadUrl = await renderEmailLarge(
-        `${_id}.mjml`,
-        mjmlSource
-      );
 
       return {
         _id,

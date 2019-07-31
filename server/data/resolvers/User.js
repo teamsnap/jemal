@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const fs = require('fs-extra');
 
 const { User, Organization } = require('../models');
 const transporter = require('../../helpers/emailTransporter');

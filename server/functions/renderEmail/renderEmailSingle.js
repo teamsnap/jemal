@@ -1,10 +1,7 @@
 const mjml2html = require('mjml');
 const { registerComponent } = require('mjml-core');
 const { mjBulletProofButton } = require('../../components');
-
 const downloadPartials = require('./downloadPartials');
-
-// todo: refactor render email function to one function to be reused
 
 registerComponent(mjBulletProofButton);
 
@@ -13,7 +10,7 @@ const renderEmail = async (source, partials) => {
 
   try {
     await downloadPartials(partials, templatePath);
-    const data = await mjml2html(source);
+    const data = await mjml2html(source, { minify: true });
 
     return data;
   } catch (err) {

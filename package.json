@@ -13,14 +13,13 @@
     "nodemon": "1.19.1"
   },
   "dependencies": {
-    "@material-ui/core": "4.2.1",
+    "@material-ui/core": "4.3.0",
     "apollo-boost": "0.4.3",
-    "apollo-server": "2.7.1",
-    "apollo-server-express": "2.7.1",
+    "apollo-server": "2.8.0",
+    "apollo-server-express": "2.8.0",
     "axios": "0.19.0",
     "bcrypt": "3.0.6",
     "body-parser": "1.19.0",
-    "casual": "1.6.2",
     "chrome-aws-lambda": "^1.19.0",
     "codemirror": "5.48.2",
     "cors": "2.8.5",
@@ -31,10 +30,9 @@
     "fs-extra": "8.1.0",
     "graphql": "14.4.2",
     "graphql-tools": "4.0.5",
-    "install": "^0.13.0",
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.15",
-    "mjml": "4.4.0",
+    "mjml": "4.4.1",
     "mongoose": "5.6.7",
     "node-fetch": "2.6.0",
     "nodemailer": "6.3.0",
@@ -48,9 +46,9 @@
     "react-dom": "16.8.6",
     "react-router": "5.0.1",
     "react-router-dom": "5.0.1",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "uglify-js": "^3.6.0"
   },
-  "homepage": "/",
   "main": "./client/src/index.js",
   "scripts": {
     "start": "node ./server/index.js",

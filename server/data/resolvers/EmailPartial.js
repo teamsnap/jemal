@@ -1,5 +1,4 @@
 const { EmailPartial } = require('../models');
-const { saveTemplatePartial } = require('../../helpers');
 
 const EmailPartialResolver = {
   Query: {
@@ -93,12 +92,6 @@ const EmailPartialResolver = {
         userId: user._id
       });
 
-      await saveTemplatePartial(
-        newEmailPartial.title,
-        newEmailPartial.folderPath,
-        newEmailPartial.mjmlSource
-      );
-
       return newEmailPartial;
     },
     deleteEmailPartial: async (root, { _id }, { user }) => {
@@ -175,10 +168,6 @@ const EmailPartialResolver = {
       );
 
       const updatedEmailPartial = await EmailPartial.findOne({ _id });
-      const savedPartial = await saveTemplatePartial(
-        updatedEmailPartial.title,
-        updatedEmailPartial.mjmlSource
-      );
 
       return updatedEmailPartial;
     }
