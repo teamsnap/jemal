@@ -23,7 +23,7 @@
       "src": "server/functions/screenshot/screenshot.js",
       "use": "@now/node",
       "config": {
-        "maxLambdaSize": "40mb"
+        "maxLambdaSize": "50mb"
       }
     },
     {

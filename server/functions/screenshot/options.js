@@ -12,14 +12,16 @@ async function getOptions() {
     return {
       args: [],
       executablePath: exePath,
-      headless: true
+      headless: true,
+      defaultViewport: null
     };
   }
 
   return {
     args: chrome.args,
     executablePath: await chrome.executablePath,
-    headless: chrome.headless
+    headless: chrome.headless,
+    defaultViewport: null
   };
 }
 

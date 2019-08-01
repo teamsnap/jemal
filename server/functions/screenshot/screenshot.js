@@ -22,7 +22,7 @@ module.exports = async function(req, res) {
 
     const emailRender = await fetchEmail.json();
 
-    const file = await getScreenshot(emailRender.html);
+    const file = await getScreenshot(emailRender.html, body.options);
     res.setHeader('Content-Type', `image/jpeg`);
     res.status(200).send(file);
   } catch (e) {
