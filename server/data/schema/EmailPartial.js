@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+const { gql } = require('apollo-server-express');
 
 const EmailPartial = gql`
   extend type Query {
@@ -8,7 +8,7 @@ const EmailPartial = gql`
     downloadAllPartials: [EmailPartial]
   }
   type EmailPartial {
-    _id: ObjectID
+    _id: String!
     title: String!
     createdAt: String
     createdById: String
@@ -37,4 +37,4 @@ const EmailPartial = gql`
   }
 `;
 
-export default EmailPartial;
+module.exports = EmailPartial;

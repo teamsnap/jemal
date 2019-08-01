@@ -1,8 +1,8 @@
-import { GraphQLScalarType } from 'graphql';
-import { Kind } from 'graphql/language';
-import { ObjectID } from 'mongoose';
+const { GraphQLScalarType } = require('graphql');
+const { Kind } = require('graphql/language');
+const { ObjectID } = require('mongoose');
 
-export const ObjectIDResolver = {
+const ObjectIDResolver = {
   ObjectID: new GraphQLScalarType({
     name: 'ObjectID',
     description:
@@ -34,3 +34,5 @@ export const ObjectIDResolver = {
     }
   })
 };
+
+module.exports = ObjectIDResolver

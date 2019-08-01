@@ -22,6 +22,24 @@ import Iframe from './Iframe';
 import HeartOutlineIcon from '../Icons/HeartOutlineIcon';
 import HeartIcon from '../Icons/HeartIcon';
 
+const dataURLtoBlob = dataurl => {
+  const parts = dataurl.split(','),
+    mime = parts[0].match(/:(.*?);/)[1];
+  if (parts[0].indexOf('base64') !== -1) {
+    let bstr = atob(parts[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new Blob([u8arr], { type: mime });
+  } else {
+    const raw = decodeURIComponent(parts[1]);
+    return new Blob([raw], { type: mime });
+  }
+};
+
 class EditEmailView extends Component {
   constructor(props) {
     super(props);
@@ -84,19 +102,34 @@ class EditEmailView extends Component {
         }
       })
       .then(({ data }) => {
-        const link = document.createElement('a');
-        link.href = data.createCurrentEmailScreenshot.screenshotDownloadUrl;
-        link.setAttribute('download', 'download');
+        const blob = dataURLtoBlob(
+          data.createCurrentEmailScreenshot.screenshotDownloadUrl
+        );
+        console.log(blob);
 
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.style = 'display: none';
+        a.href = url;
+        a.download = 'download.jpeg';
+        a.click();
+        window.URL.revokeObjectURL(url);
 
-        this.setState({
-          loading: {
-            screenshot: false
-          }
-        });
+        // console.log();
+        // const link = document.createElement('a');
+        // link.href = data.createCurrentEmailScreenshot.screenshotDownloadUrl;
+        // link.setAttribute('download', 'download');
+
+        // document.body.appendChild(link);
+        // link.click();
+        // document.body.removeChild(link);
+
+        // this.setState({
+        //   loading: {
+        //     screenshot: false
+        //   }
+        // });
       })
       .catch(error => {
         console.error(error);
@@ -144,8 +177,6 @@ class EditEmailView extends Component {
       this.props.currentUser.currentUser.organizationId;
     const _id = this.props.match.params.id;
 
-    console.log(this.state);
-
     this.props
       .editEmail({
         variables: {
@@ -162,9 +193,6 @@ class EditEmailView extends Component {
           organizationId
         },
         refetchQueries: [`getCurrentEmail`]
-      })
-      .then(data => {
-        console.log(data);
       })
       .catch(error => {
         console.error(error);
@@ -212,9 +240,6 @@ class EditEmailView extends Component {
           organizationId
         },
         refetchQueries: [`getCurrentEmail`]
-      })
-      .then(data => {
-        console.log(data);
       })
       .catch(error => {
         console.error(error);
@@ -276,9 +301,6 @@ class EditEmailView extends Component {
         },
         refetchQueries: [`getCurrentEmail`]
       })
-      .then(data => {
-        console.log(data);
-      })
       .catch(error => {
         console.error(error);
         this.setState({
@@ -300,7 +322,6 @@ class EditEmailView extends Component {
   componentWillReceiveProps(newProps) {
     if (!newProps.loading) {
       if (newProps.getCurrentEmail.error) {
-        console.log(newProps.getCurrentEmail.error);
         this.setState({
           errorMessage: newProps.getCurrentEmail.error.message.split(':')[1]
         });
@@ -386,11 +407,6 @@ class EditEmailView extends Component {
     const email =
       !this.props.getCurrentEmail.loading &&
       this.props.getCurrentEmail.getCurrentEmail;
-
-    console.log(
-      this.props.createCurrentEmailScreenshot &&
-        this.props.createCurrentEmailScreenshot.screenshotDownloadUrl
-    );
 
     return (
       <React.Fragment>
@@ -575,7 +591,6 @@ class EditEmailView extends Component {
                     this.setState({
                       mjmlSource: value
                     });
-                    console.log(value);
                   }}
                   onChange={(editor, data, value) => {
                     this.setState({

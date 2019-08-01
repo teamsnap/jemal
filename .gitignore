@@ -54,3 +54,6 @@ blog.sqlite
 
 emails/
 server/emails/
+.env
+server/functions/renderEmail/dist
+server/functions/screenshot/dist

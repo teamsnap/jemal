@@ -90,11 +90,6 @@ class AcceptToOrganizationView extends Component {
       }
     };
 
-    console.log(
-      this.props.getOrganization.currentOrganization &&
-        this.props.getOrganization.currentOrganization.logoUrl
-    );
-
     return (
       <div>
         <Card style={styles.card}>

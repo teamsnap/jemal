@@ -15,8 +15,7 @@ import 'codemirror/theme/material.css';
 
 import Auth from './modules/Auth';
 
-const uri =
-  process.env.REACT_APP_GRAPHQL_URI || 'http://localhost:4100/graphql';
+const uri = '/graphql';
 const httpLink = new HttpLink({ uri });
 
 const authLink = new ApolloLink((operation, forward) => {

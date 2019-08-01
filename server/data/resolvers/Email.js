@@ -1,12 +1,7 @@
-import fs from 'fs-extra';
+const fs = require('fs-extra');
+const fetch = require('node-fetch');
 
-import { renderEmail, renderEmailLarge } from '../../helpers';
-import { Email, User } from '../models';
-
-// With async/await:
-async function file(f) {
-  return await fs.pathExists(f);
-}
+const { Email, User, EmailPartial } = require('../models');
 
 const EmailResolver = {
   Query: {
@@ -15,22 +10,6 @@ const EmailResolver = {
       if (!_id) throw new Error('Must have organization id');
 
       let emailsFound;
-      let offsetTest;
-
-      const images = async emailsFound => {
-        // loop over to get images
-        await emailsFound.forEach(async email => {
-          // check if it exists, render if not
-          const exists = await file(
-            `./server/emails/screenshots/${email._id}.mjml.jpg`
-          );
-          if (!exists) {
-            await renderEmail(`${email._id}.mjml`, email.mjmlSource);
-          } else {
-            return;
-          }
-        });
-      };
 
       if (offset || limit) {
         emailsFound = await Email.find({ organizationId: _id }, (err, org) => {
@@ -39,13 +18,10 @@ const EmailResolver = {
           .skip(offset)
           .limit(limit)
           .sort({ createdAt: 'desc' });
-
-        await images(emailsFound);
       } else {
         emailsFound = await Email.find({ organizationId: _id }, (err, org) => {
           if (err) console.error(err);
         }).sort({ createdAt: 'desc' });
-        await images(emailsFound);
       }
 
       return emailsFound;
@@ -55,7 +31,6 @@ const EmailResolver = {
       if (!_id) throw new Error('Must have organization id');
 
       let emailsFound;
-      let offsetTest;
 
       if (offset || limit) {
         emailsFound = await Email.find(
@@ -142,28 +117,63 @@ const EmailResolver = {
     }
   },
   Email: {
-    urlPreview: async email => {
-      const templatePath = './server/emails/';
-      const options = {};
+    urlPreview: async (root, {}, { user, appUrl }) => {
+      const userFound = await User.findOne({ _id: user._id });
 
-      const emailRender = await renderEmail(
-        `${email._id}.mjml`,
-        email.mjmlSource
+      const emailPartialsFound = await EmailPartial.find(
+        { organizationId: userFound.organizationId },
+        (err, org) => {
+          if (err) console.error(err);
+        }
       );
+
+      const body = JSON.stringify({
+        _id: root._id,
+        mjmlSource: root.mjmlSource,
+        partials: emailPartialsFound
+      });
+
+      const fetchEmail = await fetch(`${appUrl}/renderEmail`, {
+        method: 'POST',
+        body,
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const emailRender = await fetchEmail.json();
+
       return emailRender.html;
     },
-    screenshot: async email => {
-      const exists = await file(
-        `./server/emails/screenshots/${email._id}.mjml.jpg`
+    screenshot: async (root, {}, { user, appUrl }) => {
+      const userFound = await User.findOne({ _id: user._id });
+
+      const emailPartialsFound = await EmailPartial.find(
+        { organizationId: userFound.organizationId },
+        (err, org) => {
+          if (err) console.error(err);
+        }
       );
 
-      if (!exists) {
-        return `${process.env.APP_URL}/public/placeholder.jpg`;
-      } else {
-        return `${process.env.APP_URL}/emails/screenshots/${
-          email._id
-        }.mjml.jpg`;
-      }
+      const body = JSON.stringify({
+        _id: root._id,
+        mjmlSource: root.mjmlSource,
+        partials: emailPartialsFound,
+        options: {
+          type: 'jpeg',
+          clip: { x: 0, y: 0, width: 400, height: 205 }
+        }
+      });
+
+      const fetchScreenshot = await fetch(`${appUrl}/screenshot/${root._id}`, {
+        method: 'POST',
+        body,
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const buffer = await fetchScreenshot.buffer();
+      const base64 = buffer.toString('base64');
+      const base64Image = `data:image/jpeg;base64,${base64}`;
+
+      return base64Image;
     }
   },
   Mutation: {
@@ -255,11 +265,6 @@ const EmailResolver = {
         userId: user._id
       });
 
-      const emailRender = await renderEmail(
-        `${newEmail._id}.mjml`,
-        newEmail.mjmlSource
-      );
-
       console.error(emailRender.errors);
 
       return newEmail;
@@ -325,28 +330,46 @@ const EmailResolver = {
       if (!user._id) throw new Error('Must be logged in');
       if (!_id) throw new Error('Must have email Id');
 
-      // todo: remove screenshots from fs on removal
       await Email.findOneAndRemove({ _id });
 
       return { _id: '' };
     },
-    createCurrentEmailScreenshot: async (root, { _id }, { user }) => {
+    createCurrentEmailScreenshot: async (root, { _id }, { user, appUrl }) => {
       if (!user._id) throw new Error('Must be logged in');
       if (!_id) throw new Error('Must have email Id');
 
-      const templatePath = './server/emails/';
+      const userFound = await User.findOne({ _id: user._id });
       const { mjmlSource } = await Email.findOne({ _id });
-      const screenshotDownloadUrl = await renderEmailLarge(
-        `${_id}.mjml`,
-        mjmlSource
+      const emailPartialsFound = await EmailPartial.find(
+        { organizationId: userFound.organizationId },
+        (err, org) => {
+          if (err) console.error(err);
+        }
       );
+      const body = JSON.stringify({
+        _id: _id,
+        mjmlSource: mjmlSource,
+        partials: emailPartialsFound,
+        options: {
+          type: 'jpeg',
+          fullPage: true
+        }
+      });
+      const fetchScreenshot = await fetch(`${appUrl}/screenshot/${_id}`, {
+        method: 'POST',
+        body,
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const buffer = await fetchScreenshot.buffer();
+      const base64 = buffer.toString('base64');
+      const base64Image = `data:image/jpeg;base64,${base64}`;
 
       return {
         _id,
-        screenshotDownloadUrl
+        screenshotDownloadUrl: base64Image
       };
     }
   }
 };
 
-export default EmailResolver;
+module.exports = EmailResolver;

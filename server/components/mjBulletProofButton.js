@@ -1,6 +1,19 @@
-import { registerDependencies } from 'mjml-validator';
-import { BodyComponent } from 'mjml-core';
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
 
+const { registerDependencies } = require('mjml-validator');
+const { BodyComponent } = require('mjml-core');
 registerDependencies({
   // Tell the validator which tags are allowed as our component's parent
   'mj-hero': ['mj-bullet-proof-button'],
@@ -8,64 +21,7 @@ registerDependencies({
   // Tell the validator which tags are allowed as our component's children
   'mj-bullet-proof-button': []
 });
-
-export default class mjBulletProofButton extends BodyComponent {
-  static endingTag = true;
-
-  static allowedAttributes = {
-    align: 'enum(left,center,right)',
-    'background-color': 'color',
-    'border-bottom': 'string',
-    'border-left': 'string',
-    'border-radius': 'string',
-    'border-right': 'string',
-    'border-top': 'string',
-    border: 'string',
-    color: 'color',
-    'container-background-color': 'color',
-    'font-family': 'string',
-    'font-size': 'unit(px,%)',
-    'font-style': 'string',
-    'font-weight': 'string',
-    height: 'unit(px,%)',
-    href: 'string',
-    'inner-padding': 'unit(px,%)',
-    'line-height': 'unit(px,%)',
-    'padding-bottom': 'unit(px,%)',
-    'padding-left': 'unit(px,%)',
-    'padding-right': 'unit(px,%)',
-    'padding-top': 'unit(px,%)',
-    padding: 'unit(px,%){1,4}',
-    rel: 'string',
-    target: 'string',
-    'text-decoration': 'string',
-    'text-transform': 'string',
-    'vertical-align': 'string',
-    width: 'unit(px,%)'
-  };
-
-  static defaultAttributes = {
-    align: 'center',
-    'background-color': '#414141',
-    border: 'none',
-    'border-radius': '3px',
-    color: '#ffffff',
-    'border-radius': '3px',
-    'border-right': null,
-    'border-left': null,
-    'border-top': null,
-    'font-family': 'Ubuntu, Helvetica, Arial, sans-serif',
-    'font-size': '13px',
-    'font-weight': 'normal',
-    'inner-padding': '10px 25px',
-    'line-height': '120%',
-    padding: '10px 25px',
-    target: '_blank',
-    'text-decoration': 'none',
-    'text-transform': 'none',
-    'vertical-align': 'middle'
-  };
-
+class mjBulletProofButton extends BodyComponent {
   getStyles() {
     return {
       table: {
@@ -105,7 +61,6 @@ export default class mjBulletProofButton extends BodyComponent {
 
   render() {
     const tag = this.getAttribute('href') ? 'a' : 'p';
-
     return `
       <table
         ${this.htmlAttributes({
@@ -146,3 +101,61 @@ export default class mjBulletProofButton extends BodyComponent {
     `;
   }
 }
+
+_defineProperty(mjBulletProofButton, 'endingTag', true);
+
+_defineProperty(mjBulletProofButton, 'allowedAttributes', {
+  align: 'enum(left,center,right)',
+  'background-color': 'color',
+  'border-bottom': 'string',
+  'border-left': 'string',
+  'border-radius': 'string',
+  'border-right': 'string',
+  'border-top': 'string',
+  border: 'string',
+  color: 'color',
+  'container-background-color': 'color',
+  'font-family': 'string',
+  'font-size': 'unit(px,%)',
+  'font-style': 'string',
+  'font-weight': 'string',
+  height: 'unit(px,%)',
+  href: 'string',
+  'inner-padding': 'unit(px,%)',
+  'line-height': 'unit(px,%)',
+  'padding-bottom': 'unit(px,%)',
+  'padding-left': 'unit(px,%)',
+  'padding-right': 'unit(px,%)',
+  'padding-top': 'unit(px,%)',
+  padding: 'unit(px,%){1,4}',
+  rel: 'string',
+  target: 'string',
+  'text-decoration': 'string',
+  'text-transform': 'string',
+  'vertical-align': 'string',
+  width: 'unit(px,%)'
+});
+
+_defineProperty(mjBulletProofButton, 'defaultAttributes', {
+  align: 'center',
+  'background-color': '#414141',
+  border: 'none',
+  'border-radius': '3px',
+  color: '#ffffff',
+  'border-radius': '3px',
+  'border-right': null,
+  'border-left': null,
+  'border-top': null,
+  'font-family': 'Ubuntu, Helvetica, Arial, sans-serif',
+  'font-size': '13px',
+  'font-weight': 'normal',
+  'inner-padding': '10px 25px',
+  'line-height': '120%',
+  padding: '10px 25px',
+  target: '_blank',
+  'text-decoration': 'none',
+  'text-transform': 'none',
+  'vertical-align': 'middle'
+});
+
+module.exports = mjBulletProofButton;

@@ -1,11 +1,11 @@
-import { gql } from 'apollo-server';
+const { gql } = require('apollo-server-express');
 
 const Organization = gql`
   extend type Query {
     currentOrganization(_id: String!): Organization
   }
   type Organization {
-    _id: ObjectID
+    _id: String!
     name: String!
     createdAt: String
     createdById: String
@@ -24,4 +24,4 @@ const Organization = gql`
   }
 `;
 
-export default Organization;
+module.exports = Organization;

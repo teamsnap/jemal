@@ -1,3 +1,3 @@
-import mjBulletProofButton from './mjBulletProofButton';
+const mjBulletProofButton = require('./mjBulletProofButton');
 
-export { mjBulletProofButton };
+module.exports = { mjBulletProofButton };

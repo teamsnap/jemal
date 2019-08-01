@@ -33,9 +33,6 @@ class EditOrganizationView extends Component {
           logoUrl
         }
       })
-      .then(data => {
-        console.log(data);
-      })
       .catch(error => {
         console.error(error);
         this.setState({
@@ -47,7 +44,6 @@ class EditOrganizationView extends Component {
   handleChange(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
-    console.log(this.state);
   }
 
   goBack() {
@@ -82,16 +78,13 @@ class EditOrganizationView extends Component {
     if (this.props.loading) return null;
     const currentOrganization = this.props.getCurrentOrganization
       .currentOrganization;
-    console.log(currentOrganization);
     return (
       <div>
         <Card style={styles.card}>
           <CardContent>
             <form action="/">
               {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
-              <Typography variant="h5">
-                Edit your Organization
-              </Typography>
+              <Typography variant="h5">Edit your Organization</Typography>
               <div style={styles.formControlPad}>
                 <TextField
                   name="name"

@@ -27,9 +27,6 @@ class Pagination extends Component {
       }
     }
 
-    // For debugging
-    // console.log(this.props.limit, this.props.count, Math.ceil(this.props.count / this.props.limit))
-
     return (
       <div>
         <ul className="Pagination">{renderPages}</ul>
