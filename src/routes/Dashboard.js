@@ -15,7 +15,6 @@ class Dashboard extends Component {
       success: '',
       errorMessage: ''
     };
-    // this.handleChange = this.handleChange.bind(this);
   }
 
   render() {
@@ -95,7 +94,6 @@ const getAllEmails = gql`
       createdAt
       updatedById
       createdById
-      screenshot
       _id
     }
   }

@@ -48,6 +48,7 @@ class ViewAllPartials extends Component {
             _id={_id}
             title={title}
             link={`/email/partials/edit/${_id}`}
+            needsImage={false}
           />
         );
       });

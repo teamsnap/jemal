@@ -39,37 +39,6 @@ class MainDashboard extends Component {
     };
 
     const { user, emails } = this.props;
-    let renderEmails;
-
-    if (emails) {
-      renderEmails = emails.map(
-        ({
-          title,
-          isDraft,
-          hasBeenSent,
-          isApproved,
-          updatedAt,
-          createdAt,
-          updatedById,
-          createdById,
-          screenshot,
-          _id,
-          favorited
-        }) => {
-          return (
-            <EmailCard
-              key={_id}
-              title={title}
-              _id={_id}
-              link={`/email/edit/${_id}`}
-              email={true}
-              image={screenshot}
-              favorited={favorited}
-            />
-          );
-        }
-      );
-    }
 
     return (
       <Grid container spacing={24}>
@@ -101,7 +70,18 @@ class MainDashboard extends Component {
                 </Grid>
               </Grid>
               <Grid container spacing={24}>
-                {renderEmails}
+                {emails &&
+                  emails.map(({ title, _id, favorited }) => (
+                    <EmailCard
+                      key={_id}
+                      title={title}
+                      _id={_id}
+                      link={`/email/edit/${_id}`}
+                      email={true}
+                      favorited={favorited}
+                      needsImage={true}
+                    />
+                  ))}
               </Grid>
             </Paper>
           </Paper>
