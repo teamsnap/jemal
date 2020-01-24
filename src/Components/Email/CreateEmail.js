@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql, compose } from 'react-apollo';
+import { withApollo, graphql } from 'react-apollo';
+import flowright from 'lodash.flowright';
 import { withRouter } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
@@ -243,7 +244,7 @@ const createEmail = gql`
 `;
 
 export default withRouter(
-  compose(
+  flowright(
     graphql(currentUser, {
       name: 'currentUser'
     }),

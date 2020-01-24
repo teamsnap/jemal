@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql, compose } from 'react-apollo';
+import { withApollo, graphql } from 'react-apollo';
+import flowright from 'lodash.flowright';
 import { withRouter } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
@@ -75,9 +76,7 @@ class CreateOrganizationView extends Component {
           <CardContent>
             <form action="/">
               {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
-              <Typography variant="h5">
-                Create a new Organization
-              </Typography>
+              <Typography variant="h5">Create a new Organization</Typography>
               <div style={styles.formControlPad}>
                 <TextField
                   name="name"
@@ -123,7 +122,7 @@ const createOrganization = gql`
   }
 `;
 
-export default compose(
+export default flowright(
   graphql(createOrganization, {
     name: 'createOrganization'
   })

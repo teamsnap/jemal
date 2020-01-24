@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql, compose } from 'react-apollo';
+import { withApollo, graphql } from 'react-apollo';
+import flowright from 'lodash.flowright';
 import { withRouter } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
@@ -234,7 +235,7 @@ const currentUser = gql`
 `;
 
 export default withRouter(
-  compose(
+  flowright(
     graphql(changePassword, {
       name: 'changePassword'
     }),

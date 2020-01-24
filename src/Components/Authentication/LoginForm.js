@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql, compose } from 'react-apollo';
+import { withApollo, graphql } from 'react-apollo';
+import flowright from 'lodash.flowright';
 import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
@@ -122,7 +123,7 @@ const login = gql`
   }
 `;
 
-export default compose(
+export default flowright(
   graphql(login, {
     name: 'login'
   })

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql, compose } from 'react-apollo';
+import { withApollo, graphql } from 'react-apollo';
+import flowright from 'lodash.flowright';
 import { withRouter } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
@@ -71,9 +72,7 @@ class InviteToOrganizationView extends Component {
             <form action="/">
               {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
               {this.state.success && <p>{this.state.success}</p>}
-              <Typography variant="h5">
-                Invite to Organization
-              </Typography>
+              <Typography variant="h5">Invite to Organization</Typography>
               <div style={styles.formControlPad}>
                 <TextField
                   name="email"
@@ -112,7 +111,7 @@ const inviteToOrganization = gql`
 `;
 
 export default withRouter(
-  compose(
+  flowright(
     graphql(inviteToOrganization, {
       name: 'inviteToOrganization'
     })
