@@ -44,45 +44,6 @@ class ViewAllEmails extends Component {
     const count =
       this.props.getEmailsCount && this.props.getEmailsCount.getEmailsCount;
 
-    let renderEmails;
-
-    if (emails) {
-      renderEmails = emails.map(
-        ({
-          title,
-          isDraft,
-          hasBeenSent,
-          isApproved,
-          updatedAt,
-          createdAt,
-          updatedById,
-          createdById,
-          screenshot,
-          _id,
-          favorited
-        }) => {
-          return (
-            <EmailCard
-              key={_id}
-              _id={_id}
-              title={title}
-              link={`/email/edit/${_id}`}
-              email={true}
-              isDraft={isDraft}
-              hasBeenSent={hasBeenSent}
-              isApproved={isApproved}
-              updatedAt={updatedAt}
-              createdAt={createdAt}
-              updatedById={updatedById}
-              createdById={createdById}
-              image={screenshot}
-              favorited={favorited}
-            />
-          );
-        }
-      );
-    }
-
     return (
       <div style={styles.root}>
         <Grid container spacing={24}>
@@ -100,7 +61,18 @@ class ViewAllEmails extends Component {
                   </Link>
                 </div>
                 <Grid container spacing={24}>
-                  {renderEmails}
+                  {emails &&
+                    emails.map(({ title, _id, favorited }) => (
+                      <EmailCard
+                        key={_id}
+                        title={title}
+                        _id={_id}
+                        link={`/email/edit/${_id}`}
+                        email={true}
+                        favorited={favorited}
+                        needsImage={true}
+                      />
+                    ))}
                 </Grid>
                 {count && count.count > limit ? (
                   <Pagination
@@ -141,16 +113,8 @@ const getAllEmails = gql`
   query getAllEmails($_id: String!, $offset: Int, $limit: Int) {
     getAllEmails(_id: $_id, offset: $offset, limit: $limit) {
       title
-      isDraft
-      hasBeenSent
-      isApproved
-      updatedAt
-      favorited
-      createdAt
-      updatedById
-      createdById
-      screenshot
       _id
+      favorited
     }
   }
 `;

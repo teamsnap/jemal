@@ -38,22 +38,6 @@ class ViewAllPartials extends Component {
       this.props.getEmailPartialsCount &&
       this.props.getEmailPartialsCount.getEmailPartialsCount;
 
-    let renderEmailPartials;
-
-    if (emailPartials) {
-      renderEmailPartials = emailPartials.map(({ title, _id }) => {
-        return (
-          <EmailCard
-            key={_id}
-            _id={_id}
-            title={title}
-            link={`/email/partials/edit/${_id}`}
-            needsImage={false}
-          />
-        );
-      });
-    }
-
     return (
       <div style={styles.root}>
         <Grid container spacing={24}>
@@ -67,7 +51,16 @@ class ViewAllPartials extends Component {
                   </Button>
                 </Link>
                 <Grid container spacing={24}>
-                  {renderEmailPartials}
+                  {emailPartials &&
+                    emailPartials.map(({ title, _id }) => (
+                      <EmailCard
+                        key={_id}
+                        _id={_id}
+                        title={title}
+                        link={`/email/partials/edit/${_id}`}
+                        needsImage={false}
+                      />
+                    ))}
                 </Grid>
                 {count && count.count > limit ? (
                   <Pagination

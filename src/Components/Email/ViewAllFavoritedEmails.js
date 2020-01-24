@@ -46,45 +46,6 @@ class ViewAllFavoritedEmails extends Component {
       this.props.getFavoritedEmailsCount &&
       this.props.getFavoritedEmailsCount.getFavoritedEmailsCount;
 
-    let renderEmails;
-
-    if (emails) {
-      renderEmails = emails.map(
-        ({
-          title,
-          isDraft,
-          hasBeenSent,
-          isApproved,
-          updatedAt,
-          createdAt,
-          updatedById,
-          createdById,
-          screenshot,
-          _id,
-          favorited
-        }) => {
-          return (
-            <EmailCard
-              key={_id}
-              _id={_id}
-              title={title}
-              link={`/email/edit/${_id}`}
-              email={true}
-              isDraft={isDraft}
-              hasBeenSent={hasBeenSent}
-              isApproved={isApproved}
-              updatedAt={updatedAt}
-              createdAt={createdAt}
-              updatedById={updatedById}
-              createdById={createdById}
-              image={screenshot}
-              favorited={favorited}
-            />
-          );
-        }
-      );
-    }
-
     return (
       <div style={styles.root}>
         <Grid container spacing={24}>
@@ -102,7 +63,18 @@ class ViewAllFavoritedEmails extends Component {
                   </Link>
                 </div>
                 <Grid container spacing={24}>
-                  {renderEmails}
+                  {emails &&
+                    emails.map(({ title, _id, favorited }) => (
+                      <EmailCard
+                        key={_id}
+                        title={title}
+                        _id={_id}
+                        link={`/email/edit/${_id}`}
+                        email={true}
+                        favorited={favorited}
+                        needsImage={true}
+                      />
+                    ))}
                 </Grid>
                 {count && count.count > limit ? (
                   <Pagination
@@ -143,16 +115,8 @@ const getFavoritedEmails = gql`
   query getFavoritedEmails($_id: String!, $offset: Int, $limit: Int) {
     getFavoritedEmails(_id: $_id, offset: $offset, limit: $limit) {
       title
-      isDraft
-      hasBeenSent
-      isApproved
-      updatedAt
-      favorited
-      createdAt
-      updatedById
-      createdById
-      screenshot
       _id
+      favorited
     }
   }
 `;
