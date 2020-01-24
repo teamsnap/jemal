@@ -114,6 +114,45 @@ const EmailResolver = {
         );
 
       return emailFound;
+    },
+    getCurrentEmailScreenshot: async (root, { _id }, { user, appUrl }) => {
+      if (!user) throw new Error('Must be logged in');
+      if (!_id) throw new Error('Must have email id');
+
+      const userFound = await User.findOne({ _id: user._id });
+
+      const emailPartialsFound = await EmailPartial.find(
+        { organizationId: userFound.organizationId },
+        (err, org) => {
+          if (err) console.error(err);
+        }
+      );
+
+      const emailFound = await Email.findOne({ _id });
+
+      const body = JSON.stringify({
+        _id: _id,
+        mjmlSource: emailFound.mjmlSource,
+        partials: emailPartialsFound,
+        options: {
+          type: 'jpeg',
+          clip: { x: 0, y: 0, width: 400, height: 205 }
+        }
+      });
+
+      const fetchScreenshot = await fetch(`${appUrl}/screenshot/${_id}`, {
+        method: 'POST',
+        body,
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const buffer = await fetchScreenshot.buffer();
+      const base64 = buffer.toString('base64');
+      const base64Image = `data:image/jpeg;base64,${base64}`;
+
+      return {
+        image: base64Image
+      };
     }
   },
   Email: {

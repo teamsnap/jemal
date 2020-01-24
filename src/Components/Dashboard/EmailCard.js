@@ -4,6 +4,7 @@ import { withApollo, graphql } from 'react-apollo';
 import flowright from 'lodash.flowright';
 import { Link } from 'react-router-dom';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -11,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import { Hidden } from '@material-ui/core';
 
 function HeartIcon(props) {
   return (
@@ -83,10 +85,27 @@ class EmailCard extends Component {
         top: 20
       },
       image: {
+        display: 'block'
+      },
+      imageContainer: {
+        minHeight: 205,
+        maxHeight: 205,
         marginLeft: -24,
         marginRight: -24,
         marginTop: -16,
-        display: 'block',
+        marginBottom: 16,
+        overflow: 'hidden'
+      },
+      loadingContainer: {
+        overflow: 'hidden',
+        minHeight: 205,
+        maxHeight: 205,
+        justifyContent: 'center',
+        alignItems: 'center',
+        display: 'flex',
+        marginLeft: -24,
+        marginRight: -24,
+        marginTop: -16,
         marginBottom: 16
       },
       link: {
@@ -97,19 +116,11 @@ class EmailCard extends Component {
 
     if (this.props.loading) return null;
     let renderEmail;
-    let renderImage;
 
-    if (this.props.email) {
-      renderImage = (
-        <Link to={this.props.link}>
-          <img
-            src={this.props.image}
-            alt={this.props.title}
-            style={styles.image}
-          />
-        </Link>
-      );
-    }
+    const image = this.props.needsImage
+      ? !this.props.getCurrentEmailScreenshot.loading &&
+        this.props.getCurrentEmailScreenshot.getCurrentEmailScreenshot.image
+      : false;
 
     return (
       <Grid item sm={4}>
@@ -118,7 +129,23 @@ class EmailCard extends Component {
             {this.props.favorited ? (
               <HeartIcon color="primary" style={styles.icon} />
             ) : null}
-            {renderImage}
+            {this.props.needsImage ? (
+              image ? (
+                <div style={styles.imageContainer}>
+                  <Link to={this.props.link}>
+                    <img
+                      src={image}
+                      alt={this.props.title}
+                      style={styles.image}
+                    />
+                  </Link>
+                </div>
+              ) : (
+                <div style={styles.loadingContainer}>
+                  <CircularProgress color="secondary" />
+                </div>
+              )
+            ) : null}
             <Link to={this.props.link} style={styles.link}>
               <Typography variant="h6">{this.props.title}</Typography>
             </Link>
@@ -164,6 +191,14 @@ const deleteEmailPartial = gql`
   }
 `;
 
+const getCurrentEmailScreenshot = gql`
+  query getCurrentEmailScreenshot($_id: String!) {
+    getCurrentEmailScreenshot(_id: $_id) {
+      image
+    }
+  }
+`;
+
 export default flowright(
   graphql(duplicateEmail, {
     name: 'duplicateEmail'
@@ -173,5 +208,8 @@ export default flowright(
   }),
   graphql(deleteEmailPartial, {
     name: 'deleteEmailPartial'
+  }),
+  graphql(getCurrentEmailScreenshot, {
+    name: 'getCurrentEmailScreenshot'
   })
 )(withApollo(EmailCard));

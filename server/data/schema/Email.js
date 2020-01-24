@@ -3,6 +3,7 @@ const { gql } = require('apollo-server-express');
 const Email = gql`
   extend type Query {
     getCurrentEmail(_id: String!): Email
+    getCurrentEmailScreenshot(_id: String!): Screenshot
     getAllEmails(_id: String!, offset: Int, limit: Int): [Email]
     getEmailsCount(_id: String!): Count
     getFavoritedEmailsCount(_id: String!): Count
@@ -32,6 +33,9 @@ const Email = gql`
     urlPreview: String
     screenshot: String
     screenshotDownloadUrl: String
+  }
+  type Screenshot {
+    image: String
   }
   type Count {
     count: String
