@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql, compose } from 'react-apollo';
+import { withApollo, graphql } from 'react-apollo';
+import flowright from 'lodash.flowright';
 
 import OrgSetup from '../Components/Dashboard/OrgSetup';
 import MainDashboard from '../Components/Dashboard/MainDashboard';
@@ -100,7 +101,7 @@ const getAllEmails = gql`
   }
 `;
 
-export default compose(
+export default flowright(
   graphql(currentUser, {
     name: 'currentUser'
   }),

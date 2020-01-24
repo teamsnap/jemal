@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql, compose } from 'react-apollo';
+import { withApollo, graphql } from 'react-apollo';
+import flowright from 'lodash.flowright';
 import { withRouter } from 'react-router-dom';
 
 import './EditEmail.css';
@@ -105,7 +106,6 @@ class EditEmailView extends Component {
         const blob = dataURLtoBlob(
           data.createCurrentEmailScreenshot.screenshotDownloadUrl
         );
-        console.log(blob);
 
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -115,21 +115,6 @@ class EditEmailView extends Component {
         a.download = 'download.jpeg';
         a.click();
         window.URL.revokeObjectURL(url);
-
-        // console.log();
-        // const link = document.createElement('a');
-        // link.href = data.createCurrentEmailScreenshot.screenshotDownloadUrl;
-        // link.setAttribute('download', 'download');
-
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link);
-
-        // this.setState({
-        //   loading: {
-        //     screenshot: false
-        //   }
-        // });
       })
       .catch(error => {
         console.error(error);
@@ -316,7 +301,8 @@ class EditEmailView extends Component {
   iframe() {
     const iframe = this.refs.iframe;
     const document = iframe.contentDocument;
-    document.body.innerHTML = this.props.content;
+    // console.log(iframe);
+    document.body.innerHTML = this.props.srcDoc;
   }
 
   componentWillReceiveProps(newProps) {
@@ -611,7 +597,7 @@ class EditEmailView extends Component {
               <Grid item sm={6} style={{ paddingLeft: 0, paddingRight: 0 }}>
                 <Iframe
                   style={styles.iframe}
-                  content={email.urlPreview}
+                  srcDoc={email.urlPreview}
                   title={email.title}
                 />
               </Grid>
@@ -733,7 +719,7 @@ const createCurrentEmailScreenshot = gql`
 `;
 
 export default withRouter(
-  compose(
+  flowright(
     graphql(duplicateEmail, {
       name: 'duplicateEmail'
     }),

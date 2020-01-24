@@ -29,7 +29,7 @@ class Iframe extends Component {
   _updateIframe() {
     const iframe = this.refs.iframe;
     const document = iframe.contentDocument;
-    document.body.innerHTML = this.props.content;
+    document.body.innerHTML = this.props.srcDoc;
   }
 
   /**
