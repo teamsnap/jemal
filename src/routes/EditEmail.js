@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import EditEmailView from '../Components/Email/EditEmail';
 
-class CreateEmail extends Component {
-  render() {
-    return (
-      <div>
-        <EditEmailView />
-      </div>
-    );
-  }
-}
+const CreateEmail = () => (
+  <div>
+    <EditEmailView />
+  </div>
+);
 
 export default CreateEmail;

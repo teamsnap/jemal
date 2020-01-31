@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import CreateOrganizationView from '../Components/Organization/CreateOrganization';
 
-class CreateOrganization extends Component {
-  render() {
-    return (
-      <div style={{ marginTop: 32 }}>
-        <CreateOrganizationView />
-      </div>
-    );
-  }
-}
+const CreateOrganization = () => (
+  <div style={{ marginTop: 32 }}>
+    <CreateOrganizationView />
+  </div>
+);
 
 export default CreateOrganization;

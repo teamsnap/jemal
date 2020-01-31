@@ -304,8 +304,6 @@ const EmailResolver = {
         userId: user._id
       });
 
-      console.error(emailRender.errors);
-
       return newEmail;
     },
     editEmail: async (
