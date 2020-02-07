@@ -76,8 +76,6 @@ const ForgotForm = () => {
       return;
     }
 
-    setTimeout(() => setError(''), 3000);
-
     if (localStorage.getItem(appToken)) {
       localStorage.removeItem(appToken);
     }
@@ -107,8 +105,6 @@ const ForgotForm = () => {
       return;
     }
 
-    setTimeout(() => setError(''), 3000);
-
     if (localStorage.getItem(appToken)) {
       localStorage.removeItem(appToken);
     }
@@ -126,22 +122,25 @@ const ForgotForm = () => {
       }
       return;
     }
-
-    if (!requestResetLoading && requestResetData) {
-      setSuccess('Please check your email!');
-    }
   };
 
   const handleChange = e =>
     setValue({ ...value, [e.target.name]: e.target.value });
 
   useEffect(() => {
+    console.log(changePassData);
     if (!changePassLoading && changePassData && changePassData.changePassword) {
       setSuccess('Password has been reset!');
       localStorage.setItem(appToken, changePassData.changePassword.jwt);
       window.location.href = '/';
     }
   }, [changePassData, changePassLoading]);
+
+  useEffect(() => {
+    if (!requestResetLoading && requestResetData) {
+      setSuccess('Please check your email!');
+    }
+  }, [requestResetLoading, requestResetData]);
 
   return (
     <>
@@ -163,6 +162,7 @@ const ForgotForm = () => {
               <div className="field-line">
                 <TextField
                   name="verifyPassword"
+                  type="password"
                   placeholder="new password"
                   fullWidth
                   onChange={handleChange}
@@ -171,6 +171,7 @@ const ForgotForm = () => {
               <div className="field-line">
                 <TextField
                   name="newPassword"
+                  type="password"
                   placeholder="verify password"
                   fullWidth
                   onChange={handleChange}

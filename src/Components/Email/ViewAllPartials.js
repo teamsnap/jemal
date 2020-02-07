@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql } from 'react-apollo';
-import flowright from 'lodash.flowright';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -14,71 +13,20 @@ import Pagination from '../../Components/Pagination/Pagination';
 import Loading from '../../Components/Loading/Loading';
 
 const limit = 6;
-
-class ViewAllPartials extends Component {
-  render() {
-    const styles = {
-      root: {
-        flexGrow: 1,
-        width: '80%',
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        marginTop: 60
-      },
-      paper: {
-        padding: 20
-      }
-    };
-
-    if (this.props.getAllEmailPartials.loading) return <Loading />;
-    const emailPartials =
-      this.props.getAllEmailPartials &&
-      this.props.getAllEmailPartials.getAllEmailPartials;
-    const count =
-      this.props.getEmailPartialsCount &&
-      this.props.getEmailPartialsCount.getEmailPartialsCount;
-
-    return (
-      <div style={styles.root}>
-        <Grid container spacing={24}>
-          <Grid item sm={12}>
-            <Paper style={styles.paper}>
-              <Typography variant="h4">Viewing all email partials</Typography>
-              <Paper style={styles.paper}>
-                <Link to="/email/partial/create">
-                  <Button variant="contained" color="primary" size="large">
-                    New email partial
-                  </Button>
-                </Link>
-                <Grid container spacing={24}>
-                  {emailPartials &&
-                    emailPartials.map(({ title, _id }) => (
-                      <EmailCard
-                        key={_id}
-                        _id={_id}
-                        title={title}
-                        link={`/email/partials/edit/${_id}`}
-                        needsImage={false}
-                      />
-                    ))}
-                </Grid>
-                {count && count.count > limit ? (
-                  <Pagination
-                    count={count && count.count}
-                    limit={limit}
-                    link="/email/partials/view/page/"
-                  />
-                ) : null}
-              </Paper>
-            </Paper>
-          </Grid>
-        </Grid>
-      </div>
-    );
+const styles = {
+  root: {
+    flexGrow: 1,
+    width: '80%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: 60
+  },
+  paper: {
+    padding: 20
   }
-}
+};
 
-const currentUser = gql`
+const CURRENT_USER = gql`
   query currentUser {
     currentUser {
       _id
@@ -89,7 +37,7 @@ const currentUser = gql`
   }
 `;
 
-const getAllEmailPartials = gql`
+const GET_ALL_EMAIL_PARTIALS = gql`
   query getAllEmailPartials($_id: String!, $offset: Int, $limit: Int) {
     getAllEmailPartials(_id: $_id, offset: $offset, limit: $limit) {
       title
@@ -98,7 +46,7 @@ const getAllEmailPartials = gql`
   }
 `;
 
-const getEmailPartialsCount = gql`
+const GET_EMAIL_PARTIALS_COUNT = gql`
   query getEmailPartialsCount($_id: String!) {
     getEmailPartialsCount(_id: $_id) {
       count
@@ -106,34 +54,116 @@ const getEmailPartialsCount = gql`
   }
 `;
 
-export default withRouter(
-  flowright(
-    graphql(currentUser, {
-      name: 'currentUser'
-    }),
-    graphql(getAllEmailPartials, {
-      name: 'getAllEmailPartials',
-      options: ownProps => ({
+const DUPLICATE_EMAIL_PARTIAL = gql`
+  mutation duplicateEmailPartial($_id: String!) {
+    duplicateEmailPartial(_id: $_id) {
+      title
+      _id
+    }
+  }
+`;
+
+const ViewAllPartials = () => {
+  const { page } = useParams();
+  const history = useHistory();
+  const offset = (page - 1) * limit;
+  const { data: data_user } = useQuery(CURRENT_USER);
+  const { data: data_partials, loading: loading_partials } = useQuery(
+    GET_ALL_EMAIL_PARTIALS,
+    {
+      variables: {
+        skip: !data_user,
+        _id: data_user && data_user.currentUser.organizationId,
+        offset,
+        limit
+      }
+    }
+  );
+  const { data: data_count, loading: loading_count } = useQuery(
+    GET_EMAIL_PARTIALS_COUNT,
+    {
+      variables: {
+        skip: !data_user,
+        _id: data_user && data_user.currentUser.organizationId
+      }
+    }
+  );
+  const [duplicateEmailPartial] = useMutation(DUPLICATE_EMAIL_PARTIAL, {
+    update(cache, { data: { duplicateEmailPartial } }) {
+      const { getAllEmailPartials } = cache.readQuery({
+        query: GET_ALL_EMAIL_PARTIALS,
         variables: {
-          _id:
-            !ownProps.currentUser.loading &&
-            ownProps.currentUser.currentUser &&
-            ownProps.currentUser.currentUser.organizationId,
-          offset: (ownProps.match.params.page - 1) * limit,
-          limit
+          skip: !data_user,
+          _id: data_user && data_user.currentUser.organizationId,
+          offset: 0,
+          limit: 6
         }
-      })
-    }),
-    graphql(getEmailPartialsCount, {
-      name: 'getEmailPartialsCount',
-      options: ownProps => ({
+      });
+
+      getAllEmailPartials.pop();
+
+      cache.writeQuery({
+        query: GET_ALL_EMAIL_PARTIALS,
         variables: {
-          _id:
-            !ownProps.currentUser.loading &&
-            ownProps.currentUser.currentUser &&
-            ownProps.currentUser.currentUser.organizationId
+          skip: !data_user,
+          _id: data_user && data_user.currentUser.organizationId,
+          offset: 0,
+          limit: 6
+        },
+        data: {
+          getAllEmails: getAllEmailPartials.unshift(duplicateEmailPartial)
         }
-      })
-    })
-  )(withApollo(ViewAllPartials))
-);
+      });
+
+      history.push(`/email/partials/edit/${duplicateEmailPartial._id}`);
+    }
+  });
+
+  if (loading_partials) return <Loading />;
+  const emailPartials =
+    !loading_partials && data_partials && data_partials.getAllEmailPartials;
+  const count =
+    !loading_count && data_count && data_count.getEmailPartialsCount;
+
+  return (
+    <div style={styles.root}>
+      <Grid container spacing={24}>
+        <Grid item sm={12}>
+          <Paper style={styles.paper}>
+            <Typography variant="h4">Viewing all email partials</Typography>
+            <Paper style={styles.paper}>
+              <Link to="/email/partial/create">
+                <Button variant="contained" color="primary" size="large">
+                  New email partial
+                </Button>
+              </Link>
+              <Grid container spacing={24}>
+                {emailPartials &&
+                  emailPartials.map(({ title, _id }) => (
+                    <EmailCard
+                      key={_id}
+                      _id={_id}
+                      title={title}
+                      link={`/email/partials/edit/${_id}`}
+                      needsImage={false}
+                      history={history}
+                      duplicateEmailPartial={duplicateEmailPartial}
+                    />
+                  ))}
+              </Grid>
+              {count && count.count > limit ? (
+                <Pagination
+                  count={count && count.count}
+                  limit={limit}
+                  link="/email/partials/view/page/"
+                />
+              ) : null}
+            </Paper>
+          </Paper>
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
+
+export default ViewAllPartials;
