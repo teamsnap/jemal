@@ -1,6 +1,6 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import { useMutation, useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import { Link } from 'react-router-dom';
 
 import CircularProgress from '@material-ui/core/CircularProgress';

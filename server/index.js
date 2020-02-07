@@ -1,9 +1,8 @@
 require('dotenv').config();
 const express = require('express');
-const { ApolloServer, gql } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server-express');
 const mongoose = require('mongoose');
 const jwt = require('express-jwt');
-const path = require('path');
 
 const typeDefs = require('./data/schema');
 const resolvers = require('./data/resolvers');
@@ -30,9 +29,6 @@ const server = new ApolloServer({
   path: gqlPath,
   introspection: true
 });
-
-// app.use('/emails', express.static(path.join(__dirname, 'emails')));
-// app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use(
   gqlPath,
