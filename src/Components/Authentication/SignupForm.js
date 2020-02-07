@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
+const appToken = 'mjml-jwt';
 const styles = {
   card: {
     maxWidth: 400,
@@ -44,6 +45,7 @@ const SignupForm = () => {
     firstname: '',
     lastname: ''
   });
+  const [error, setError] = useState('');
 
   const [
     signup,
@@ -52,91 +54,95 @@ const SignupForm = () => {
 
   const createUser = () => {
     const { email, password, firstname, lastname } = value;
-    const token = 'mjml-jwt';
 
     if (!email || !password || !firstname || !lastname) {
       return;
     }
 
-    if (localStorage.getItem(token)) {
-      localStorage.removeItem(token);
+    setTimeout(() => setError(''), 3000);
+
+    if (localStorage.getItem(appToken)) {
+      localStorage.removeItem(appToken);
     }
 
     signup({ variables: { email, password, firstname, lastname } });
 
     if (signupError) {
-      console.log(signupError);
+      setError(signupError.message.split(':')[1]);
+      if (localStorage.getItem(appToken)) {
+        localStorage.removeItem(appToken);
+      }
       return;
-    }
-
-    if (!signupLoading && signupData && signupData.signup) {
-      localStorage.setItem(token, signupData.signup.jwt);
-      window.location.href = '/';
     }
   };
 
   const handleChange = e =>
     setValue({ ...value, [e.target.name]: e.target.value });
 
+  useEffect(() => {
+    if (!signupLoading && signupData && signupData.signup) {
+      localStorage.setItem(appToken, signupData.signup.jwt);
+      window.location.href = '/';
+    }
+  }, [signupData, signupLoading]);
+
   return (
-    <div>
-      <Card style={styles.card}>
-        <CardContent>
-          <form action="/">
-            {signupError && <p>{signupError.toString()}</p>}
-            <Typography variant="h5">Create account</Typography>
-            <div className="field-line">
-              <TextField
-                name="firstname"
-                placeholder="First name"
-                fullWidth
-                onChange={handleChange}
-              />
-            </div>
-            <div className="field-line">
-              <TextField
-                name="lastname"
-                placeholder="Last name"
-                fullWidth
-                onChange={handleChange}
-              />
-            </div>
-            <div className="field-line">
-              <TextField
-                name="email"
-                placeholder="email"
-                fullWidth
-                onChange={handleChange}
-              />
-            </div>
-            <div className="field-line">
-              <TextField
-                type="password"
-                name="password"
-                placeholder="password"
-                fullWidth
-                onChange={handleChange}
-              />
-            </div>
-          </form>
-        </CardContent>
-        <CardActions>
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={createUser}
-          >
-            Create account
+    <Card style={styles.card}>
+      <CardContent>
+        <form action="/">
+          {error && <p>{error}</p>}
+          <Typography variant="h5">Create account</Typography>
+          <div className="field-line">
+            <TextField
+              name="firstname"
+              placeholder="First name"
+              fullWidth
+              onChange={handleChange}
+            />
+          </div>
+          <div className="field-line">
+            <TextField
+              name="lastname"
+              placeholder="Last name"
+              fullWidth
+              onChange={handleChange}
+            />
+          </div>
+          <div className="field-line">
+            <TextField
+              name="email"
+              placeholder="email"
+              fullWidth
+              onChange={handleChange}
+            />
+          </div>
+          <div className="field-line">
+            <TextField
+              type="password"
+              name="password"
+              placeholder="password"
+              fullWidth
+              onChange={handleChange}
+            />
+          </div>
+        </form>
+      </CardContent>
+      <CardActions>
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={createUser}
+        >
+          Create account
+        </Button>
+        <Link to="/login">
+          <Button variant="contained" size="small">
+            Log in
           </Button>
-          <Link to="/login">
-            <Button variant="contained" size="small">
-              Log in
-            </Button>
-          </Link>
-        </CardActions>
-      </Card>
-    </div>
+        </Link>
+      </CardActions>
+    </Card>
   );
 };
 
