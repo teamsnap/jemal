@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql } from 'react-apollo';
-import flowright from 'lodash.flowright';
+import { useMutation } from '@apollo/react-hooks';
 import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
@@ -11,127 +10,14 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
-class SignupForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-      firstname: '',
-      lastname: '',
-      errorMessage: ''
-    };
-    this.createUser = this.createUser.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+const styles = {
+  card: {
+    maxWidth: 400,
+    margin: '0 auto'
   }
+};
 
-  createUser() {
-    const { email, password, firstname, lastname } = this.state;
-    const token = 'mjml-jwt';
-
-    if (localStorage.getItem(token)) {
-      localStorage.removeItem(token);
-    }
-
-    this.props
-      .signup({
-        variables: {
-          email,
-          firstname,
-          lastname,
-          password
-        }
-      })
-      .then(data => {
-        localStorage.setItem(token, data.data.signup.jwt);
-      })
-      .then(() => (window.location.href = '/'))
-      .catch(error => {
-        if (localStorage.getItem(token)) {
-          localStorage.removeItem(token);
-        }
-        console.error(error);
-        this.setState({
-          errorMessage: error.message.split(':')[1]
-        });
-      });
-  }
-
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  }
-
-  render() {
-    const styles = {
-      card: {
-        maxWidth: 400,
-        margin: '0 auto'
-      }
-    };
-    return (
-      <div>
-        <Card style={styles.card}>
-          <CardContent>
-            <form action="/">
-              <Typography variant="h5">Create account</Typography>
-              <div className="field-line">
-                <TextField
-                  name="firstname"
-                  placeholder="First name"
-                  fullWidth
-                  onChange={this.handleChange}
-                />
-              </div>
-              <div className="field-line">
-                <TextField
-                  name="lastname"
-                  placeholder="Last name"
-                  fullWidth
-                  onChange={this.handleChange}
-                />
-              </div>
-              <div className="field-line">
-                <TextField
-                  name="email"
-                  placeholder="email"
-                  fullWidth
-                  onChange={this.handleChange}
-                />
-              </div>
-              <div className="field-line">
-                <TextField
-                  type="password"
-                  name="password"
-                  placeholder="password"
-                  fullWidth
-                  onChange={this.handleChange}
-                />
-              </div>
-            </form>
-          </CardContent>
-          <CardActions>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={this.createUser}
-            >
-              Create account
-            </Button>
-            <Link to="/login">
-              <Button variant="contained" size="small">
-                Log in
-              </Button>
-            </Link>
-          </CardActions>
-        </Card>
-      </div>
-    );
-  }
-}
-
-const signup = gql`
+const SIGNUP = gql`
   mutation signup(
     $email: String!
     $password: String!
@@ -151,8 +37,107 @@ const signup = gql`
   }
 `;
 
-export default flowright(
-  graphql(signup, {
-    name: 'signup'
-  })
-)(withApollo(SignupForm));
+const SignupForm = () => {
+  const [value, setValue] = useState({
+    email: '',
+    password: '',
+    firstname: '',
+    lastname: ''
+  });
+
+  const [
+    signup,
+    { data: signupData, loading: signupLoading, error: signupError }
+  ] = useMutation(SIGNUP);
+
+  const createUser = () => {
+    const { email, password, firstname, lastname } = value;
+    const token = 'mjml-jwt';
+
+    if (!email || !password || !firstname || !lastname) {
+      return;
+    }
+
+    if (localStorage.getItem(token)) {
+      localStorage.removeItem(token);
+    }
+
+    signup({ variables: { email, password, firstname, lastname } });
+
+    if (signupError) {
+      console.log(signupError);
+      return;
+    }
+
+    if (!signupLoading && signupData && signupData.signup) {
+      localStorage.setItem(token, signupData.signup.jwt);
+      window.location.href = '/';
+    }
+  };
+
+  const handleChange = e =>
+    setValue({ ...value, [e.target.name]: e.target.value });
+
+  return (
+    <div>
+      <Card style={styles.card}>
+        <CardContent>
+          <form action="/">
+            {signupError && <p>{signupError.toString()}</p>}
+            <Typography variant="h5">Create account</Typography>
+            <div className="field-line">
+              <TextField
+                name="firstname"
+                placeholder="First name"
+                fullWidth
+                onChange={handleChange}
+              />
+            </div>
+            <div className="field-line">
+              <TextField
+                name="lastname"
+                placeholder="Last name"
+                fullWidth
+                onChange={handleChange}
+              />
+            </div>
+            <div className="field-line">
+              <TextField
+                name="email"
+                placeholder="email"
+                fullWidth
+                onChange={handleChange}
+              />
+            </div>
+            <div className="field-line">
+              <TextField
+                type="password"
+                name="password"
+                placeholder="password"
+                fullWidth
+                onChange={handleChange}
+              />
+            </div>
+          </form>
+        </CardContent>
+        <CardActions>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={createUser}
+          >
+            Create account
+          </Button>
+          <Link to="/login">
+            <Button variant="contained" size="small">
+              Log in
+            </Button>
+          </Link>
+        </CardActions>
+      </Card>
+    </div>
+  );
+};
+
+export default SignupForm;
