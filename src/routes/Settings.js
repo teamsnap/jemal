@@ -1,4 +1,5 @@
 import React from 'react';
+
 import SettingsView from '../Components/Settings/Settings';
 
 const Settings = () => (
