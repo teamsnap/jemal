@@ -36,6 +36,25 @@ const OrganizationResolver = {
 
       return organization;
     },
+    updateOrganization: async (root, { name, logoUrl }, { user }) => {
+      if (!user._id) throw new Error('Must be logged in');
+
+      const { organizationId } = await User.findOne({ _id: user._id });
+
+      if (!organizationId) throw new Error('Must apart of an organization');
+
+      const organization = await Organization.update(
+        { _id: organizationId },
+        {
+          $set: {
+            name,
+            logoUrl
+          }
+        }
+      );
+
+      return organization;
+    },
     inviteToOrganization: async (root, { email }, { user, appUrl }) => {
       if (!user._id) throw new Error('Must be logged in');
       if (!email) throw new Error('Must have an email');

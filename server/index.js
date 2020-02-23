@@ -24,7 +24,7 @@ const server = new ApolloServer({
     appUrl:
       req.headers['x-now-deployment-url'] === 'localhost:3000'
         ? `http://${req.headers['x-now-deployment-url']}`
-        : `https://${req.headers['x-now-deployment-url']}`
+        : `https://ts-mar-email.now.sh}`
   }),
   path: gqlPath,
   introspection: true

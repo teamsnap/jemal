@@ -13,11 +13,7 @@ const Organization = gql`
   }
   extend type Mutation {
     createOrganization(name: String!, logoUrl: String): Organization
-    updateOrganization(
-      _id: String!
-      name: String
-      logoUrl: String
-    ): Organization
+    updateOrganization(name: String, logoUrl: String): Organization
     inviteToOrganization(email: String!): User
     acceptToOrganization(email: String!, organizationId: String!): User
     deleteOrganization(_id: String!): Organization

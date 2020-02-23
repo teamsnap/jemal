@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql } from 'react-apollo';
-import flowright from 'lodash.flowright';
-import { withRouter } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+import { useMutation, useQuery, useApolloClient } from 'react-apollo';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -11,116 +10,20 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
-class EditOrganizationView extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      logoUrl: '',
-      errorMessage: ''
-    };
-    this.editOrganization = this.editOrganization.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.goBack = this.goBack.bind(this);
+const styles = {
+  card: {
+    maxWidth: 400,
+    margin: '0 auto'
+  },
+  formControl: {
+    minWidth: 120
+  },
+  formControlPad: {
+    marginTop: 20
   }
+};
 
-  editOrganization() {
-    const { name, logoUrl } = this.state;
-
-    this.props
-      .editOrganization({
-        variables: {
-          name,
-          logoUrl
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        this.setState({
-          errorMessage: error.message.split(':')[1]
-        });
-      });
-  }
-
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  }
-
-  goBack() {
-    this.props.history.goBack();
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (!newProps.loading) {
-      const currentOrganization =
-        newProps.getCurrentOrganization.currentOrganization;
-      this.setState({
-        name: currentOrganization && currentOrganization.name,
-        logoUrl: currentOrganization && currentOrganization.logoUrl
-      });
-    }
-  }
-
-  render() {
-    const styles = {
-      card: {
-        maxWidth: 400,
-        margin: '0 auto'
-      },
-      formControl: {
-        minWidth: 120
-      },
-      formControlPad: {
-        marginTop: 20
-      }
-    };
-
-    if (this.props.loading) return null;
-    const currentOrganization = this.props.getCurrentOrganization
-      .currentOrganization;
-    return (
-      <div>
-        <Card style={styles.card}>
-          <CardContent>
-            <form action="/">
-              {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
-              <Typography variant="h5">Edit your Organization</Typography>
-              <div style={styles.formControlPad}>
-                <TextField
-                  name="name"
-                  placeholder="name"
-                  fullWidth
-                  value={this.state.name || ''}
-                  onChange={this.handleChange}
-                />
-              </div>
-              <div style={styles.formControlPad}>
-                <TextField
-                  name="logoUrl"
-                  placeholder="Logo URL"
-                  fullWidth
-                  value={this.state.logoUrl || ''}
-                  onChange={this.handleChange}
-                />
-              </div>
-            </form>
-          </CardContent>
-          <CardActions>
-            <Button variant="contained" color="primary" size="small" disabled>
-              Save
-            </Button>
-            <Button variant="contained" size="small" onClick={this.goBack}>
-              Cancel
-            </Button>
-          </CardActions>
-        </Card>
-      </div>
-    );
-  }
-}
-
-const getCurrentOrganization = gql`
+const GET_CURRENT_ORGANIZATION = gql`
   query currentOrganization($_id: String!) {
     currentOrganization(_id: $_id) {
       name
@@ -131,29 +34,138 @@ const getCurrentOrganization = gql`
   }
 `;
 
-const editOrganization = gql`
-  mutation editOrganization($name: String!, $logoUrl: String!) {
-    editOrganization(name: $name, logoUrl: $logoUrl) {
-      _id
+const UPDATE_ORGANIZATION = gql`
+  mutation updateOrganization($name: String!, $logoUrl: String!) {
+    updateOrganization(name: $name, logoUrl: $logoUrl) {
       name
-      createdAt
-      createdById
       logoUrl
     }
   }
 `;
 
-export default withRouter(
-  flowright(
-    graphql(editOrganization, {
-      name: 'editOrganization'
-    }),
-    graphql(getCurrentOrganization, {
-      name: 'getCurrentOrganization',
-      options: ownProps => ({
-        variables: { _id: ownProps.match.params.id },
-        forceRefetch: true
-      })
-    })
-  )(withApollo(EditOrganizationView))
-);
+const EditOrganizationView = () => {
+  const [value, setValue] = useState({
+    name: '',
+    logoUrl: ''
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccces] = useState('');
+  const history = useHistory();
+  const client = useApolloClient();
+  const { id } = useParams();
+
+  const [
+    updateOrganization,
+    {
+      data: updateOrganizationData,
+      loading: updateOrganizationLoading,
+      error: updateOrganizationError
+    }
+  ] = useMutation(UPDATE_ORGANIZATION);
+
+  const {
+    data: currentOrganizationData,
+    loading: currentOrganizationLoading
+  } = useQuery(GET_CURRENT_ORGANIZATION, {
+    variables: {
+      _id: id
+    }
+  });
+
+  const handleEditOrganization = () => {
+    const { name, logoUrl } = value;
+
+    if (!name || !logoUrl) {
+      setError('Form must not be empty');
+      return;
+    }
+
+    updateOrganization({
+      variables: {
+        name,
+        logoUrl
+      }
+    });
+
+    if (updateOrganizationError) {
+      setError(updateOrganizationError.message.split(':')[1]);
+      return;
+    }
+  };
+
+  const handleChange = e =>
+    setValue({
+      ...value,
+      [e.target.name]: e.target.value
+    });
+
+  const goBack = () => history.goBack();
+
+  useEffect(() => {
+    if (!updateOrganizationLoading && updateOrganizationData) {
+      setSuccces('Updated');
+      setError('');
+      client.resetStore();
+      window.location.reload();
+    }
+  }, [updateOrganizationData, updateOrganizationLoading]);
+
+  useEffect(() => {
+    if (!currentOrganizationLoading && currentOrganizationData) {
+      setValue(v => ({
+        ...v,
+        logoUrl: currentOrganizationData.currentOrganization.logoUrl,
+        name: currentOrganizationData.currentOrganization.name
+      }));
+    }
+  }, [currentOrganizationLoading, currentOrganizationData]);
+
+  if (currentOrganizationLoading) return null;
+
+  return (
+    <div>
+      <Card style={styles.card}>
+        <CardContent>
+          <form action="/">
+            {error && <p>{error}</p>}
+            {success && <p>{success}</p>}
+            <Typography variant="h5">Edit your Organization</Typography>
+            <div style={styles.formControlPad}>
+              <TextField
+                name="name"
+                placeholder="name"
+                fullWidth
+                value={value.name || ''}
+                onChange={handleChange}
+              />
+            </div>
+            <div style={styles.formControlPad}>
+              <TextField
+                name="logoUrl"
+                placeholder="Logo URL"
+                fullWidth
+                value={value.logoUrl || ''}
+                onChange={handleChange}
+              />
+            </div>
+          </form>
+        </CardContent>
+        <CardActions>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={handleEditOrganization}
+          >
+            Save
+          </Button>
+          <Button variant="contained" size="small" onClick={goBack}>
+            Cancel
+          </Button>
+        </CardActions>
+      </Card>
+    </div>
+  );
+};
+
+export default EditOrganizationView;
