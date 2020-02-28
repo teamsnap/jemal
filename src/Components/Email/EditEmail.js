@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import gql from 'graphql-tag';
-import { useMutation, useQuery, useApolloClient } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import { useHistory, useParams } from 'react-router-dom';
 
 import './EditEmail.css';
@@ -133,7 +133,6 @@ const CREATE_CURRENT_EMAIL_SCREENSHOT = gql`
 const EditEmailView = () => {
   const { id } = useParams();
   const history = useHistory();
-  const client = useApolloClient();
   const [value, setValue] = useState({
     title: '',
     mjmlSource: '',
