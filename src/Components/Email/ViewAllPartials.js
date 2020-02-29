@@ -132,7 +132,7 @@ const ViewAllPartials = () => {
           <Paper style={styles.paper}>
             <Typography variant="h4">Viewing all email partials</Typography>
             <Paper style={styles.paper}>
-              <Link to="/email/partial/create">
+              <Link to="/email/partials/create">
                 <Button variant="contained" color="primary" size="large">
                   New email partial
                 </Button>

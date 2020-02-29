@@ -67,6 +67,25 @@ const EDIT_EMAIL_PARTIAL = gql`
       organizationId: $organizationId
     ) {
       _id
+      title
+      mjmlSource
+      folderPath
+    }
+  }
+`;
+
+const DUPLICATE_EMAIL_PARTIAL = gql`
+  mutation duplicateEmailPartial($_id: String!) {
+    duplicateEmailPartial(_id: $_id) {
+      _id
+    }
+  }
+`;
+
+const DELETE_EMAIL_PARTIAL = gql`
+  mutation deleteEmailPartial($_id: String!) {
+    deleteEmailPartial(_id: $_id) {
+      _id
     }
   }
 `;
@@ -92,6 +111,16 @@ const EmailEditorOnly = () => {
     editEmailPartial,
     { loading: editEmailPartialLoading, error: editEmailPartialError }
   ] = useMutation(EDIT_EMAIL_PARTIAL);
+  const [duplicateEmailPartial] = useMutation(DUPLICATE_EMAIL_PARTIAL, {
+    update(cache, { data: { duplicateEmailPartial } }) {
+      window.location = `/email/partials/edit/${duplicateEmailPartial._id}`;
+    }
+  });
+  const [deleteEmailPartial] = useMutation(DELETE_EMAIL_PARTIAL, {
+    update(cache, { data: { deleteEmailPartial } }) {
+      window.location = '/email/partials/view/page/1';
+    }
+  });
 
   console.log(editEmailPartialError);
 
@@ -112,6 +141,20 @@ const EmailEditorOnly = () => {
       }
     });
   };
+
+  const handleDuplicateEmailPartial = () =>
+    duplicateEmailPartial({
+      variables: {
+        _id: id
+      }
+    });
+
+  const handleDelete = () =>
+    deleteEmailPartial({
+      variables: {
+        _id: id
+      }
+    });
 
   const handleChange = e =>
     setValue({
@@ -177,16 +220,22 @@ const EmailEditorOnly = () => {
                   >
                     Save
                   </Button>
-                  {/* <Button
+                  <Button
                     variant="outlined"
                     size="small"
                     style={{ marginLeft: 10 }}
+                    onClick={handleDuplicateEmailPartial}
                   >
                     Duplicate
                   </Button>
-                  <Button variant="outlined" size="small" color="secondary">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    color="secondary"
+                    onClick={handleDelete}
+                  >
                     Delete
-                  </Button> */}
+                  </Button>
                 </Grid>
               </Grid>
             </Paper>
