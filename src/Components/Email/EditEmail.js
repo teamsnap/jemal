@@ -17,7 +17,7 @@ import { countColumn } from 'codemirror';
 
 import Loading from '../../Components/Loading/Loading';
 import Iframe from './Iframe';
-import dataURLtoBlob from '../../modules/dataURLtoBlob';
+import dataURLtoBlob from '../../modules/dataURLToBlob';
 
 const styles = {
   root: {
