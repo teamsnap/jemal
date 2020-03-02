@@ -65,7 +65,7 @@ const OrganizationResolver = {
 
       const { organizationId } = await User.findOne({ _id: user._id });
       const { name } = await Organization.findOne({ _id: organizationId });
-      const url = appUrl;
+      const url = 'https://ts-mar-email.now.sh';
 
       const message = {
         from: 'sender@server.com',

@@ -89,7 +89,7 @@ const UserResolver = {
       const resetPasswordToken = await crypto.randomBytes(48).toString('hex');
       // expires in 1 hour
       const resetPasswordExpires = Date.now() + 1 * 60 * 60 * 1000;
-      const url = appUrl;
+      const url = 'https://ts-mar-email.now.sh';
 
       const message = {
         from: 'sender@server.com',
