@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@material-ui/core": "4.9.5",
+    "@material-ui/lab": "^4.0.0-alpha.45",
     "@zeit/ncc": "0.21.1",
     "apollo-boost": "0.4.7",
     "apollo-server": "2.10.1",

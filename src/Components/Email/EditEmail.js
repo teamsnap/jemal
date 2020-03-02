@@ -9,6 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -18,6 +20,20 @@ import { countColumn } from 'codemirror';
 import Loading from '../../Components/Loading/Loading';
 import Iframe from './Iframe';
 import dataURLtoBlob from '../../modules/dataURLToBlob';
+
+const Alert = props => <MuiAlert elevation={6} variant="filled" {...props} />;
+
+const AlertBar = props => {
+  return (
+    <Snackbar
+      open={props.open}
+      autoHideDuration={6000}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+    >
+      <Alert severity={props.severity}>{props.content}</Alert>
+    </Snackbar>
+  );
+};
 
 const styles = {
   root: {
@@ -133,6 +149,7 @@ const CREATE_CURRENT_EMAIL_SCREENSHOT = gql`
 const EditEmailView = () => {
   const { id } = useParams();
   const history = useHistory();
+  const [note, setNote] = useState({ open: false, severity: '', content: '' });
   const [value, setValue] = useState({
     title: '',
     mjmlSource: '',
@@ -169,25 +186,28 @@ const EditEmailView = () => {
       window.location = '/';
     }
   });
-  const [createCurrentEmailScreenshot] = useMutation(
-    CREATE_CURRENT_EMAIL_SCREENSHOT,
+  const [
+    createCurrentEmailScreenshot,
     {
-      update(cache, { data: { createCurrentEmailScreenshot } }) {
-        const blob = dataURLtoBlob(
-          createCurrentEmailScreenshot.screenshotDownloadUrl
-        );
-
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        document.body.appendChild(a);
-        a.style = 'display: none';
-        a.href = url;
-        a.download = 'download.jpeg';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
+      loading: createCurrentEmailScreenshotLoading,
+      error: createCurrentEmailScreenshotError
     }
-  );
+  ] = useMutation(CREATE_CURRENT_EMAIL_SCREENSHOT, {
+    update(cache, { data: { createCurrentEmailScreenshot } }) {
+      const blob = dataURLtoBlob(
+        createCurrentEmailScreenshot.screenshotDownloadUrl
+      );
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.style = 'display: none';
+      a.href = url;
+      a.download = 'download.jpeg';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+  });
 
   useEffect(() => {
     if (getCurrentEmailLoading) return;
@@ -197,6 +217,38 @@ const EditEmailView = () => {
       ...getCurrentEmailData.getCurrentEmail
     }));
   }, [getCurrentEmailData, getCurrentEmailLoading]);
+
+  useEffect(() => {
+    setNote({
+      open: editEmailError,
+      severity: 'error',
+      content: 'Whoah! Try again.'
+    });
+  }, [editEmailError]);
+
+  useEffect(() => {
+    setNote({
+      open: editEmailLoading,
+      severity: 'success',
+      content: 'Saving…'
+    });
+  }, [editEmailLoading]);
+
+  useEffect(() => {
+    setNote({
+      open: createCurrentEmailScreenshotError,
+      severity: 'error',
+      content: 'Whoah! Try again.'
+    });
+  }, [createCurrentEmailScreenshotError]);
+
+  useEffect(() => {
+    setNote({
+      open: createCurrentEmailScreenshotLoading,
+      severity: 'info',
+      content: 'Getting screenshot…'
+    });
+  }, [createCurrentEmailScreenshotLoading]);
 
   const handleDuplicate = () =>
     duplicateEmail({
@@ -296,24 +348,6 @@ const EditEmailView = () => {
                         marginLeft: 'auto'
                       }}
                     >
-                      {value.copied ? (
-                        <span
-                          onClick={() =>
-                            setValue(v => ({ ...v, copied: false }))
-                          }
-                          style={{
-                            position: 'absolute',
-                            backgroundColor: 'white',
-                            padding: 20,
-                            borderRadius: 8,
-                            right: 200,
-                            top: 20,
-                            zIndex: 100
-                          }}
-                        >
-                          Copied. [Close]
-                        </span>
-                      ) : null}
                       <Button
                         variant="contained"
                         color="primary"
@@ -324,7 +358,19 @@ const EditEmailView = () => {
                       </Button>
                       <CopyToClipboard
                         text={email.urlPreview}
-                        onCopy={() => setValue(v => ({ ...v, copied: true }))}
+                        onCopy={() => {
+                          setNote({
+                            open: true,
+                            severity: 'success',
+                            content: 'Copied'
+                          });
+
+                          setTimeout(() => {
+                            setNote({
+                              open: false
+                            });
+                          }, 6000);
+                        }}
                       >
                         <Button
                           color="primary"
@@ -365,8 +411,11 @@ const EditEmailView = () => {
           </div>
           <Grid container spacing={24}>
             <Grid item sm={6} style={{ paddingLeft: 0, paddingRight: 0 }}>
-              {editEmailLoading && <p>Loading...</p>}
-              {editEmailError && <p>Error :( Please try again</p>}
+              <AlertBar
+                open={note.open}
+                content={note.content}
+                severity={note.severity}
+              />
               <CodeMirror
                 value={value.mjmlSource}
                 options={{
