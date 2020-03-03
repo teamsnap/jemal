@@ -1,4 +1,3 @@
-const fs = require('fs-extra');
 const fetch = require('node-fetch');
 
 const { Email, User, EmailPartial } = require('../models');
@@ -303,8 +302,6 @@ const EmailResolver = {
         baseTemplate,
         userId: user._id
       });
-
-      console.error(emailRender.errors);
 
       return newEmail;
     },

@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql } from 'react-apollo';
-import flowright from 'lodash.flowright';
-import { withRouter } from 'react-router-dom';
+import { useQuery, useMutation } from 'react-apollo';
+import { useHistory } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -11,121 +10,21 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
-class CreateEmailPartialView extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      title: '',
-      mjmlSource: '',
-      folderPath: '',
-      errorMessage: ''
-    };
-    this.createEmailPartial = this.createEmailPartial.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.goBack = this.goBack.bind(this);
-  }
+const styles = {
+  card: {
+    maxWidth: 400,
+    margin: '0 auto'
+  },
+  formControl: {
+    minWidth: 120
+  },
+  formControlPad: {
+    marginTop: 20
+  },
+  selectEmpty: {}
+};
 
-  createEmailPartial() {
-    const { title, mjmlSource, folderPath } = this.state;
-    const organizationId =
-      this.props.currentUser.currentUser &&
-      this.props.currentUser.currentUser.organizationId;
-
-    this.props
-      .createEmailPartial({
-        variables: {
-          title,
-          mjmlSource,
-          folderPath,
-          organizationId
-        }
-      })
-      .then(data => {
-        this.props.history.push(
-          `/email/partials/edit/${data.data.createEmailPartial._id}`
-        );
-      })
-      .catch(error => {
-        console.error(error);
-        this.setState({
-          errorMessage: error.message.split(':')[1]
-        });
-      });
-  }
-
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  }
-
-  goBack() {
-    this.props.history.goBack();
-  }
-  render() {
-    const styles = {
-      card: {
-        maxWidth: 400,
-        margin: '0 auto'
-      },
-      formControl: {
-        minWidth: 120
-      },
-      formControlPad: {
-        marginTop: 20
-      },
-      selectEmpty: {}
-    };
-    return (
-      <div>
-        <Card style={styles.card}>
-          <CardContent>
-            <form action="/">
-              <Typography variant="h5">
-                Create a new email template partial
-              </Typography>
-              <div style={styles.formControlPad}>
-                <TextField
-                  floatingLabelText="title"
-                  name="title"
-                  placeholder="title"
-                  value={this.state.title}
-                  onChange={this.handleChange}
-                  fullWidth
-                />
-              </div>
-              <div>
-                <TextField
-                  floatingLabelText="folderPath"
-                  type="folderPath"
-                  name="folderPath"
-                  placeholder="folderPath"
-                  value={this.state.folderPath}
-                  onChange={this.handleChange}
-                  fullWidth
-                />
-              </div>
-            </form>
-          </CardContent>
-          <CardActions>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={this.createEmailPartial}
-            >
-              Create
-            </Button>
-            <Button variant="contained" size="small" onClick={this.goBack}>
-              Cancel
-            </Button>
-          </CardActions>
-        </Card>
-      </div>
-    );
-  }
-}
-
-const currentUser = gql`
+const CURRENT_USER = gql`
   query currentUser {
     currentUser {
       _id
@@ -134,17 +33,17 @@ const currentUser = gql`
   }
 `;
 
-const createEmailPartial = gql`
+const CREATE_EMAIL_PARTIAL = gql`
   mutation createEmailPartial(
     $title: String!
     $mjmlSource: String
-    $filePath: String
+    $folderPath: String
     $organizationId: String!
   ) {
     createEmailPartial(
       title: $title
       mjmlSource: $mjmlSource
-      filePath: $filePath
+      folderPath: $folderPath
       organizationId: $organizationId
     ) {
       _id
@@ -152,13 +51,90 @@ const createEmailPartial = gql`
   }
 `;
 
-export default withRouter(
-  flowright(
-    graphql(currentUser, {
-      name: 'currentUser'
-    }),
-    graphql(createEmailPartial, {
-      name: 'createEmailPartial'
-    })
-  )(withApollo(CreateEmailPartialView))
-);
+const CreateEmailPartialView = () => {
+  const history = useHistory();
+  const [value, setValue] = useState({
+    title: '',
+    mjmlSource: '<!-- code goes here -->\n',
+    folderPath: '',
+    errorMessage: ''
+  });
+  const { data: userData, loading: userLoading } = useQuery(CURRENT_USER);
+  const [createEmailPartial] = useMutation(CREATE_EMAIL_PARTIAL, {
+    update(cache, { data: { createEmailPartial } }) {
+      window.location = `/email/partials/edit/${createEmailPartial._id}`;
+    }
+  });
+
+  const handleCreateEmailPartial = () => {
+    const { title, mjmlSource, folderPath } = value;
+    const organizationId = !userLoading && userData.currentUser.organizationId;
+
+    createEmailPartial({
+      variables: {
+        title,
+        mjmlSource,
+        folderPath,
+        organizationId
+      }
+    });
+  };
+
+  const handleChange = e =>
+    setValue({
+      ...value,
+      [e.target.name]: e.target.value
+    });
+
+  const goBack = () => history.goBack();
+
+  return (
+    <div>
+      <Card style={styles.card}>
+        <CardContent>
+          <form action="/">
+            <Typography variant="h5">
+              Create a new email template partial
+            </Typography>
+            <div style={styles.formControlPad}>
+              <TextField
+                floatingLabelText="title"
+                name="title"
+                placeholder="title"
+                value={value.title}
+                onChange={handleChange}
+                fullWidth
+              />
+            </div>
+            <div>
+              <TextField
+                floatingLabelText="folderPath"
+                type="folderPath"
+                name="folderPath"
+                placeholder="folderPath"
+                value={value.folderPath}
+                onChange={handleChange}
+                fullWidth
+              />
+            </div>
+          </form>
+        </CardContent>
+        <CardActions>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={handleCreateEmailPartial}
+          >
+            Create
+          </Button>
+          <Button variant="contained" size="small" onClick={goBack}>
+            Cancel
+          </Button>
+        </CardActions>
+      </Card>
+    </div>
+  );
+};
+
+export default CreateEmailPartialView;

@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import InviteToOrganizationView from '../Components/Organization/InviteToOrganization';
 
-class InviteToOrganization extends Component {
-  render() {
-    return (
-      <div style={{ marginTop: 32 }}>
-        <InviteToOrganizationView />
-      </div>
-    );
-  }
-}
+const InviteToOrganization = () => (
+  <div style={{ marginTop: 32 }}>
+    <InviteToOrganizationView />
+  </div>
+);
 
 export default InviteToOrganization;

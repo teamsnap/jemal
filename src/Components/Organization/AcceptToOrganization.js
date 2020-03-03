@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql } from 'react-apollo';
-import flowright from 'lodash.flowright';
-import { withRouter } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+import { useQuery, useMutation, useApolloClient } from 'react-apollo';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -11,140 +10,20 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
-class AcceptToOrganizationView extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      errorMessage: '',
-      success: ''
-    };
-    this.input = React.createRef();
-    this.acceptToOrganization = this.acceptToOrganization.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.goBack = this.goBack.bind(this);
+const styles = {
+  card: {
+    maxWidth: 400,
+    margin: '0 auto'
+  },
+  formControl: {
+    minWidth: 120
+  },
+  formControlPad: {
+    marginTop: 20
   }
+};
 
-  acceptToOrganization() {
-    const { email } = this.state;
-    const organizationId = this.props.match.params.id;
-
-    this.props
-      .acceptToOrganization({
-        variables: {
-          email,
-          organizationId
-        }
-      })
-      .then(() =>
-        this.setState({
-          success: 'Great! You are now apart of the organization now!'
-        })
-      )
-      .then(() => (window.location = '/'))
-      .catch(error => {
-        console.error(error);
-        this.setState({
-          errorMessage: error.message.split(':')[1]
-        });
-      });
-  }
-
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  }
-
-  goBack() {
-    this.props.history.goBack();
-  }
-
-  componentWillMount() {
-    if (!this.props.loading) {
-      const currentEmail = this.props.currentUser.currentUser;
-      this.setState({
-        email: currentEmail && currentEmail.email
-      });
-    }
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (!newProps.loading) {
-      const currentEmail = newProps.currentUser.currentUser;
-      this.setState({
-        email: currentEmail && currentEmail.email
-      });
-    }
-  }
-
-  render() {
-    const styles = {
-      card: {
-        maxWidth: 400,
-        margin: '0 auto'
-      },
-      formControl: {
-        minWidth: 120
-      },
-      formControlPad: {
-        marginTop: 20
-      }
-    };
-
-    return (
-      <div>
-        <Card style={styles.card}>
-          <CardContent>
-            <form action="/">
-              {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
-              {this.state.success && <p>{this.state.success}</p>}
-              <img
-                src={
-                  this.props.getOrganization.currentOrganization &&
-                  this.props.getOrganization.currentOrganization.logoUrl
-                }
-                alt={
-                  this.props.getOrganization.currentOrganization &&
-                  this.props.getOrganization.currentOrganization.name
-                }
-              />
-              <Typography variant="h5">
-                You have been Invited to{' '}
-                {this.props.getOrganization.currentOrganization &&
-                  this.props.getOrganization.currentOrganization.name}
-              </Typography>
-              <div style={styles.formControlPad}>
-                <TextField
-                  name="email"
-                  placeholder="email"
-                  fullWidth
-                  type="email"
-                  value={this.state.email}
-                  onChange={this.handleChange}
-                />
-              </div>
-            </form>
-          </CardContent>
-          <CardActions>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={this.acceptToOrganization}
-            >
-              Invite
-            </Button>
-            <Button variant="contained" size="small" onClick={this.goBack}>
-              Cancel
-            </Button>
-          </CardActions>
-        </Card>
-      </div>
-    );
-  }
-}
-
-const acceptToOrganization = gql`
+const ACCEPT_TO_ORGANIZATION = gql`
   mutation acceptToOrganization($email: String!, $organizationId: String!) {
     acceptToOrganization(email: $email, organizationId: $organizationId) {
       email
@@ -152,7 +31,7 @@ const acceptToOrganization = gql`
   }
 `;
 
-const getOrganization = gql`
+const GET_ORGANIZATION = gql`
   query currentOrganization($_id: String!) {
     currentOrganization(_id: $_id) {
       name
@@ -161,7 +40,7 @@ const getOrganization = gql`
   }
 `;
 
-const currentUser = gql`
+const CURRENT_USER = gql`
   query currentUser {
     currentUser {
       _id
@@ -170,17 +49,127 @@ const currentUser = gql`
   }
 `;
 
-export default withRouter(
-  flowright(
-    graphql(acceptToOrganization, {
-      name: 'acceptToOrganization'
-    }),
-    graphql(getOrganization, {
-      name: 'getOrganization',
-      options: ownProps => ({ variables: { _id: ownProps.match.params.id } })
-    }),
-    graphql(currentUser, {
-      name: 'currentUser'
-    })
-  )(withApollo(AcceptToOrganizationView))
-);
+const AcceptToOrganizationView = () => {
+  const [value, setValue] = useState({
+    email: ''
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccces] = useState('');
+  const history = useHistory();
+  const client = useApolloClient();
+  const { id } = useParams();
+  const { data: data_user, loading: loading_user } = useQuery(CURRENT_USER);
+  const {
+    data: getOrganizationData,
+    loading: getOrganizationLoading
+  } = useQuery(GET_ORGANIZATION, {
+    variables: {
+      _id: id
+    }
+  });
+  const [
+    acceptToOrganization,
+    {
+      data: acceptToOrganizationData,
+      loading: acceptToOrganizationLoading,
+      error: acceptToOrganizationError
+    }
+  ] = useMutation(ACCEPT_TO_ORGANIZATION);
+
+  const handleAcceptToOrganization = () => {
+    const { email } = value;
+    const organizationId = id;
+
+    if (!email) {
+      setError('Form must not be empty');
+      return;
+    }
+
+    acceptToOrganization({
+      variables: {
+        email,
+        organizationId
+      }
+    });
+
+    if (acceptToOrganizationError) {
+      setError(acceptToOrganizationError.message.split(':')[1]);
+      return;
+    }
+  };
+
+  const handleChange = e =>
+    setValue({
+      ...value,
+      [e.target.name]: e.target.value
+    });
+
+  const goBack = () => history.goBack();
+
+  useEffect(() => {
+    if (!loading_user && data_user) {
+      setValue(v => ({ ...v, email: data_user.currentUser.email }));
+    }
+  }, [data_user, loading_user]);
+
+  useEffect(() => {
+    if (!acceptToOrganizationLoading && acceptToOrganizationData) {
+      setSuccces('Great! You are now apart of the organization now!');
+      setError('');
+      client.resetStore();
+      window.location = '/';
+    }
+  }, [acceptToOrganizationData, acceptToOrganizationLoading]);
+
+  return (
+    <div>
+      <Card style={styles.card}>
+        <CardContent>
+          <form action="/">
+            {error && <p>{error}</p>}
+            {success && <p>{success}</p>}
+            <img
+              src={
+                !getOrganizationLoading &&
+                getOrganizationData.currentOrganization &&
+                getOrganizationData.currentOrganization.logoUrl
+              }
+              alt="Organization logo"
+            />
+            <Typography variant="h5">
+              You have been Invited to{' '}
+              {!getOrganizationLoading &&
+                getOrganizationData.currentOrganization &&
+                getOrganizationData.currentOrganization.name}
+            </Typography>
+            <div style={styles.formControlPad}>
+              <TextField
+                name="email"
+                placeholder="email"
+                fullWidth
+                type="email"
+                value={value.email}
+                onChange={handleChange}
+              />
+            </div>
+          </form>
+        </CardContent>
+        <CardActions>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={handleAcceptToOrganization}
+          >
+            Accept
+          </Button>
+          <Button variant="contained" size="small" onClick={goBack}>
+            Cancel
+          </Button>
+        </CardActions>
+      </Card>
+    </div>
+  );
+};
+
+export default AcceptToOrganizationView;

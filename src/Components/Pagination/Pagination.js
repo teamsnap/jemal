@@ -1,38 +1,31 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 import './Pagination.css';
 
-class Pagination extends Component {
-  render() {
-    let renderPages;
+const Pagination = ({ count, limit, link }) => {
+  let pageArray = [];
 
-    if (this.props.count && this.props.limit) {
-      const pages = Math.ceil(this.props.count / this.props.limit);
-      let pageArray = [];
-      let i;
+  if (count && limit) {
+    const pages = Math.ceil(count / limit);
 
-      for (i = 0; i < pages; i++) {
-        pageArray.push(i + 1);
-      }
+    let i;
 
-      if (pageArray) {
-        renderPages = pageArray.map(page => {
-          return (
-            <li key={page}>
-              <NavLink to={`${this.props.link}${page}`}>{page}</NavLink>
-            </li>
-          );
-        });
-      }
+    for (i = 0; i < pages; i++) {
+      pageArray.push(i + 1);
     }
-
-    return (
-      <div>
-        <ul className="Pagination">{renderPages}</ul>
-      </div>
-    );
   }
-}
+
+  return (
+    <ul className="Pagination">
+      {pageArray &&
+        pageArray.map(page => (
+          <li key={page}>
+            <NavLink to={`${link}${page}`}>{page}</NavLink>
+          </li>
+        ))}
+    </ul>
+  );
+};
 
 export default Pagination;

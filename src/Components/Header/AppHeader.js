@@ -1,115 +1,83 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
-import { withRouter } from 'react-router-dom';
 
 import './AppHeader.css';
 import Menu from '../Menu/Menu';
 import Auth from '../../modules/Auth';
 
-class AppHeader extends Component {
-  constructor(props) {
-    super(props);
-    this.logoutUser = this.logoutUser.bind(this);
-    this.loginPush = this.loginPush.bind(this);
-    this.handleTooltipClose = this.handleTooltipClose.bind(this);
-    this.handleTooltipOpen = this.handleTooltipOpen.bind(this);
-
-    this.state = {
-      left: false,
-      open: false
-    };
+const styles = {
+  root: {
+    flexGrow: 1
+  },
+  flex: {
+    flex: 1
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20
+  },
+  link: {
+    textDecoration: 'none',
+    color: 'white'
   }
+};
 
-  handleTooltipClose = () => {
-    this.setState({ open: false });
-  };
+const AppHeader = () => {
+  const [open, setOpen] = useState(false);
 
-  handleTooltipOpen = () => {
-    this.setState({ open: true });
-  };
-
-  loginPush() {
-    this.props.history.push('/login');
-  }
-
-  logoutUser() {
+  const logoutUser = () => {
     const token = 'mjml-jwt';
 
     localStorage.removeItem(token);
     window.location.href = '/';
-  }
-
-  toggleDrawer = (side, open) => () => {
-    this.setState({
-      [side]: open
-    });
   };
 
-  render() {
-    const styles = {
-      root: {
-        flexGrow: 1
-      },
-      flex: {
-        flex: 1
-      },
-      menuButton: {
-        marginLeft: -12,
-        marginRight: 20
-      }
-    };
-
-    return (
-      <div style={styles.root}>
-        <AppBar position="static">
-          <Toolbar>
-            {Auth.isUserAuthenticated() ? (
-              <div>
-                <Button
-                  style={styles.menuButton}
-                  color="inherit"
-                  onClick={this.toggleDrawer('left', true)}
-                >
-                  Menu
-                </Button>
-                <Menu
-                  open={this.state.left}
-                  close={this.toggleDrawer('left', false)}
-                />
-              </div>
-            ) : (
-              <div />
-            )}
-
-            <Typography variant="h6" color="inherit" style={styles.flex}>
-              <Tooltip
-                disableFocusListener
-                title="Jolly Email Management Application Laboratory"
+  return (
+    <div style={styles.root}>
+      <AppBar position="static">
+        <Toolbar>
+          {Auth.isUserAuthenticated() ? (
+            <>
+              <Button
+                style={styles.menuButton}
+                color="inherit"
+                onClick={() => setOpen(true)}
               >
-                <Link to="/" className="AppHeaderLogo">
-                  J.E.M.A.L
-                </Link>
-              </Tooltip>
-            </Typography>
-            {Auth.isUserAuthenticated() ? (
-              <Button color="inherit" onClick={this.logoutUser}>
-                Logout
+                Menu
               </Button>
-            ) : (
-              <Button color="inherit" onClick={this.loginPush}>
+              <Menu open={open} close={() => setOpen(false)} />
+            </>
+          ) : null}
+          <Typography variant="h6" color="inherit" style={styles.flex}>
+            <Tooltip
+              disableFocusListener
+              title="Jolly Email Management Application Laboratory"
+            >
+              <Link to="/" className="AppHeaderLogo">
+                J.E.M.A.L
+              </Link>
+            </Tooltip>
+          </Typography>
+          {Auth.isUserAuthenticated() ? (
+            <Button color="inherit" onClick={logoutUser}>
+              Logout
+            </Button>
+          ) : (
+            <Button color="inherit">
+              <Link to="/login" style={styles.link}>
                 Login
-              </Button>
-            )}
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
-  }
-}
+              </Link>
+            </Button>
+          )}
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+};
 
-export default withRouter(AppHeader);
+export default AppHeader;

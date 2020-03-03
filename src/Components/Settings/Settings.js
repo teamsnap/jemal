@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import gql from 'graphql-tag';
-import { withApollo, graphql } from 'react-apollo';
-import flowright from 'lodash.flowright';
-import { withRouter } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -15,193 +13,30 @@ import TextField from '@material-ui/core/TextField';
 
 import Loading from '../../Components/Loading/Loading';
 
-class Settings extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      success: '',
-      errorMessage: '',
-      newPassword: '',
-      verifyPassword: ''
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.changePassword = this.changePassword.bind(this);
+const appToken = 'mjml-jwt';
+
+const styles = {
+  root: {
+    flexGrow: 1,
+    width: '80%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: 60
+  },
+  heading: {
+    marginBottom: 20
+  },
+  flexEnd: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'flex-end'
+  },
+  paper: {
+    padding: 20
   }
+};
 
-  changePassword() {
-    const { newPassword, verifyPassword } = this.state;
-    const token = 'mjml-jwt';
-
-    if (localStorage.getItem(token)) {
-      localStorage.removeItem(token);
-    }
-
-    this.props
-      .changePassword({
-        variables: {
-          newPassword,
-          verifyPassword,
-          email:
-            this.props.currentUser.currentUser &&
-            this.props.currentUser.currentUser.email
-        }
-      })
-      .then(data => {
-        localStorage.setItem(token, data.data.changePassword.jwt);
-        this.setState({ success: 'Password has been reset!' });
-      })
-      .then(() => (window.location.href = '/settings'))
-      .catch(error => {
-        if (localStorage.getItem(token)) {
-          localStorage.removeItem(token);
-        }
-        console.error(error);
-        this.setState({
-          errorMessage: error.message.split(':')[1]
-        });
-      });
-  }
-
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  }
-
-  render() {
-    const styles = {
-      root: {
-        flexGrow: 1,
-        width: '80%',
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        marginTop: 60
-      },
-      heading: {
-        marginBottom: 20
-      },
-      flexEnd: {
-        display: 'flex',
-        width: '100%',
-        justifyContent: 'flex-end'
-      },
-      paper: {
-        padding: 20
-      }
-    };
-
-    if (this.props.currentUser.loading) return <Loading />;
-    const user =
-      this.props.currentUser.currentUser && this.props.currentUser.currentUser;
-
-    return (
-      <div style={styles.root}>
-        <Grid container spacing={24}>
-          <Grid item sm={12}>
-            <Paper style={styles.paper}>
-              <Typography variant="h4" style={styles.heading}>
-                Settings
-              </Typography>
-              <Paper style={styles.paper}>
-                <div style={styles.flexEnd}>
-                  {/* <Link to="/email/create"><Button variant="contained" color="primary" size="large">New email</Button></Link> */}
-                </div>
-                <Grid container spacing={24}>
-                  <Grid item md={6}>
-                    <Card style={styles.card}>
-                      <CardContent>
-                        <form action="/">
-                          {this.state.errorMessage && (
-                            <p>{this.state.errorMessage}</p>
-                          )}
-                          {this.state.success && <p>{this.state.success}</p>}
-                          <Typography variant="h5">
-                            Add or Change Organization
-                          </Typography>
-                          <div className="field-line">
-                            <TextField
-                              name="org-name"
-                              placeholder={`Current Org Name: ${(user &&
-                                user.organization &&
-                                user.organization.name) ||
-                                'none'}`}
-                              fullWidth
-                              onChange={this.handleChange}
-                            />
-                          </div>
-                          <div className="field-line">
-                            <TextField
-                              name="org-id"
-                              placeholder={`Current Org id: ${(user &&
-                                user.organization &&
-                                user.organization._id) ||
-                                'none'}`}
-                              fullWidth
-                              onChange={this.handleChange}
-                            />
-                          </div>
-                        </form>
-                      </CardContent>
-                      <CardActions>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          onClick={this.changePassword}
-                        >
-                          Add Organization
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                  <Grid item md={6}>
-                    <Card style={styles.card}>
-                      <CardContent>
-                        <form action="/">
-                          <Typography variant="h5">Reset password</Typography>
-                          <div className="field-line">
-                            <TextField
-                              type="newPassword"
-                              name="newPassword"
-                              placeholder="new password"
-                              fullWidth
-                              onChange={this.handleChange}
-                            />
-                          </div>
-                          <div className="field-line">
-                            <TextField
-                              type="verifyPassword"
-                              name="verifyPassword"
-                              placeholder="verify password"
-                              fullWidth
-                              onChange={this.handleChange}
-                            />
-                          </div>
-                        </form>
-                      </CardContent>
-                      <CardActions>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          onClick={this.changePassword}
-                        >
-                          Change password
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Paper>
-          </Grid>
-        </Grid>
-      </div>
-    );
-  }
-}
-
-const changePassword = gql`
+const CHANGE_PASSWORD = gql`
   mutation changePassword(
     $newPassword: String!
     $verifyPassword: String!
@@ -221,7 +56,7 @@ const changePassword = gql`
   }
 `;
 
-const currentUser = gql`
+const CURRENT_USER = gql`
   query currentUser {
     currentUser {
       _id
@@ -234,13 +69,127 @@ const currentUser = gql`
   }
 `;
 
-export default withRouter(
-  flowright(
-    graphql(changePassword, {
-      name: 'changePassword'
-    }),
-    graphql(currentUser, {
-      name: 'currentUser'
-    })
-  )(withApollo(Settings))
-);
+const Settings = () => {
+  const [value, setValue] = useState({
+    newPassword: '',
+    verifyPassword: ''
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccces] = useState('');
+  const { data: data_user, loading: loading_user } = useQuery(CURRENT_USER);
+
+  const [
+    changePassword,
+    {
+      data: changePasswordData,
+      loading: changePasswordLoading,
+      error: changePasswordError
+    }
+  ] = useMutation(CHANGE_PASSWORD);
+
+  const handleChangePassword = () => {
+    const { newPassword, verifyPassword } = value;
+
+    if (!newPassword || !verifyPassword) {
+      setError('Form must not be empty');
+      return;
+    }
+
+    if (newPassword !== verifyPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    changePassword({
+      variables: {
+        newPassword,
+        verifyPassword,
+        email: data_user && data_user.currentUser.email
+      }
+    });
+
+    if (changePasswordError) {
+      setError(changePasswordError.message.split(':')[1]);
+      return;
+    }
+  };
+
+  const handleChange = e =>
+    setValue({
+      ...value,
+      [e.target.name]: e.target.value
+    });
+
+  useEffect(() => {
+    if (
+      !changePasswordLoading &&
+      changePasswordData &&
+      changePasswordData.changePassword
+    ) {
+      localStorage.setItem(appToken, changePasswordData.changePassword.jwt);
+      setSuccces('Password Changed');
+      setError('');
+    }
+  }, [changePasswordData, changePasswordLoading]);
+
+  if (loading_user) return <Loading />;
+
+  return (
+    <div style={styles.root}>
+      <Grid container spacing={24}>
+        <Grid item sm={12}>
+          <Paper style={styles.paper}>
+            <Typography variant="h4" style={styles.heading}>
+              Settings
+            </Typography>
+            <Paper style={styles.paper}>
+              <Grid container spacing={24}>
+                <Grid item md={6}>
+                  <Card style={styles.card}>
+                    <CardContent>
+                      <form action="/">
+                        {error && <p>{error}</p>}
+                        {success && <p>{success}</p>}
+                        <Typography variant="h5">Change password</Typography>
+                        <div className="field-line">
+                          <TextField
+                            type="newPassword"
+                            name="newPassword"
+                            placeholder="new password"
+                            fullWidth
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="field-line">
+                          <TextField
+                            type="verifyPassword"
+                            name="verifyPassword"
+                            placeholder="verify password"
+                            fullWidth
+                            onChange={handleChange}
+                          />
+                        </div>
+                      </form>
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={handleChangePassword}
+                      >
+                        Change password
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Paper>
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
+
+export default Settings;
