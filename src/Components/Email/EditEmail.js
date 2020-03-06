@@ -174,7 +174,7 @@ const EditEmailView = () => {
   });
   const [
     editEmail,
-    { loading: editEmailLoading, error: editEmailError }
+    { data: editEmailData, loading: editEmailLoading, error: editEmailError }
   ] = useMutation(EDIT_EMAIL);
   const [duplicateEmail] = useMutation(DUPLICATE_EMAIL, {
     update(cache, { data: { duplicateEmail } }) {
@@ -452,6 +452,7 @@ const EditEmailView = () => {
                 style={styles.iframe}
                 srcDoc={email.urlPreview}
                 title={email.title}
+                dataReady={editEmailData ? true : false}
               />
             </Grid>
           </Grid>
