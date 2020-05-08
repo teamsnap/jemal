@@ -17,6 +17,8 @@ const EmailPartial = gql`
     folderPath: String
     mjmlSource: String
     organizationId: String
+    isEmailPartialBeingEdited: Boolean
+    currentEditor: String
   }
   extend type Mutation {
     createEmailPartial(
@@ -31,6 +33,10 @@ const EmailPartial = gql`
       mjmlSource: String!
       organizationId: String!
       folderPath: String
+    ): EmailPartial
+    setEmailPartialBeingEdited(
+      _id: String!
+      isBeingEdited: Boolean!
     ): EmailPartial
     deleteEmailPartial(_id: String!): EmailPartial
     duplicateEmailPartial(_id: String!): EmailPartial

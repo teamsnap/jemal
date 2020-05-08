@@ -7,8 +7,8 @@ const EmailSchema = new Schema({
   createdById: { type: String },
   updatedAt: { type: Date, default: Date.now },
   updatedById: { type: String },
+  currentEditor: { type: String },
   mjmlSource: { type: String },
-  baseTemplate: { type: String },
   duplicatedFrom: { type: String },
   folderPath: { type: String },
   favorited: { type: Boolean, default: false },
@@ -16,7 +16,8 @@ const EmailSchema = new Schema({
   hasBeenSent: { type: Boolean, default: false },
   isDraft: { type: Boolean, default: false },
   organizationId: { type: String },
-  baseTemplate: { type: Boolean, default: false }
+  baseTemplate: { type: Boolean, default: false },
+  isBeingEdited: { type: Boolean, default: false }
 });
 
 const Email = mongoose.model('Email', EmailSchema);

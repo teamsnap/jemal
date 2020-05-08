@@ -89,6 +89,7 @@ const EmailPartialResolver = {
         updatedAt,
         folderPath,
         organizationId,
+        isBeingEdited: false,
         userId: user._id
       });
 
@@ -98,7 +99,6 @@ const EmailPartialResolver = {
       if (!user._id) throw new Error('Must be logged in');
       if (!_id) throw new Error('Must have email partial Id');
 
-      // todo: remove partials from fs on removal
       await EmailPartial.findOneAndRemove({ _id });
 
       return { _id: '' };
@@ -127,6 +127,7 @@ const EmailPartialResolver = {
         updatedAt,
         folderPath,
         organizationId,
+        isBeingEdited: false,
         userId: user._id
       });
 
@@ -134,7 +135,15 @@ const EmailPartialResolver = {
     },
     editEmailPartial: async (
       roots,
-      { _id, title, description, mjmlSource, organizationId, folderPath },
+      {
+        _id,
+        title,
+        description,
+        mjmlSource,
+        organizationId,
+        folderPath,
+        isBeingEdited
+      },
       { user }
     ) => {
       if (!user._id) throw new Error('Must be logged in');
@@ -162,7 +171,8 @@ const EmailPartialResolver = {
             folderPath,
             updatedById,
             updatedAt,
-            organizationId
+            organizationId,
+            isBeingEdited
           }
         }
       );

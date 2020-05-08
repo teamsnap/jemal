@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-
 const { Email, User, EmailPartial } = require('../models');
 
 const EmailResolver = {
@@ -99,6 +98,22 @@ const EmailResolver = {
       return emails;
     },
     getCurrentEmail: async (root, { _id }, { user }) => {
+      if (!user) throw new Error('Must be logged in');
+      if (!_id) throw new Error('Must have email id');
+
+      const userId = user._id;
+      const userFound = await User.findOne({ _id: userId });
+      const emailFound = await Email.findOne({ _id });
+
+      // Throw error if userOrg id doesn't match org id of email
+      if (userFound.organizationId !== emailFound.organizationId)
+        throw new Error(
+          'Must be associated with a certain organization to view this email'
+        );
+
+      return emailFound;
+    },
+    getEmailBeingEdited: async (root, { _id }, { user }) => {
       if (!user) throw new Error('Must be logged in');
       if (!_id) throw new Error('Must have email id');
 
@@ -257,7 +272,8 @@ const EmailResolver = {
         updatedById,
         updatedAt,
         organizationId,
-        userId: user._id
+        userId: user._id,
+        isBeingEdited: false
       });
 
       return email;
@@ -299,7 +315,7 @@ const EmailResolver = {
         updatedById,
         updatedAt,
         organizationId,
-        baseTemplate,
+        isBeingEdited: false,
         userId: user._id
       });
 
@@ -319,7 +335,9 @@ const EmailResolver = {
         isApproved,
         hasBeenSent,
         isDraft,
-        organizationId
+        organizationId,
+        currentEditor,
+        isBeingEdited
       },
       { user }
     ) => {
@@ -353,6 +371,7 @@ const EmailResolver = {
             hasBeenSent,
             isDraft,
             updatedById,
+            isBeingEdited,
             updatedAt
           }
         }
@@ -404,6 +423,36 @@ const EmailResolver = {
         _id,
         screenshotDownloadUrl: base64Image
       };
+    },
+    setEmailBeingEdited: async (
+      root,
+      { _id, isBeingEdited, currentEditor },
+      { user }
+    ) => {
+      if (!user._id) throw new Error('Must be logged in');
+      if (!_id) throw new Error('Must have email Id');
+      console.log(
+        `emailId: ${_id}, isBeingEdited ${isBeingEdited}, currentEditor: ${
+          isBeingEdited ? currentEditor : ''
+        }`
+      );
+      // on email load, set to isBeingEdited: true
+      // if current user id from frontend !== what is in DB as currentEditor
+      // lock other users out from saving
+      // don't save in DB, return error as last resort
+      // email cards should ask, am I being edited, yes, yes, yes, no (subscription?)
+
+      await Email.update(
+        { _id },
+        {
+          $set: {
+            isBeingEdited,
+            currentEditor: isBeingEdited ? currentEditor : ''
+          }
+        }
+      );
+
+      return { isBeingEdited, _id, currentEditor: currentEditor };
     }
   }
 };

@@ -76,6 +76,25 @@ const GET_CURRENT_EMAIL = gql`
       hasBeenSent
       isDraft
       urlPreview
+      isBeingEdited
+      currentEditor
+    }
+  }
+`;
+
+const SET_EMAIL_BEING_EDITED = gql`
+  mutation setEmailBeingEdited(
+    $_id: String!
+    $isBeingEdited: Boolean!
+    $currentEditor: String!
+  ) {
+    setEmailBeingEdited(
+      _id: $_id
+      isBeingEdited: $isBeingEdited
+      currentEditor: $currentEditor
+    ) {
+      _id
+      isBeingEdited
     }
   }
 `;
@@ -176,6 +195,14 @@ const EditEmailView = () => {
     editEmail,
     { data: editEmailData, loading: editEmailLoading, error: editEmailError }
   ] = useMutation(EDIT_EMAIL);
+  const [
+    setEmailBeingEdited,
+    {
+      data: setEmailBeingEditedData,
+      loading: setEmailBeingEditedLoading,
+      error: setEmailBeingEditedError
+    }
+  ] = useMutation(SET_EMAIL_BEING_EDITED);
   const [duplicateEmail] = useMutation(DUPLICATE_EMAIL, {
     update(cache, { data: { duplicateEmail } }) {
       window.location = `/email/edit/${duplicateEmail._id}`;
@@ -250,6 +277,27 @@ const EditEmailView = () => {
     });
   }, [createCurrentEmailScreenshotLoading]);
 
+  useEffect(() => {
+    if (userLoading) return;
+    if (getCurrentEmailLoading) return;
+
+    if (
+      email.currentEditor === userData.currentUser._id &&
+      email.isBeingEdited
+    ) {
+      console.log('not setting user');
+      return;
+    } else {
+      setEmailBeingEdited({
+        variables: {
+          _id: id,
+          isBeingEdited: true,
+          currentEditor: userData.currentUser._id
+        }
+      });
+    }
+  }, [getCurrentEmailLoading, userLoading]);
+
   const handleDuplicate = () =>
     duplicateEmail({
       variables: {
@@ -312,6 +360,13 @@ const EditEmailView = () => {
 
   if (getCurrentEmailLoading) return <Loading />;
   const email = !getCurrentEmailLoading && getCurrentEmailData.getCurrentEmail;
+
+  console.log(
+    `currentEditor: ${
+      email.currentEditor
+    }, do users match? ${email.currentEditor ===
+      userData.currentUser._id}, isBeingEdited: ${email.isBeingEdited}`
+  );
 
   return (
     <>

@@ -12,6 +12,7 @@ const Email = gql`
     getEmailsByFolder(folderName: String): [Email]
     getFavoritedEmails(_id: String!, offset: Int, limit: Int): [Email]
     getEmailsByUser: [Email]
+    getEmailBeingEdited(_id: String!): Email
   }
   type Email {
     _id: String!
@@ -33,6 +34,8 @@ const Email = gql`
     urlPreview: String
     screenshot: String
     screenshotDownloadUrl: String
+    isBeingEdited: Boolean
+    currentEditor: String
   }
   type Screenshot {
     image: String
@@ -66,6 +69,11 @@ const Email = gql`
       hasBeenSent: Boolean
       isDraft: Boolean
       organizationId: String
+    ): Email
+    setEmailBeingEdited(
+      _id: String!
+      isBeingEdited: Boolean!
+      currentEditor: String!
     ): Email
     deleteEmail(_id: String!): Email
     duplicateEmail(_id: String!): Email

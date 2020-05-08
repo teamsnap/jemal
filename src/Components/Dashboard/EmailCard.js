@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { Link } from 'react-router-dom';
@@ -65,6 +65,14 @@ const GET_CURRENT_EMAIL_SCREENSHOT = gql`
   }
 `;
 
+const GET_EMAIL_BEING_EDITED = gql`
+  query getEmailBeingEdited($_id: String!) {
+    getEmailBeingEdited(_id: $_id) {
+      isBeingEdited
+    }
+  }
+`;
+
 const EmailCard = ({
   favorited,
   needsImage,
@@ -79,20 +87,61 @@ const EmailCard = ({
       _id
     }
   });
+  const {
+    startPolling,
+    stopPolling,
+    data: emailBeingEditedData,
+    loading: emailBeingEditedLoading
+  } = useQuery(GET_EMAIL_BEING_EDITED, {
+    variables: {
+      _id
+    }
+  });
+
+  useEffect(() => {
+    startPolling(6000); // will be called only once
+    return stopPolling; // just return cleanup function without making new one
+  }, []);
 
   const image = data && data.getCurrentEmailScreenshot.image;
+  const isBeingEdited =
+    !emailBeingEditedLoading &&
+    emailBeingEditedData &&
+    emailBeingEditedData.getEmailBeingEdited.isBeingEdited;
+
+  // instead of pulling isBeingEdited from the top level
+  // lets setInterval from the cards and check here
+
+  // setInterval(() => {
+
+  // })
+
+  if (emailBeingEditedLoading)
+    return (
+      <Grid item sm={4}>
+        <CardContent style={styles.cardContent}>
+          <div style={styles.loadingContainer}>
+            <CircularProgress color="secondary" />
+          </div>
+        </CardContent>
+      </Grid>
+    );
 
   return (
     <Grid item sm={4}>
-      <Card style={styles.card}>
+      <Card style={{ ...styles.card, opacity: isBeingEdited ? 0.45 : 1 }}>
         <CardContent style={styles.cardContent}>
           {favorited ? <HeartIcon color="primary" style={styles.icon} /> : null}
           {needsImage ? (
             !loading ? (
               <div style={styles.imageContainer}>
-                <Link to={link}>
+                {isBeingEdited ? (
                   <img src={image} alt={title} style={styles.image} />
-                </Link>
+                ) : (
+                  <Link to={link}>
+                    <img src={image} alt={title} style={styles.image} />
+                  </Link>
+                )}
               </div>
             ) : (
               <div style={styles.loadingContainer}>
@@ -100,34 +149,45 @@ const EmailCard = ({
               </div>
             )
           ) : null}
-          <Link to={link} style={styles.link}>
-            <Typography variant="h6">{title}</Typography>
-          </Link>
-        </CardContent>
-        <CardActions>
-          <Link to={link}>
-            <Button variant="contained" color="primary" size="small">
-              Edit
-            </Button>
-          </Link>
-          {needsImage ? (
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => duplicateEmail({ variables: { _id } })}
-            >
-              Duplicate
-            </Button>
+          {isBeingEdited ? (
+            <Typography variant="h6">{title} Locked</Typography>
           ) : (
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => duplicateEmailPartial({ variables: { _id } })}
-            >
-              Duplicate partial
-            </Button>
+            <Link to={link} style={styles.link}>
+              <Typography variant="h6">{title}</Typography>
+            </Link>
           )}
-        </CardActions>
+          {isBeingEdited ? 'isBeingEdited' : 'isNotBeingEdited'}
+        </CardContent>
+        {isBeingEdited ? (
+          <CardActions>
+            isBeingEdited <Link to={link}>{link}</Link>
+          </CardActions>
+        ) : (
+          <CardActions>
+            <Link to={link}>
+              <Button variant="contained" color="primary" size="small">
+                Edit
+              </Button>
+            </Link>
+            {needsImage ? (
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => duplicateEmail({ variables: { _id } })}
+              >
+                Duplicate
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => duplicateEmailPartial({ variables: { _id } })}
+              >
+                Duplicate partial
+              </Button>
+            )}
+          </CardActions>
+        )}
       </Card>
     </Grid>
   );

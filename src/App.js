@@ -20,6 +20,8 @@ import AcceptToOrganization from './routes/AcceptToOrganization';
 import Settings from './routes/Settings';
 import Forgot from './routes/Forgot';
 
+import { useRouteListener } from './hooks/useRouteListener';
+
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -57,6 +59,7 @@ const LoggedOutRoute = ({ component: Component, ...rest }) => (
 );
 
 const App = () => {
+  useRouteListener('1234');
   const isAuthed = Auth.isUserAuthenticated();
   const [authenticated, setAuthenticated] = useState(false);
 
@@ -65,81 +68,83 @@ const App = () => {
   }, [isAuthed]);
 
   return (
-    <Router>
-      <div>
-        {authenticated ? (
-          <AppHeader authenticated={authenticated} />
-        ) : (
-          <AppHeader authenticated={authenticated} />
-        )}
-        <PrivateRoute
-          exact
-          path="/"
-          component={Dashboard}
-          toggleAuthenticateStatus={() => setAuthenticated(isAuthed)}
-        />
-        <PrivateRoute match path="/email/create" component={CreateEmail} />
-        <PrivateRoute match path="/email/edit/:id" component={EditEmail} />
-        <PrivateRoute
-          match
-          path="/email/partials/create"
-          component={CreateEmailPartial}
-        />
-        <PrivateRoute
-          match
-          path="/email/partials/view/page/:page"
-          exact
-          component={ViewAllPartials}
-        />
-        <PrivateRoute
-          match
-          path="/email/view/page/:page"
-          exact
-          component={ViewAllEmails}
-        />
-        <PrivateRoute
-          match
-          path="/email/favorited/view/page/:page"
-          exact
-          component={ViewAllFavoritedEmails}
-        />
-        <PrivateRoute
-          match
-          path="/email/partials/edit/:id"
-          component={EmailEditorOnly}
-        />
-        <PrivateRoute
-          match
-          path="/organization/create"
-          component={CreateOrganization}
-        />
-        <PrivateRoute
-          match
-          path="/organization/invite/:id"
-          component={InviteToOrganization}
-        />
-        <PrivateRoute
-          match
-          path="/organization/accept/:id"
-          component={AcceptToOrganization}
-        />
-        <PrivateRoute
-          match
-          path="/organization/edit/:id"
-          component={EditOrganization}
-        />
-        <PrivateRoute path="/settings" component={Settings} />
-        <LoggedOutRoute
-          path="/login"
-          component={Login}
-          toggleAuthenticateStatus={() => setAuthenticated(isAuthed)}
-        />
-        <LoggedOutRoute path="/signup" component={Signup} />
-        <LoggedOutRoute path="/forgot" exact component={Forgot} />
-        <LoggedOutRoute path="/forgot/:token" component={Forgot} />
-      </div>
-    </Router>
+    <>
+      {authenticated ? (
+        <AppHeader authenticated={authenticated} />
+      ) : (
+        <AppHeader authenticated={authenticated} />
+      )}
+      <PrivateRoute
+        exact
+        path="/"
+        component={Dashboard}
+        toggleAuthenticateStatus={() => setAuthenticated(isAuthed)}
+      />
+      <PrivateRoute match path="/email/create" component={CreateEmail} />
+      <PrivateRoute match path="/email/edit/:id" component={EditEmail} />
+      <PrivateRoute
+        match
+        path="/email/partials/create"
+        component={CreateEmailPartial}
+      />
+      <PrivateRoute
+        match
+        path="/email/partials/view/page/:page"
+        exact
+        component={ViewAllPartials}
+      />
+      <PrivateRoute
+        match
+        path="/email/view/page/:page"
+        exact
+        component={ViewAllEmails}
+      />
+      <PrivateRoute
+        match
+        path="/email/favorited/view/page/:page"
+        exact
+        component={ViewAllFavoritedEmails}
+      />
+      <PrivateRoute
+        match
+        path="/email/partials/edit/:id"
+        component={EmailEditorOnly}
+      />
+      <PrivateRoute
+        match
+        path="/organization/create"
+        component={CreateOrganization}
+      />
+      <PrivateRoute
+        match
+        path="/organization/invite/:id"
+        component={InviteToOrganization}
+      />
+      <PrivateRoute
+        match
+        path="/organization/accept/:id"
+        component={AcceptToOrganization}
+      />
+      <PrivateRoute
+        match
+        path="/organization/edit/:id"
+        component={EditOrganization}
+      />
+      <PrivateRoute path="/settings" component={Settings} />
+      <LoggedOutRoute
+        path="/login"
+        component={Login}
+        toggleAuthenticateStatus={() => setAuthenticated(isAuthed)}
+      />
+      <LoggedOutRoute path="/signup" component={Signup} />
+      <LoggedOutRoute path="/forgot" exact component={Forgot} />
+      <LoggedOutRoute path="/forgot/:token" component={Forgot} />
+    </>
   );
 };
 
-export default App;
+export default () => (
+  <Router>
+    <App />
+  </Router>
+);
