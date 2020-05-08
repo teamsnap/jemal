@@ -62,13 +62,14 @@ const MainDashboard = ({
             </Grid>
           </Grid>
           <Grid container spacing={24}>
-            {emails.map(({ title, _id, favorited }) => (
+            {emails.map(({ title, _id, favorited, organizationId }) => (
               <EmailCard
                 key={_id}
                 title={title}
                 _id={_id}
                 link={`/email/edit/${_id}`}
                 email={true}
+                organizationId={organizationId}
                 favorited={favorited}
                 needsImage={true}
                 history={history}

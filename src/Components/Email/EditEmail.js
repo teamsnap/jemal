@@ -21,9 +21,9 @@ import Loading from '../../Components/Loading/Loading';
 import Iframe from './Iframe';
 import dataURLtoBlob from '../../modules/dataURLToBlob';
 
-const Alert = props => <MuiAlert elevation={6} variant="filled" {...props} />;
+const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />;
 
-const AlertBar = props => {
+const AlertBar = (props) => {
   return (
     <Snackbar
       open={props.open}
@@ -76,6 +76,7 @@ const GET_CURRENT_EMAIL = gql`
       hasBeenSent
       isDraft
       urlPreview
+      organizationId
     }
   }
 `;
@@ -212,7 +213,7 @@ const EditEmailView = () => {
   useEffect(() => {
     if (getCurrentEmailLoading) return;
 
-    setValue(v => ({
+    setValue((v) => ({
       ...v,
       ...getCurrentEmailData.getCurrentEmail
     }));
@@ -302,7 +303,7 @@ const EditEmailView = () => {
     });
   };
 
-  const handleChange = e =>
+  const handleChange = (e) =>
     setValue({
       ...value,
       [e.target.name]: e.target.value
@@ -362,7 +363,7 @@ const EditEmailView = () => {
                           setNote({
                             open: true,
                             severity: 'success',
-                            content: 'Copied'
+                            content: 'Copied HTML'
                           });
 
                           setTimeout(() => {
@@ -378,6 +379,30 @@ const EditEmailView = () => {
                           style={{ marginLeft: 10 }}
                         >
                           Copy HTML
+                        </Button>
+                      </CopyToClipboard>
+                      <CopyToClipboard
+                        text={`${window.location.origin}/email/public/${email.organizationId}/${email._id}`}
+                        onCopy={() => {
+                          setNote({
+                            open: true,
+                            severity: 'success',
+                            content: 'Copied share link!'
+                          });
+
+                          setTimeout(() => {
+                            setNote({
+                              open: false
+                            });
+                          }, 6000);
+                        }}
+                      >
+                        <Button
+                          color="primary"
+                          size="small"
+                          style={{ marginLeft: 10 }}
+                        >
+                          Share
                         </Button>
                       </CopyToClipboard>
                       <Button
@@ -425,13 +450,13 @@ const EditEmailView = () => {
                   lineWrapping: true
                 }}
                 onBeforeChange={(editor, data, value) => {
-                  setValue(v => ({
+                  setValue((v) => ({
                     ...v,
                     mjmlSource: value
                   }));
                 }}
                 onChange={(editor, data, value) => {
-                  setValue(v => ({
+                  setValue((v) => ({
                     ...v,
                     mjmlSource: value
                   }));

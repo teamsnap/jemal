@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { Link } from 'react-router-dom';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
@@ -72,8 +73,10 @@ const EmailCard = ({
   title,
   _id,
   duplicateEmail,
-  duplicateEmailPartial
+  duplicateEmailPartial,
+  organizationId
 }) => {
+  const [feedback, setFeedback] = useState(false);
   const { data, loading } = useQuery(GET_CURRENT_EMAIL_SCREENSHOT, {
     variables: {
       _id
@@ -111,13 +114,29 @@ const EmailCard = ({
             </Button>
           </Link>
           {needsImage ? (
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => duplicateEmail({ variables: { _id } })}
-            >
-              Duplicate
-            </Button>
+            <>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => duplicateEmail({ variables: { _id } })}
+              >
+                Duplicate
+              </Button>
+              <CopyToClipboard
+                text={`${window.location.origin}/email/public/${organizationId}/${_id}`}
+                onCopy={() => {
+                  setFeedback(true);
+
+                  setTimeout(() => {
+                    setFeedback(false);
+                  }, 3000);
+                }}
+              >
+                <Button color="primary" size="small" style={{ marginLeft: 10 }}>
+                  {feedback ? 'Copied!' : 'Share'}
+                </Button>
+              </CopyToClipboard>
+            </>
           ) : (
             <Button
               variant="contained"
