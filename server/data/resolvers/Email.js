@@ -114,6 +114,13 @@ const EmailResolver = {
 
       return emailFound;
     },
+    getCurrentPublicEmail: async (root, { _id }, context) => {
+      if (!_id) throw new Error('Must have email id');
+
+      const emailFound = await Email.findOne({ _id });
+
+      return emailFound;
+    },
     getCurrentEmailScreenshot: async (root, { _id }, { user, appUrl }) => {
       if (!user) throw new Error('Must be logged in');
       if (!_id) throw new Error('Must have email id');
@@ -156,14 +163,24 @@ const EmailResolver = {
   },
   Email: {
     urlPreview: async (root, {}, { user, appUrl }) => {
-      const userFound = await User.findOne({ _id: user._id });
+      let emailPartialsFound;
 
-      const emailPartialsFound = await EmailPartial.find(
-        { organizationId: userFound.organizationId },
-        (err, org) => {
-          if (err) console.error(err);
-        }
-      );
+      if (root.organizationId) {
+        emailPartialsFound = await EmailPartial.find(
+          { organizationId: root.organizationId },
+          (err, org) => {
+            if (err) console.error(err);
+          }
+        );
+      } else {
+        const userFound = await User.findOne({ _id: user._id });
+        emailPartialsFound = await EmailPartial.find(
+          { organizationId: userFound.organizationId },
+          (err, org) => {
+            if (err) console.error(err);
+          }
+        );
+      }
 
       const body = JSON.stringify({
         _id: root._id,
@@ -282,9 +299,7 @@ const EmailResolver = {
       const updatedAt = Date.now();
 
       const newEmail = await Email.create({
-        title: `${title}${Date.now()
-          .toString()
-          .slice(-3)}`,
+        title: `${title}${Date.now().toString().slice(-3)}`,
         description,
         mjmlSource,
         baseTemplate,
@@ -299,7 +314,6 @@ const EmailResolver = {
         updatedById,
         updatedAt,
         organizationId,
-        baseTemplate,
         userId: user._id
       });
 
@@ -370,18 +384,34 @@ const EmailResolver = {
 
       return { _id: '' };
     },
-    createCurrentEmailScreenshot: async (root, { _id }, { user, appUrl }) => {
-      if (!user._id) throw new Error('Must be logged in');
-      if (!_id) throw new Error('Must have email Id');
+    createCurrentEmailScreenshot: async (
+      root,
+      { _id, orgId },
+      { user, appUrl }
+    ) => {
+      let emailPartialsFound;
+      if (orgId) {
+        emailPartialsFound = await EmailPartial.find(
+          { organizationId: orgId },
+          (err, org) => {
+            if (err) console.error(err);
+          }
+        );
+      } else {
+        if (!user._id) throw new Error('Must be logged in');
+        if (!_id) throw new Error('Must have email Id');
 
-      const userFound = await User.findOne({ _id: user._id });
+        const userFound = await User.findOne({ _id: user._id });
+        emailPartialsFound = await EmailPartial.find(
+          { organizationId: userFound.organizationId },
+          (err, org) => {
+            if (err) console.error(err);
+          }
+        );
+      }
+
       const { mjmlSource } = await Email.findOne({ _id });
-      const emailPartialsFound = await EmailPartial.find(
-        { organizationId: userFound.organizationId },
-        (err, org) => {
-          if (err) console.error(err);
-        }
-      );
+
       const body = JSON.stringify({
         _id: _id,
         mjmlSource: mjmlSource,

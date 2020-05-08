@@ -9,6 +9,7 @@ import Dashboard from './routes/Dashboard';
 import CreateEmail from './routes/CreateEmail';
 import CreateEmailPartial from './routes/CreateEmailPartial';
 import EditEmail from './routes/EditEmail';
+import PublicEmail from './routes/PublicEmail';
 import ViewAllPartials from './routes/ViewAllPartials';
 import ViewAllEmails from './routes/ViewAllEmails';
 import ViewAllFavoritedEmails from './routes/ViewAllFavoritedEmails';
@@ -23,7 +24,7 @@ import Forgot from './routes/Forgot';
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={props =>
+    render={(props) =>
       Auth.isUserAuthenticated() ? (
         <Component {...props} {...rest} />
       ) : (
@@ -41,7 +42,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 const LoggedOutRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={props =>
+    render={(props) =>
       Auth.isUserAuthenticated() ? (
         <Redirect
           to={{
@@ -80,6 +81,7 @@ const App = () => {
         />
         <PrivateRoute match path="/email/create" component={CreateEmail} />
         <PrivateRoute match path="/email/edit/:id" component={EditEmail} />
+        <Route match path="/email/public/:orgId/:id" component={PublicEmail} />
         <PrivateRoute
           match
           path="/email/partials/create"

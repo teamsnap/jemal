@@ -48,6 +48,7 @@ const GET_ALL_EMAILS = gql`
       title
       isDraft
       hasBeenSent
+      organizationId
       isApproved
       favorited
       updatedAt

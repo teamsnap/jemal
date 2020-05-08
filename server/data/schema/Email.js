@@ -3,6 +3,7 @@ const { gql } = require('apollo-server-express');
 const Email = gql`
   extend type Query {
     getCurrentEmail(_id: String!): Email
+    getCurrentPublicEmail(_id: String!, orgId: String!): Email
     getCurrentEmailScreenshot(_id: String!): Screenshot
     getAllEmails(_id: String!, offset: Int, limit: Int): [Email]
     getEmailsCount(_id: String!): Count
@@ -69,7 +70,7 @@ const Email = gql`
     ): Email
     deleteEmail(_id: String!): Email
     duplicateEmail(_id: String!): Email
-    createCurrentEmailScreenshot(_id: String!): Email
+    createCurrentEmailScreenshot(_id: String!, orgId: String): Email
   }
 `;
 
