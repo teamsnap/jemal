@@ -1,6 +1,6 @@
 const chrome = require('chrome-aws-lambda');
 
-const isDev = process.env.NOW_REGION === 'dev1';
+const isDev = process.env.VERCEL_REGION === 'dev1';
 
 const exePath =
   process.platform === 'win32'

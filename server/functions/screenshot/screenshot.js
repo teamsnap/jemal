@@ -1,13 +1,13 @@
 const fetch = require('node-fetch');
 const { getScreenshot } = require('./chromium');
 
-module.exports = async function(req, res) {
+module.exports = async function (req, res) {
   try {
-    const { body, headers } = req;
+    const { body, headers, hostname } = req;
     const appUrl =
-      headers['x-now-deployment-url'] === 'localhost:3000'
-        ? `http://${req.headers['x-now-deployment-url']}`
-        : `https://${req.headers['x-now-deployment-url']}`;
+      hostname === 'localhost'
+        ? `http://localhost:3000`
+        : `https://ts-mar-email.now.sh`;
 
     const serverlessBody = JSON.stringify({
       mjmlSource: body.mjmlSource,
