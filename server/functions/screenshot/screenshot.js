@@ -3,9 +3,9 @@ const { getScreenshot } = require('./chromium');
 
 module.exports = async function (req, res) {
   try {
-    const { body, headers } = req;
+    const { body, headers, hostname } = req;
     const appUrl =
-      headers['x-now-deployment-url'] === 'localhost:3000'
+      hostname === 'localhost'
         ? `http://localhost:3000`
         : `https://ts-mar-email.now.sh`;
 
