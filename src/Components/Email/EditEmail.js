@@ -212,12 +212,13 @@ const EditEmailView = () => {
 
   useEffect(() => {
     if (getCurrentEmailLoading) return;
+    if (getCurrentEmailError) return;
 
     setValue((v) => ({
       ...v,
       ...getCurrentEmailData.getCurrentEmail
     }));
-  }, [getCurrentEmailData, getCurrentEmailLoading]);
+  }, [getCurrentEmailData, getCurrentEmailLoading, getCurrentEmailError]);
 
   useEffect(() => {
     setNote({
@@ -312,7 +313,10 @@ const EditEmailView = () => {
   const goBack = () => history.goBack();
 
   if (getCurrentEmailLoading) return <Loading />;
-  const email = !getCurrentEmailLoading && getCurrentEmailData.getCurrentEmail;
+  const email =
+    !getCurrentEmailLoading &&
+    getCurrentEmailData &&
+    getCurrentEmailData.getCurrentEmail;
 
   return (
     <>
@@ -492,7 +496,7 @@ const EditEmailView = () => {
                     <Typography variant="h4" style={{ paddingBottom: 20 }}>
                       Error:{' '}
                       {getCurrentEmailError &&
-                        getCurrentEmailError.error.message.split(':')[1]}
+                        getCurrentEmailError.graphQLErrors[0].message}
                     </Typography>
                     <Button variant="contained" size="small" onClick={goBack}>
                       Go back
