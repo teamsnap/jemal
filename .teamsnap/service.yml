@@ -1,15 +1,18 @@
 ---
-classification: 
+classification: lib
 production:
-  tier: 
+  tier: 3
   url: 
   hosting_platform: 
-  logging: false
 performance_monitoring: []
 error_monitoring: []
 continuous_integration: []
 bug_tracking: []
 documentation: []
 deployment: []
-languages: []
-frameworks: []
+languages:
+  - name: JavaScript
+frameworks:
+  - name: React
+    version: 16.13.1
+logging: []
