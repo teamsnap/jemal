@@ -3,7 +3,7 @@ classification: lib
 production:
   tier: 3
   url: 
-  hosting_platform: 
+  hosting_platform: Vercel
 performance_monitoring: []
 error_monitoring: []
 continuous_integration: []
