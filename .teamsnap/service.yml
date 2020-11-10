@@ -1,5 +1,5 @@
 ---
-classification: lib
+classification: webapp
 production:
   tier: 3
   url: 
