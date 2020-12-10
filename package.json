@@ -67,9 +67,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "now-dev-start": "now dev",
+    "now-dev-start": "vercel dev",
     "renderEmail-function": "nodemon --watch ./server/functions/renderEmail --ignore dist/ --exec 'ncc build ./server/functions/renderEmail/renderEmail.js -o ./server/functions/renderEmail/dist'",
-    "deploy": "ncc build ./server/functions/renderEmail/renderEmail.js -o ./server/functions/renderEmail/dist && now deploy --debug"
+    "deploy": "ncc build ./server/functions/renderEmail/renderEmail.js -o ./server/functions/renderEmail/dist && vercel deploy --debug"
   },
   "engines": {
     "node": "12.x"

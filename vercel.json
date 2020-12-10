@@ -1,12 +1,5 @@
 {
   "version": 2,
-  "env": {
-    "MONGO_URI": "@mongo_uri",
-    "JWT_SECRET": "@jwt_secret",
-    "NODEMAILER_SERVICE": "@nodemailer_service",
-    "NODEMAILER_USER": "@nodemailer_user",
-    "NODEMAILER_PASS": "@nodemailer_pass"
-  },
   "builds": [
     {
       "src": "package.json",
