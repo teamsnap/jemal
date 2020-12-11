@@ -8,13 +8,12 @@ const { resolve } = require('path');
 registerComponent(mjBulletProofButton);
 
 const renderEmail = async (source, partials) => {
-  const tmp = '/tmp/emails';
-  const templatePath = `${tmp}/templates-partials`;
+  const tmp = '/tmp/emails/';
 
   try {
-    await downloadPartials(partials, templatePath);
+    await downloadPartials(partials, tmp);
     const data = await mjml2html(source, {
-      filePath: '/tmp/',
+      filePath: resolve(tmp),
       minify: true
     });
 

@@ -9,12 +9,13 @@ async function asyncForEach(array, callback) {
 const downloadPartials = async (partials, templatePath) => {
   try {
     await asyncForEach(partials, async ({ title, mjmlSource, folderPath }) => {
-      await fs.outputFile(
-        `${templatePath}${folderPath}/${title
-          .replace(/\s+/g, '-')
-          .toLowerCase()}.mjml`,
-        mjmlSource
-      );
+      const file = `${templatePath}emails/templates-partials${folderPath}/${title
+        .replace(/\s+/g, '-')
+        .toLowerCase()}.mjml`;
+
+      console.log(`outputting ${file}`);
+
+      await fs.outputFile(file, mjmlSource);
     });
   } catch (err) {
     throw new Error(err);
