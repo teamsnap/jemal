@@ -20,15 +20,14 @@ mongoose.connect(
   }
 );
 
+console.log(process.env.APP_URL);
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req, res }) => ({
     user: req.user,
-    appUrl:
-      req.hostname === 'localhost'
-        ? `http://localhost:3000/`
-        : 'https://ts-mar-email.now.sh/'
+    appUrl: process.env.APP_URL
   }),
   path: gqlPath,
   introspection: true
