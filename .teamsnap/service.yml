@@ -14,5 +14,5 @@ languages:
   - name: JavaScript
 frameworks:
   - name: React
-    version: 16.13.1
+    version: 17.0.1
 logging: []
