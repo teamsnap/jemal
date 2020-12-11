@@ -36,7 +36,11 @@ const server = new ApolloServer({
 
 app.use(
   gqlPath,
-  jwt({ secret: process.env.JWT_SECRET, credentialsRequired: false })
+  jwt({
+    secret: process.env.JWT_SECRET,
+    credentialsRequired: false,
+    algorithms: ['sha1', 'RS256', 'HS256']
+  })
 );
 server.applyMiddleware({ app, path: gqlPath });
 

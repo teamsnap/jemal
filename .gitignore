@@ -60,3 +60,4 @@ server/functions/screenshot/dist
 
 .now
 .vercel
+.eslintcache

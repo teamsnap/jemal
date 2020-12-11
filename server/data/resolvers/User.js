@@ -99,7 +99,7 @@ const UserResolver = {
         html: `<p><a href="${url}/forgot/${resetPasswordToken}">${url}/forgot/${resetPasswordToken}</a></p>`
       };
 
-      await User.update(
+      await User.updateOne(
         { email },
         {
           $set: {
@@ -147,7 +147,7 @@ const UserResolver = {
         } else {
           const hash = await bcrypt.hash(newPassword, 10);
 
-          await User.update(
+          await User.updateOne(
             { email },
             {
               $set: {
@@ -180,7 +180,7 @@ const UserResolver = {
 
         const hash = await bcrypt.hash(newPassword, 10);
 
-        await User.update(
+        await User.updateOne(
           { email },
           {
             $set: {
