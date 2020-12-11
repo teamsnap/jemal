@@ -78,9 +78,7 @@ const EmailPartialResolver = {
       const updatedAt = Date.now();
 
       const newEmailPartial = await EmailPartial.create({
-        title: `${title}${Date.now()
-          .toString()
-          .slice(-3)}`,
+        title: `${title}${Date.now().toString().slice(-3)}`,
         description,
         mjmlSource,
         createdById,
@@ -152,7 +150,7 @@ const EmailPartialResolver = {
       const updatedById = user._id;
       const updatedAt = Date.now();
 
-      await EmailPartial.update(
+      await EmailPartial.updateOne(
         { _id },
         {
           $set: {

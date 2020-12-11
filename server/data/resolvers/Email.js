@@ -352,7 +352,7 @@ const EmailResolver = {
       const updatedById = user._id;
       const updatedAt = Date.now();
 
-      await Email.update(
+      await Email.updateOne(
         { _id },
         {
           $set: {

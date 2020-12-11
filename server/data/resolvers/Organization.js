@@ -29,7 +29,7 @@ const OrganizationResolver = {
         logoUrl
       });
 
-      await User.update(
+      await User.updateOne(
         { _id: user._id },
         { $set: { organizationId: organization._id } }
       );
@@ -43,7 +43,7 @@ const OrganizationResolver = {
 
       if (!organizationId) throw new Error('Must apart of an organization');
 
-      const organization = await Organization.update(
+      const organization = await Organization.updateOne(
         { _id: organizationId },
         {
           $set: {
@@ -96,7 +96,7 @@ const OrganizationResolver = {
 
       const { name } = await Organization.findOne({ _id: organizationId });
 
-      await User.update({ _id: user._id }, { $set: { organizationId } });
+      await User.updateOne({ _id: user._id }, { $set: { organizationId } });
 
       const message = {
         from: 'sender@server.com',
