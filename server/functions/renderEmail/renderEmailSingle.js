@@ -1,4 +1,5 @@
 const mjml2html = require('mjml');
+const fs = require('fs');
 const { registerComponent } = require('mjml-core');
 const { mjBulletProofButton } = require('../../components');
 const downloadPartials = require('./downloadPartials');
@@ -13,7 +14,7 @@ const renderEmail = async (source, partials) => {
   try {
     await downloadPartials(partials, templatePath);
     const data = await mjml2html(source, {
-      filePath: resolve(tmp),
+      filePath: '/tmp/',
       minify: true
     });
 
