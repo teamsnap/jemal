@@ -27,7 +27,7 @@
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@zeit/ncc": "0.22.1",
     "apollo-boost": "0.4.9",
-    "apollo-server": "2.19.0",
+    "apollo-server": "2.21.2",
     "apollo-server-express": "2.19.0",
     "axios": "0.21.0",
     "bcrypt": "5.0.0",
