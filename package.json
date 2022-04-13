@@ -41,7 +41,7 @@
     "express-jwt": "6.0.0",
     "fs-extra": "9.0.1",
     "graphql": "15.4.0",
-    "graphql-tools": "7.0.2",
+    "graphql-tools": "8.2.6",
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.20",
     "lodash.flowright": "3.5.0",
