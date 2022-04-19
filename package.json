@@ -30,7 +30,7 @@
     "apollo-server": "2.19.0",
     "apollo-server-express": "2.19.0",
     "axios": "0.21.0",
-    "bcrypt": "5.0.0",
+    "bcrypt": "5.0.1",
     "body-parser": "1.19.0",
     "chrome-aws-lambda": "5.5.0",
     "codemirror": "5.58.3",
