@@ -8,7 +8,7 @@
     "@babel/node": "7.12.10",
     "@babel/plugin-proposal-class-properties": "7.12.1",
     "@babel/plugin-transform-runtime": "7.12.10",
-    "@babel/preset-env": "7.12.10",
+    "@babel/preset-env": "7.17.10",
     "@typescript-eslint/eslint-plugin": "4.9.1",
     "@typescript-eslint/parser": "4.9.1",
     "eslint": "7.15.0",
