@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "@babel/cli": "7.12.10",
+    "@babel/cli": "7.20.7",
     "@babel/core": "7.12.10",
     "@babel/node": "7.12.10",
     "@babel/plugin-proposal-class-properties": "7.12.1",
