@@ -33,7 +33,7 @@
     "bcrypt": "5.0.0",
     "body-parser": "1.19.0",
     "chrome-aws-lambda": "5.5.0",
-    "codemirror": "5.58.3",
+    "codemirror": "5.65.12",
     "cors": "2.8.5",
     "crypto": "1.0.1",
     "dotenv": "8.2.0",
